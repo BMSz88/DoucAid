@@ -4,7 +4,7 @@ import ChatForm from "./components/ChatForm";
 import ChatMessage from "./components/ChatMessage";
 import "./index.css";
 
-const API_KEY = "AIzaSyD-TyxeUph5lJp4YgdGrS7cWiFBvTG97Z0"; // Replace this with your valid API key
+const API_KEY = "AIzaSyD-TyxeUph5lJp4YgdGrS7cWiFBvTG97Z0"; // Replace with your valid API key
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
 async function getGeminiResponse(prompt) {
@@ -20,7 +20,7 @@ async function getGeminiResponse(prompt) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }] // ✅ Correct format for Gemini API
+                contents: [{ parts: [{ text: prompt }] }]
             }),
         });
 
@@ -38,7 +38,6 @@ async function getGeminiResponse(prompt) {
     }
 }
 
-// Corrected function
 const generateResponse = async (history, setChatHistory) => {
     setChatHistory((prev) => [...prev, { role: "bot", text: "Thinking..." }]);
 
@@ -64,32 +63,39 @@ const App = () => {
     const [chatHistory, setChatHistory] = useState([
         { role: "bot", text: "Hi there! How can I help you today?" }
     ]);
+    const [isChatOpen, setIsChatOpen] = useState(false);
 
     return (
-        <div className="chat-container">
-            <div className="chatbot-popup">
-                <div className="chat-header">
-                    <div className="header-info">
-                        <ChatbotIcon />
-                        <h2 className="logo-text">Chat Assistant</h2>
+        <div className="chatbot-container">
+            <button className="chatbot-toggle" onClick={() => setIsChatOpen(!isChatOpen)}>
+                💬
+            </button>
+            {isChatOpen && (
+                <div className="chatbot-popup">
+                    <div className="chat-header">
+                        <div className="header-info">
+                            <ChatbotIcon />
+                            <h2 className="logo-text">Chat Assistant</h2>
+                        </div>
+                        <button className="close-btn" onClick={() => setIsChatOpen(false)}>&times;</button>
                     </div>
-                    <button className="close-btn">&times;</button>
-                </div>
 
-                <div className="chat-body">
-                    {chatHistory.map((chat, index) => (
-                        <ChatMessage key={index} chat={chat} />
-                    ))}
-                </div>
+                    <div className="chat-body">
+                        {chatHistory.map((chat, index) => (
+                            <ChatMessage key={index} chat={chat} />
+                        ))}
+                    </div>
 
-                <div className="chat-footer">
-                    <ChatForm 
-                        chatHistory={chatHistory} 
-                        setChatHistory={setChatHistory} 
-                        generateResponse={(history) => generateResponse(history, setChatHistory)} 
-                    />
+                    <div className="chat-footer">
+                        <ChatForm 
+                            chatHistory={chatHistory} 
+                            setChatHistory={setChatHistory} 
+                            generateResponse={(history) => generateResponse(history, setChatHistory)} 
+                        />
+                    </div>
                 </div>
-            </div>
+            )}
+           
         </div>
     );
 };
