@@ -1,0 +1,132 @@
+/* General Body Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f47878;  /* Light gray background */
+    margin: 0;
+    padding: 0;
+}
+
+/* Flexbox Container for Centering */
+.d-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.google-btn {
+    border:#831e1e;
+    background: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    transition: transform 0.2s ease-in-out;
+    
+}
+
+.google-btn img {
+    background-color: #cc32cc;
+    width: auto;
+    height: 39px;
+    justify-content: center;
+    display: inline-flex;
+    align-items: center;
+    padding: 10 10px;
+    border-radius: 4px;
+}
+
+/* Increase size when hovered */
+.google-btn:hover {
+    transform: scale(1.1); /* Increase size by 10% */
+}
+
+/* Increase size when clicked */
+.google-btn:active {
+    transform: scale(0.9); /* Slightly reduce when clicked */
+}
+
+/* Full View Height */
+.vh-100 {
+    height: 100vh;
+}
+
+/* Login Form Container */
+.bg-white {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Heading Styling */
+h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Input Field Styling */
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+/* Button Styling */
+.btn {
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: #2563EB;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #1d47b4;
+}
+
+.btn-outline-secondary {
+    border: 1px solid #ddd;
+    color: #2563EB;
+    background-color: white;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #984646;
+}
+
+/* Link Styling */
+a {
+    text-decoration: none;
+}
+
+/* Paragraph for 'Do not have an account?' */
+.mt-2 {
+    margin-top: 10px;
+}
+
+/* Responsiveness */
+@media (max-width: 576px) {
+    .bg-white {
+        width: 90%;
+        padding: 1.5rem;
+    }
+}
