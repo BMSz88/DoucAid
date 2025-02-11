@@ -26,7 +26,10 @@ function Login() {
     };
 
     return (
-        <div className="d-flex justify-content-center align-items-center bg-secondary vh-100">
+            <div 
+            className="d-flex justify-content-center align-items-center vh-100" 
+            style={{ background: 'linear-gradient(to bottom, #dac6eb, #3a0379)' }}
+            >
             <div className="bg-white p-3 rounded w-25">
                 <h2 className="text-center">Login</h2>
                 <form onSubmit={handleSubmit}>
