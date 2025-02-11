@@ -1,0 +1,83 @@
+/* Full screen gradient background */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #dac6eb, #3a0379);
+    color: rgb(23, 13, 13);
+    height: 100%;
+    overflow-y: scroll; /* Allow scrolling on the whole page */
+}
+
+/* Container for full screen layout */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: auto;
+    min-height: 100vh;
+    padding: 40px;
+}
+
+/* Navbar styling */
+.navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 40px;
+    background: white;
+    backdrop-filter: blur(10px);
+}
+
+/* Navbar links */
+.navbar a {
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar div {
+    display: flex;
+    gap: 10px;
+}
+
+.sign-in, .sign-up {
+    background-color: rgb(255, 255, 255);
+    color: #020202;
+    margin-right: 10px;
+}
+
+.chrome-btn {
+    background-color: #2932a9;
+    color: rgb(242, 242, 242);
+    border-radius: 340%;
+}
+
+.navbar a:hover {
+    opacity: 0.8;
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    margin-top: 100px; /* Adjust the spacing as per your need */
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+
+
