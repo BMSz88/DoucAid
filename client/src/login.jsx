@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import "./assets/css/login.css";
+
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -13,14 +13,14 @@ function Login() {
         try {
             const result = await axios.post("http://localhost:3001/login", { email, password });
 
-            if (result.data.redirect) {
+            if (result.data.token) {
                 localStorage.setItem("token", result.data.token);
-                navigate("/home"); // Redirect to home page
+                navigate("/home");
             } else {
                 alert(result.data.message);
             }
         } catch (error) {
-            console.error("❌ Login error:", error);
+            console.error(error);
             alert("Login failed. Please try again.");
         }
     };

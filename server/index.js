@@ -10,7 +10,7 @@ const MongoStore = require("connect-mongo"); // Store sessions in MongoDB
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const EmployeeModel = require("./models/Employee");
 const jwt = require("jsonwebtoken"); // Import JWT
-const SECRET_KEY = process.env.JWT_SECRET || "default_secret";
+const SECRET_KEY = process.env.JWT_SECRET || "default_secret"; // Fallback secret
 
 const app = express();
 
@@ -47,10 +47,11 @@ passport.use(new GoogleStrategy({
         let user = await EmployeeModel.findOne({ email: profile.emails[0].value });
 
         if (!user) {
+            // Create user if doesn't exist
             user = await EmployeeModel.create({
                 name: profile.displayName,
                 email: profile.emails[0].value,
-                password: null
+                password: null // Password is not needed for Google login
             });
         }
         return done(null, user);
@@ -76,13 +77,12 @@ passport.deserializeUser(async (id, done) => {
 });
 
 // ✅ Google Authentication Routes
-app.get("/auth/google",
-    passport.authenticate("google", { scope: ["profile", "email"] })
-);
+app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 app.get("/auth/google/callback",
     passport.authenticate("google", { failureRedirect: "/login" }),
     (req, res) => {
+        // Successful authentication, redirect home.
         res.redirect("http://localhost:5173/home");
     }
 );
@@ -139,15 +139,15 @@ app.post('/login', async (req, res) => {
             // 🔹 Generate a JWT token
             const token = jwt.sign({ id: user._id, email: user.email }, SECRET_KEY, { expiresIn: "1h" });
 
-            // 🔹 Store JWT in session
+            // 🔹 Store JWT in session (not recommended to store tokens in session)
             req.session.token = token;
 
-            // 🔹 Redirect to Home Page
-            res.json({ 
-                message: "✅ Login successful", 
+            // 🔹 Return JWT token in response and redirect message
+            res.json({
+                message: "✅ Login successful",
                 redirect: "http://localhost:5173/home", // Frontend will handle the redirection
                 user: { id: user._id, email: user.email },
-                token 
+                token
             });
         });
 
@@ -156,7 +156,9 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ message: "Server error during login" });
     }
 });
-z
+
+// Start server
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`🚀 Server is running on port ${PORT}...`);
 });
