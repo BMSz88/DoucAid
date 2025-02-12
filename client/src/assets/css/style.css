@@ -8,7 +8,18 @@ body, html {
     height: 100%;
     overflow-y: scroll; /* Allow scrolling on the whole page */
 }
-
+.logout-btn{
+    background-color: #ffffff;
+    color: rgb(11, 1, 1);
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    
+}
+.logout-btn:hover{
+    background-color: #c0392b;
+}
 /* Container for full screen layout */
 .container {
     display: flex;

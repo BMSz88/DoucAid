@@ -2,6 +2,12 @@ import { Link } from "react-router-dom";
 import './assets/css/style.css';
 
 function Home() {
+  const handleLogout = () => {
+    alert("Logout successful!");
+    // Redirect or handle logout logic if needed
+  };
+  
+
   return (
     <div className="container">
       {/* Navbar */}
@@ -11,6 +17,7 @@ function Home() {
           <Link to="/login" className="sign-in">Sign In</Link>
           <Link to="/register" className="sign-up">Sign Up</Link>
           <button className="chrome-btn">Add to Chrome</button>
+          <Link to="/home" className="logout-btn" onClick={handleLogout}>Log out</Link>
         </div>
       </nav>
 

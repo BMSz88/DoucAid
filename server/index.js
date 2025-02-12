@@ -13,7 +13,17 @@ const jwt = require("jsonwebtoken"); // Import JWT
 const SECRET_KEY = process.env.JWT_SECRET || "default_secret"; // Fallback secret
 
 const app = express();
-
+const verifyToken = (req, res, next) => {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+  
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+      if (err) return res.status(403).json({ message: "Invalid token" });
+      req.user = decoded;
+      next();
+    });
+  };
+  
 // ✅ Middleware
 app.use(express.json());
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
@@ -149,6 +159,13 @@ app.post('/login', async (req, res) => {
                 user: { id: user._id, email: user.email },
                 token
             });
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "Strict",
+                maxAge: 3600000, // 1 hour
+              });
+              
         });
 
     } catch (error) {
