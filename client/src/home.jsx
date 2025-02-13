@@ -16,6 +16,8 @@ function Home() {
         <div>
           <Link to="/login" className="sign-in">Sign In</Link>
           <Link to="/register" className="sign-up">Sign Up</Link>
+  
+          <Link to="/home" className="logout-btn" onClick={handleLogout}>Log out</Link>
         </div>
       </nav>
 
