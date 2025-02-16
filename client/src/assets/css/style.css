@@ -1,0 +1,322 @@
+/* Full screen animated gradient background */
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(270deg, #dac6eb, #dcd2c3, #6c42d1);
+    background-size: 400% 400%;
+    animation: gradientAnimation 10s ease infinite;
+    color: rgb(23, 13, 13);
+    height: 100%;
+    overflow-y: scroll;
+}
+
+/* Navbar Styling */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 40px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+/* Navbar Scroll Effect */
+.navbar.scrolled {
+    background: rgba(58, 3, 121, 0.9);
+    transform: translateY(-5px);
+}
+
+.navbar a {
+    padding: 8px 6px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: transform 0.2s ease-in-out;
+}
+
+.navbar a:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
+.sign-in, .sign-up {
+    background-color: white;
+    color: #020202;
+    margin-right: 10px;
+    transition: background 0.3s ease-in-out;
+}
+
+.chrome-btn {
+    background-color: #2932a9;
+    color: white;
+    border-radius: 20px;
+    padding: 10px 20px;
+    transition: background 0.3s ease-in-out, transform 0.3s;
+}
+
+.chrome-btn:hover {
+    background-color: #1b2370;
+    transform: scale(1.05);
+}
+
+/* Hero Section Animation */
+.hero {
+    text-align: center;
+    margin-top: 120px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease-in-out forwards;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Features Section */
+.feature-list {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease-in-out forwards;
+}
+
+/* Contact Section */
+/* Footer (Contact Section) */
+.contact-section {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    background: rgba(58, 3, 121, 0.9); /* Dark purple background */
+    color: white;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+/* Slide-up effect when user scrolls down */
+.contact-section.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Initially hidden */
+.contact-section {
+    transform: translateY(100%);
+    opacity: 0;
+    background-color: #c188c9;
+}
+
+/* Animation trigger on scroll */
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Footer scroll animation */
+@keyframes slideUp {
+    from { bottom: -50px; }
+    to { bottom: 0; }
+}
+
+
+
+/* Scroll-triggered animations */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease-in-out forwards;
+}
+
+/* Feature List Styling */
+.feature-list {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid transparent;
+    padding: 20px;
+    border-radius: 15px;
+    width: 250px;
+    text-align: center;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border 0.3s ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    border: 2px solid #6c42d1;
+}
+
+/* Glowing border animation */
+@keyframes glow {
+    0% { box-shadow: 0 0 10px #6c42d1; }
+    50% { box-shadow: 0 0 20px #6c42d1; }
+    100% { box-shadow: 0 0 10px #6c42d1; }
+}
+
+.feature-card:hover {
+    animation: glow 1.5s infinite alternate;
+}
+
+
+.footer {
+    width: 100%;
+    text-align: center;
+    padding: 10px 20px; /* Reduced padding */
+    background: linear-gradient(90deg, #2b3a67, #0d253f); /* New dark blue gradient */
+    color: white;
+    position: relative;
+    bottom: -50px;
+    transition: all 0.5s ease-in-out;
+    box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.2);
+    border-top: 3px solid #dac6eb;
+}
+
+/* Reduced Footer Content */
+.footer-content {
+    max-width: 800px; /* Reduced width */
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px; /* Reduced gap */
+}
+
+/* Reduced Font Size in Links */
+.footer-links {
+    display: flex;
+    gap: 15px;
+}
+
+.footer-links a {
+    color: #dac6eb;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+    align-items: center;
+    margin: auto;
+}
+
+.footer-links a:hover {
+    color: #0e064e;
+    text-decoration: underline;
+}
+
+.social-icons a {
+    color: white;
+    font-size: 20px; /* Reduced icon size */
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* Button Styling */
+.button {
+    background: linear-gradient(45deg, #6c42d1, #3a0379); /* Gradient background */
+    color: white;
+    padding: 15px 30px;
+    font-size: 16px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Button Styling */
+.button {
+    background: linear-gradient(45deg, #6c42d1, #3a0379); /* Gradient background */
+    color: white;
+    padding: 15px 30px;
+    font-size: 16px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    outline: none;
+}
+
+/* General Button Styling for Sign Up, Sign In, and Add to Chrome */
+.navbar .sign-in, 
+.navbar .sign-up, 
+.navbar .chrome-btn {
+    background: linear-gradient(45deg, #6c42d1, #3a0379); /* Gradient background */
+    color: white;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    margin-right: 10px; /* Add space between buttons */
+}
+
+/* Pulse animation on hover */
+.navbar .sign-in:hover,
+.navbar .sign-up:hover,
+.navbar .chrome-btn:hover {
+    animation: pulse 0.8s ease-in-out infinite;
+    transform: scale(1.1); /* Slight scale on hover */
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+/* Pulse keyframe animation */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15); /* Scale up to 1.15 times */
+    }
+    100% {
+        transform: scale(1); /* Scale back to normal size */
+    }
+}
+
+/* Optional glow when focused */
+.navbar .sign-in:focus,
+.navbar .sign-up:focus,
+.navbar .chrome-btn:focus {
+    box-shadow: 0 0 8px 3px rgba(0, 0, 0, 0.2);
+    outline: none;
+}
