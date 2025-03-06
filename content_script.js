@@ -3,6 +3,7 @@ const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-
 
 let uploadedDocument = null;
 let extractedPageContent = "";
+let chatHistory = [];
 
 // Create and inject the chat elements
 function createChatElements() {
@@ -21,14 +22,11 @@ function createChatElements() {
                 <img src="${chrome.runtime.getURL('icon128.png')}" alt="Chat" class="chat-logo">
                 <span class="logo-text">Docuaid Chatbot</span>
             </div>
-            
             <button class="close-chat-btn">✖</button>
         </div>
         <button class="like-chat-btn">
-    <img src="${chrome.runtime.getURL('123.png')}" alt="Like" class="like-icon">
-</button>
-
-
+            <img src="${chrome.runtime.getURL('123.png')}" alt="Like" class="like-icon">
+        </button>
         <div id="chat-box" class="chat-body"></div>
         <div class="chat-footer">
             <input type="text" id="user-input" placeholder="Type a message..." autocomplete="off">
@@ -61,11 +59,35 @@ function createChatElements() {
     `;
     document.body.appendChild(chatContainer);
 
+    // Create share interface with tabs
+    
+
     // Add event listeners
     toggleButton.addEventListener('click', toggleChat);
     chatContainer.querySelector('.close-chat-btn').addEventListener('click', toggleChat);
+    
+    const likeButton = chatContainer.querySelector('.like-chat-btn');
+    likeButton.addEventListener('click', toggleShareInterface);
 
-    // Initialize chat functionality
+    const shareButtons = shareInterface.querySelectorAll('.share-button');
+    shareButtons.forEach(button => {
+        button.addEventListener('click', handleShare);
+    });
+
+    const navTabs = shareInterface.querySelectorAll('.nav-tab');
+    navTabs.forEach(tab => {
+        tab.addEventListener('click', handleTabClick);
+    });
+
+    // Close share interface when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.share-interface') && !e.target.closest('.like-chat-btn')) {
+            shareInterface.classList.remove('show');
+        }
+    });
+
+    // Load chat history from storage
+    loadChatHistory();
     initializeChatFunctionality();
 }
 
@@ -114,12 +136,22 @@ function handleFileUpload(e) {
     }
 }
 
+// Toggle share interface visibility
+
+
+// Handle share button clicks
+
+
+// Handle tab clicks
+
+
 // Send message
 async function sendMessage() {
     const inputField = document.getElementById('user-input');
     const userText = inputField.value.trim();
     if (!userText) return;
 
+    const timestamp = new Date().toISOString();
     addMessage('user', userText);
     inputField.value = '';
 
@@ -139,6 +171,17 @@ async function sendMessage() {
 
         const data = await response.json();
         const botReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't process your request.";
+        
+        // Save to chat history
+        chatHistory.push({
+            timestamp,
+            messages: [
+                { type: 'user', text: userText },
+                { type: 'bot', text: botReply }
+            ]
+        });
+        saveChatHistory();
+        
         addMessage('bot', botReply);
     } catch (error) {
         addMessage('bot', 'Error retrieving response.');
@@ -184,6 +227,15 @@ function removeFile() {
     addMessage('system', 'Document removed');
 }
 
+// Save chat history to storage
+
+
+// Load chat history from storage
+
+
+// Display chat history
+
+// Delete conversation from history
 
 
 // Initialize when the content script loads

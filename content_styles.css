@@ -71,6 +71,7 @@ body.chatbot-open {
     padding: 8px 12px;
     border-radius: 8px;
     max-width: 80%;
+    word-wrap: break-word;
 }
 
 .user-message {
@@ -187,14 +188,16 @@ body.chatbot-open {
 #chatbot-toggle:hover {
     transform: scale(1.1);
 }
+
+/* Like Button */
 .like-chat-btn {
     background: none;
     border: none;
     cursor: pointer;
     position: absolute;
-    top: 50px; /* Adjust as needed */
-    right: -5px; /* Adjust to align properly */
-    z-index: 1000; /* Ensure it's above other elements */
+    top: 70px;
+    right: 5px;
+    z-index: 1000;
 }
 
 .like-icon {
@@ -202,3 +205,170 @@ body.chatbot-open {
     height: 24px;
 }
 
+/* Share Interface */
+.share-interface {
+    position: absolute;
+    top: 80px;
+    right: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    z-index: 10002;
+    display: none;
+}
+
+.share-interface.show {
+    display: block;
+}
+
+/* Tab Navigation */
+.nav-tabs {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 5px;
+}
+
+.nav-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.nav-tab.active {
+    color: #7e57c2;
+    border-bottom-color: #7e57c2;
+}
+
+/* Tab Content */
+.tab-content {
+    position: relative;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* Settings Tab */
+#settings-tab h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #333;
+}
+
+.share-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.share-button {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: #f5f5f5;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    color: #333;
+}
+
+.share-button:hover {
+    background: #ebebeb;
+}
+
+.share-button img {
+    width: 24px;
+    height: 24px;
+    margin-right: 15px;
+}
+
+.share-button span {
+    font-size: 14px;
+}
+
+/* History Tab */
+#chat-history-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.history-conversation {
+    background: #f5f5f5;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.history-header {
+    background: #7e57c2;
+    color: white;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history- date {
+    font-size: 12px;
+}
+
+.delete-conversation {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.delete-conversation:hover {
+    opacity: 1;
+}
+
+.history-messages {
+    padding: 10px;
+}
+
+.history-message {
+    margin-bottom: 8px;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.history-message.user-message {
+    background: #e3f2fd;
+    color: black;
+    margin-left: auto;
+    max-width: 80%;
+}
+
+.history-message.bot-message {
+    background: #7e57c2;
+    color: white;
+    max-width: 80%;
+}
+
+.no-history {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+    font-style: italic;
+}
