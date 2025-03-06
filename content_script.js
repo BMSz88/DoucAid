@@ -326,6 +326,14 @@ function removeFile() {
 
 
 // Load chat history from storage
+    function loadChatHistory() {
+        chrome.storage.local.get(['chatHistory'], (result) => {
+            if (result.chatHistory) {
+                chatHistory = result.chatHistory;
+                displayChatHistory();
+            }
+        });
+    }
 
 
 // Display chat history
