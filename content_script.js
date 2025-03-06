@@ -337,6 +337,43 @@ function removeFile() {
 
 
 // Display chat history
+    function displayChatHistory() {
+        const historyList = document.getElementById('chat-history-list');
+        if (!historyList) return;
+
+        historyList.innerHTML = '';
+        
+        if (chatHistory.length === 0) {
+            historyList.innerHTML = '<div class="no-history">No chat history available</div>';
+            return;
+        }
+
+        chatHistory.forEach((conversation, index) => {
+            const conversationDiv = document.createElement('div');
+            conversationDiv.className = 'history-conversation';
+            
+            const date = new Date(conversation.timestamp);
+            const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+            
+            conversationDiv.innerHTML = `
+                <div class="history-header">
+                    <span class="history-date">${formattedDate}</span>
+                    <button class="delete-conversation" onclick="deleteConversation(${index})">×</button>
+                </div>
+                <div class="history-messages">
+                    ${conversation.messages.map(msg => `
+                        <div class="history-message ${msg.type}-message">
+                            ${msg.text}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            historyList.appendChild(conversationDiv);
+        });
+    }
+
+
 
 // Delete conversation from history
 
