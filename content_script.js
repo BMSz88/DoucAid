@@ -221,7 +221,21 @@ function handleFileUpload(e) {
 
 
 // Handle tab clicks
+    function handleTabClick(e) {
+        const tabs = document.querySelectorAll('.nav-tab');
+        const tabContents = document.querySelectorAll('.tab-pane');
+        
+        tabs.forEach(tab => tab.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        
+        e.currentTarget.classList.add('active');
+        const tabName = e.currentTarget.getAttribute('data-tab');
+        document.getElementById(`${tabName}-tab`).classList.add('active');
 
+        if (tabName === 'history') {
+            displayChatHistory();
+        }
+    }
 
 // Send message
 async function sendMessage() {
