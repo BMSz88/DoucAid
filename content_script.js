@@ -62,6 +62,47 @@ function createChatElements() {
     // Create share interface with tabs
     
 
+    const shareInterface = document.createElement('div');
+    shareInterface.className = 'share-interface';
+    shareInterface.innerHTML = `
+        <div class="nav-tabs">
+            <button class="nav-tab" data-tab="settings">Settings</button>
+            <button class="nav-tab" data-tab="history">Chat History</button>
+        </div>
+        <div class="tab-content">
+            <div id="settings-tab" class="tab-pane">
+                <h2>SHARE US WITH YOUR FRIENDS</h2>
+                <div class="share-buttons">
+                    <a href="#" class="share-button whatsapp-share">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMjVEMzY2Ij48cGF0aCBkPSJNMTcuNDcyIDEzLjM1N2MuMjk3LS4xNjkuNDk2LS40NTguNTQtLjc5Mi4wNDMtLjMzMy0uMDg2LS42NTMtLjM1Mi0uODc2TDE1LjM1IDkuNzljLS43MzMtLjQyNC0xLjY0Ny0uNDI0LTIuMzggMEwxMC42NiAxMS42OWMtLjI2Ni4yMjMtLjM5NS41NDMtLjM1Mi44NzYuMDQ0LjMzNC4yNDMuNjIzLjU0Ljc5MmwzLjMxIDEuOTFjLjczMy40MjQgMS42NDcuNDI0IDIuMzggMGwuOTM0LS41NHoiLz48cGF0aCBkPSJNMTIgMkM2LjQ4NiAyIDIgNi40ODYgMiAxMmMwIDEuNjY1LjQxMiAzLjIzMyAxLjEzNiA0LjYxbC0xLjEzIDMuMzkzIDMuMzk0LTEuMTNjMS4zNzcuNzI0IDIuOTQyIDEuMTM2IDQuNiAxLjEzNiA1LjUxNCAwIDEwLTQuNDg2IDEwLTEwUzE3LjUxNCAyIDEyIDJ6bTAgMTguNDJjLTEuNTIyIDAtMi45MzctLjQzLTQuMTQtMS4xN2wtMi44OTUuOTY1Ljk2NS0yLjg5NWMtLjc0LTEuMjAzLTEuMTctMi42MTgtMS4xNy00LjE0IDAtNC4zNSAzLjU3LTcuOTIgNy45Mi03LjkyIDQuMzUgMCA3LjkyIDMuNTcgNy45MiA3Ljkycy0zLjU3IDcuOTItNy45MiA3LjkyeiIvPjwvc3ZnPg==" alt="WhatsApp">
+                        <span>WhatsApp</span>
+                    </a>
+                    <a href="#" class="share-button facebook-share">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMTg3N0YyIj48cGF0aCBkPSJNMjQgMTJjMC02LjYyNy01LjM3My0xMi0xMi0xMlMwIDUuMzczIDAgMTJjMCA1Ljk5IDQuMzg4IDEwLjk1NCAxMC4xMjUgMTEuODU0di04LjM4NUg3LjA3OFYxMmgzLjA0N1Y5LjM1NmMwLTMuMDA3IDEuNzkyLTQuNjY4IDQuNTMzLTQuNjY4YzEuMzEyIDAgMi42ODYuMjM0IDIuNjg2LjIzNHYyLjk1M0gxNS44M2MtMS40OTEgMC0xLjk1Ni45MjUtMS45NTYgMS44NzRWMTJoMy4zMjhsLS41MzIgMy40NjloLTIuNzk2djguMzg1QzE5LjYxMiAyMi45NTQgMjQgMTcuOTkgMjQgMTJ6Ii8+PC9zdmc+" alt="Facebook">
+                        <span>Facebook</span>
+                    </a>
+                    <a href="#" class="share-button telegram-share">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMjdBNkU2Ij48cGF0aCBkPSJNMjAuNjY1IDMuNzE3bC0xNy43MyA2LjgzN2MtMS4yMS40ODYtMS4yMDMgMS4xNjEtLjIyMiAxLjQ2Mmw0LjU1MiAxLjQyIDEwLjUzMi02LjQ3M2MuNDk4LS4zMDMuOTUyLS4xNC41NzguLjE5MmwtOC41MzMgNy43MDEtLjMzNSA0Ljk5YzAuMzMyIDAgLjQ3OC0uMTUuNjY4LS4zMzRsMi42MDEtMi41MjMgNC41MzcgMy4zNDNjLjgzOC40NjIgMS40NDEuMjE3IDEuNjQ5LS43NzRsMi45OTMtMTQuMDljLjMwNi0xLjIzNC0uNDctMS45MS0xLjI5LTEuNTF6Ii8+PC9zdmc+" alt="Telegram">
+                        <span>Telegram</span>
+                    </a>
+                    <a href="#" class="share-button email-share">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMjMyMzIzIj48cGF0aCBkPSJNMjAgNEg0Yy0xLjEgMC0yIC45LTIgMnYxMmMwIDEuMS45IDIgMiAyaDE2YzEuMSAwIDItLjkgMi0yVjZjMC0xLjEtLjktMi0yLTJ6bTAgNGwtOCA1LTgtNVY2bDggNSA4LTV2MnoiLz48L3N2Zz4=" alt="Email">
+                        <span>Email</span>
+                    </a>
+                    <button class="share-button copy-link">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDA3NkZGIj48cGF0aCBkPSJNMTYgMTN2LTJIMTR2Mmgyem0tNi00aDJ2LTJIMTB2MnptMTQgNHYtMmgtMnYyaDJ6TTQgMTd2Mmgydi0ySDR6TTIwIDlIMTh2MmgyVjl6TTQgOUgydjJoMlY5em0xNi00VjNoLTJ2Mmgyem0wIDEydjJoMnYtMmgtMnpNMiAxN2gydjJIMnYtMnptMC04aDJ2LTJIMG0yIDBoMnYySDJ2LTJ6bTE2IDR2LTJoLTJ2Mmgyem0tOCAwdi0ySDh2MmgyeiIvPjwvc3ZnPg==" alt="Copy Link">
+                        <span>Copy Link</span>
+                    </button>
+                </div>
+            </div>
+            <div id="history-tab" class="tab-pane">
+                <div id="chat-history-list"></div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(shareInterface);
+
+
     // Add event listeners
     toggleButton.addEventListener('click', toggleChat);
     chatContainer.querySelector('.close-chat-btn').addEventListener('click', toggleChat);
