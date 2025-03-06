@@ -187,3 +187,18 @@ body.chatbot-open {
 #chatbot-toggle:hover {
     transform: scale(1.1);
 }
+.like-chat-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 50px; /* Adjust as needed */
+    right: -5px; /* Adjust to align properly */
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+.like-icon {
+    width: 24px;
+    height: 24px;
+}
+

@@ -19,10 +19,16 @@ function createChatElements() {
         <div class="chat-header">
             <div class="header-info">
                 <img src="${chrome.runtime.getURL('icon128.png')}" alt="Chat" class="chat-logo">
-                <span class="logo-text">Chat Assistant</span>
+                <span class="logo-text">Docuaid Chatbot</span>
             </div>
+            
             <button class="close-chat-btn">✖</button>
         </div>
+        <button class="like-chat-btn">
+    <img src="${chrome.runtime.getURL('123.png')}" alt="Like" class="like-icon">
+</button>
+
+
         <div id="chat-box" class="chat-body"></div>
         <div class="chat-footer">
             <input type="text" id="user-input" placeholder="Type a message..." autocomplete="off">
@@ -177,6 +183,8 @@ function removeFile() {
     document.getElementById('file-info').className = 'file-info';
     addMessage('system', 'Document removed');
 }
+
+
 
 // Initialize when the content script loads
 createChatElements();
