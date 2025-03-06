@@ -186,6 +186,38 @@ function handleFileUpload(e) {
 
 
 // Handle share button clicks
+    function handleShare(e) {
+        e.preventDefault();
+        const shareUrl = encodeURIComponent(window.location.href);
+        const shareTitle = encodeURIComponent(document.title);
+        const shareText = encodeURIComponent('Check out this awesome chatbot!');
+
+        switch(e.currentTarget.className.split(' ')[1]) {
+            case 'whatsapp-share':
+                window.open(`https://wa.me/?text=${shareText}%20${shareUrl}`);
+                break;
+            case 'facebook-share':
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`);
+                break;
+            case 'telegram-share':
+                window.open(`https://t.me/share/url?url=${shareUrl}&text=${shareText}`);
+                break;
+            case 'email-share':
+                window.location.href = `mailto:?subject=${shareTitle}&body=${shareText}%20${shareUrl}`;
+                break;
+            case 'copy-link':
+                navigator.clipboard.writeText(window.location.href)
+                    .then(() => {
+                        const button = e.currentTarget;
+                        const originalText = button.querySelector('span').textContent;
+                        button.querySelector('span').textContent = 'Copied!';
+                        setTimeout(() => {
+                            button.querySelector('span').textContent = originalText;
+                        }, 2000);
+                    });
+                break;
+        }
+    }
 
 
 // Handle tab clicks
