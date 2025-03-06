@@ -178,6 +178,11 @@ function handleFileUpload(e) {
 }
 
 // Toggle share interface visibility
+    function toggleShareInterface(e) {
+        e.stopPropagation();
+        const shareInterface = document.querySelector('.share-interface');
+        shareInterface.classList.toggle('show');
+    }
 
 
 // Handle share button clicks
