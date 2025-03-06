@@ -320,6 +320,9 @@ function removeFile() {
 }
 
 // Save chat history to storage
+    function saveChatHistory() {
+        chrome.storage.local.set({ chatHistory: chatHistory });
+    }
 
 
 // Load chat history from storage
