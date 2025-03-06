@@ -376,6 +376,11 @@ function removeFile() {
 
 
 // Delete conversation from history
+    function deleteConversation(index) {
+        chatHistory.splice(index, 1);
+        saveChatHistory();
+        displayChatHistory();
+    }
 
 
 // Initialize when the content script loads
