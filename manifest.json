@@ -1,0 +1,32 @@
+{
+    "manifest_version": 3,
+    "name": "DocuAid Chatbot",
+    "version": "1.1",
+    "description": "A chatbot extension for any webpage.",
+    "permissions": ["storage", "activeTab", "scripting"],
+    "host_permissions": ["https://generativelanguage.googleapis.com/*"],
+    "action": {
+        "default_icon": {
+            "16": "icon.png",
+            "48": "icon128.png",
+            "128": "icon128.png"
+        }
+    },
+    "icons": {
+        "16": "icon.png",
+        "48": "icon128.png",
+        "128": "icon128.png"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content_script.js"],
+            "css": ["content_styles.css"],
+            "run_at": "document_end"
+        }
+    ],
+    "web_accessible_resources": [{
+        "resources": ["icon128.png"],
+        "matches": ["<all_urls>"]
+    }]
+}
