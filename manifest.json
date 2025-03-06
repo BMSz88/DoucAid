@@ -26,7 +26,7 @@
         }
     ],
     "web_accessible_resources": [{
-        "resources": ["icon128.png"],
+        "resources": ["icon128.png", "123.png"],
         "matches": ["<all_urls>"]
     }]
 }
