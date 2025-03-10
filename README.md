@@ -8,11 +8,19 @@ DocuAid is a web extension designed to provide quick and accurate answers from d
 
 ## Tech Stack
 
+<<<<<<< HEAD
 Frontend: The extension is compatible with all major browsers(Chrome, Firefox ,etc..)and was created using React Js.
 
 Backend: A Server-side program that processes NLP, manages requests, and retrieves information from the Documentation database using Node.js.
 
 Database: An organised database with user interactions , feedback ,and documentation content and User login data and history management
+=======
+Frontend: React.js
+
+Backend: Node.js
+
+Database: User login data and history management
+>>>>>>> 99101d5 (Add README for DocuAid)
 
 Platform: Web Extension
 
@@ -24,12 +32,20 @@ To run the frontend locally, follow these steps:
 1. Clone the repository:
 
 ```bash
+<<<<<<< HEAD
 git clone https://github.com/BMSz88/DoucAid
+=======
+git clone https://github.com/your-repo/docuaid-frontend.git
+>>>>>>> 99101d5 (Add README for DocuAid)
 ```
 2. Navigate to the project directory:
 
 ```bash
+<<<<<<< HEAD
 cd docuaid
+=======
+cd docuaid-frontend
+>>>>>>> 99101d5 (Add README for DocuAid)
 ```
 3. Install dependencies:
 
@@ -49,4 +65,7 @@ www.docuaid.online
 ```
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 99101d5 (Add README for DocuAid)
