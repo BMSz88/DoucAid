@@ -1,5 +1,5 @@
 # Natural Language Processing: Bridging Human Communication and Artificial Intelligence
-
+#New line
 ## Overview
 Natural Language Processing (NLP) represents a critical intersection between linguistics, computer science, and artificial intelligence. This technological domain focuses on enabling machines to understand, interpret, and generate human language.
 
