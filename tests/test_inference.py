@@ -1,5 +1,5 @@
 # tests/test_inference.py
-
+#This file contains the unit tests for the SummaryInference class. The SummaryInference class is responsible for generating summaries using the pre-trained T5 model. The test cases in this file cover the initialization of the inference service, summary generation, batch summarization, and summary quality evaluation.
 import os
 import sys
 import unittest
