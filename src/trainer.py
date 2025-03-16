@@ -1,5 +1,5 @@
 # src/trainer.py
-
+#This file contains the Trainer class that is responsible for training the summarization model. The Trainer class is responsible for preparing the training data, training the model, and logging the training progress. The train method is responsible for training the model using the training data and returning the training metrics. The main function is responsible for initializing the data processor, preparing the training data, initializing the trainer, training the model, and displaying the training results. The main function is the entry point for training the summarization model.
 import os
 import logging
 import yaml
