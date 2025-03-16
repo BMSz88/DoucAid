@@ -1,4 +1,5 @@
 # src/data_processor.py
+#This file contains the DocumentationDataProcessor class that is responsible for loading and preprocessing documentation data for training the summarization model. The DocumentationDataProcessor class is responsible for loading documentation files, preprocessing text data, and preparing training data for the summarization model. The main function demonstrates the data processing capabilities by loading and processing documentation files.
 
 import os
 import json
