@@ -1,5 +1,5 @@
 # tests/test_data_processor.py
-
+#This file contains the unit tests for the DocumentationDataProcessor class. The DocumentationDataProcessor class is responsible for loading and preprocessing documentation data for training the summarization model. The test cases in this file cover the loading of documentation files, text preprocessing, and training data preparation.
 import os
 import sys
 import unittest
