@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuAid</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            width: 300px;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #467DF6, #E54AA0);
+            color: white;
+            padding: 15px;
+            font-weight: 600;
+            text-align: center;
+            border-radius: 0 0 10px 10px;
+            margin-bottom: 15px;
+        }
+
+        .content {
+            padding: 0 15px 15px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: linear-gradient(90deg, #467DF6, #E54AA0);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .footer a {
+            color: #467DF6;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h2>DocuAid</h2>
+    </div>
+    <div class="content">
+        <button id="toggle-chatbot">Toggle Chatbot</button>
+        <button id="extract-page">Extract Current Page</button>
+    </div>
+    <div class="footer">
+        <a href="https://www.docuaid.online" target="_blank">DocuAid V1.0</a>
+    </div>
+    <script src="popup.js"></script>
+</body>
+
+</html>
