@@ -1,0 +1,293 @@
+/* DocuAid Chatbot Styles */
+:root {
+    --docuaid-gradient: linear-gradient(135deg, #4e54c8 0%, #8c55c6 50%, #e65c9c 100%);
+    --docuaid-light-bg: #ffffff;
+    --docuaid-dark-bg: #1a1b1e;
+    --docuaid-light-text: #2c3e50;
+    --docuaid-dark-text: #ecf0f1;
+    --docuaid-border-radius: 16px;
+    --docuaid-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Chatbot Icon */
+.docuaid-chatbot-icon {
+    position: fixed !important;
+    bottom: 24px !important;
+    right: 24px !important;
+    width: 56px !important;
+    height: 56px !important;
+    background: var(--docuaid-gradient) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    box-shadow: var(--docuaid-shadow) !important;
+    z-index: 999999 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.docuaid-chatbot-icon:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+.docuaid-chatbot-icon i {
+    color: white !important;
+    font-size: 24px !important;
+}
+
+/* Chatbot Window */
+.docuaid-chatbot-window {
+    position: fixed !important;
+    bottom: 96px !important;
+    right: 24px !important;
+    width: 380px !important;
+    height: 600px !important;
+    background-color: var(--docuaid-light-bg) !important;
+    border-radius: var(--docuaid-border-radius) !important;
+    overflow: hidden !important;
+    box-shadow: var(--docuaid-shadow) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    z-index: 999998 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    pointer-events: none;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+.docuaid-chatbot-window.active {
+    opacity: 1 !important;
+    transform: translateY(0) scale(1) !important;
+    pointer-events: all !important;
+}
+
+.docuaid-dark-mode .docuaid-chatbot-window {
+    background-color: var(--docuaid-dark-bg) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Chatbot Header */
+.docuaid-chatbot-header {
+    background: var(--docuaid-gradient) !important;
+    color: white !important;
+    padding: 20px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.docuaid-chatbot-title {
+    font-size: 22px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+}
+
+.docuaid-chatbot-controls button {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: none !important;
+    color: white !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    margin-left: 8px !important;
+    transition: all 0.2s !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.docuaid-chatbot-controls button:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Chatbot Messages */
+.docuaid-chatbot-messages {
+    flex: 1 !important;
+    padding: 24px !important;
+    overflow-y: auto !important;
+    background-color: var(--docuaid-light-bg) !important;
+}
+
+.docuaid-dark-mode .docuaid-chatbot-messages {
+    background-color: var(--docuaid-dark-bg) !important;
+}
+
+.docuaid-message {
+    margin-bottom: 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    animation: messageSlideIn 0.3s ease-out !important;
+}
+
+@keyframes messageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.docuaid-bot-message {
+    align-items: flex-start !important;
+}
+
+.docuaid-user-message {
+    align-items: flex-end !important;
+}
+
+.docuaid-message-content {
+    max-width: 85% !important;
+    padding: 12px 18px !important;
+    border-radius: 16px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+}
+
+.docuaid-bot-message .docuaid-message-content {
+    background-color: #f8f9fa !important;
+    color: var(--docuaid-light-text) !important;
+    border-bottom-left-radius: 4px !important;
+}
+
+.docuaid-dark-mode .docuaid-bot-message .docuaid-message-content {
+    background-color: #2a2b2f !important;
+    color: var(--docuaid-dark-text) !important;
+}
+
+.docuaid-user-message .docuaid-message-content {
+    background: var(--docuaid-gradient) !important;
+    color: white !important;
+    border-bottom-right-radius: 4px !important;
+}
+
+/* User Input */
+.docuaid-user-input-container {
+    padding: 16px 24px !important;
+    background-color: var(--docuaid-light-bg) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.docuaid-dark-mode .docuaid-user-input-container {
+    background-color: var(--docuaid-dark-bg) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+#docuaid-user-input {
+    flex: 1 !important;
+    padding: 12px 18px !important;
+    border: 2px solid rgba(0, 0, 0, 0.08) !important;
+    border-radius: 12px !important;
+    outline: none !important;
+    font-size: 15px !important;
+    transition: all 0.2s !important;
+    background-color: #f8f9fa !important;
+}
+
+.docuaid-dark-mode #docuaid-user-input {
+    background-color: #2a2b2f !important;
+    color: var(--docuaid-dark-text) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+#docuaid-user-input:focus {
+    border-color: #4e54c8 !important;
+    background-color: white !important;
+    box-shadow: 0 2px 8px rgba(78, 84, 200, 0.1) !important;
+}
+
+.docuaid-dark-mode #docuaid-user-input:focus {
+    border-color: #8c55c6 !important;
+    background-color: #2a2b2f !important;
+}
+
+.docuaid-send-button {
+    background: var(--docuaid-gradient) !important;
+    color: white !important;
+    border: none !important;
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 12px !important;
+    margin-left: 12px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s !important;
+    box-shadow: 0 2px 8px rgba(78, 84, 200, 0.2) !important;
+}
+
+.docuaid-send-button:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(78, 84, 200, 0.3) !important;
+}
+
+/* Chatbot Footer */
+.docuaid-chatbot-footer {
+    padding: 12px 24px !important;
+    background-color: var(--docuaid-light-bg) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.docuaid-dark-mode .docuaid-chatbot-footer {
+    background-color: var(--docuaid-dark-bg) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.docuaid-action-button {
+    background: none !important;
+    border: none !important;
+    color: #6c757d !important;
+    padding: 8px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    margin-right: 12px !important;
+    transition: all 0.2s !important;
+}
+
+.docuaid-action-button:hover {
+    background-color: rgba(78, 84, 200, 0.1) !important;
+    color: #4e54c8 !important;
+}
+
+.docuaid-version {
+    margin-left: auto !important;
+    font-size: 13px !important;
+    color: #6c757d !important;
+    font-weight: 500 !important;
+}
+
+.docuaid-dark-mode .docuaid-version {
+    color: #a0a0a0 !important;
+}
+
+/* For small screens */
+@media (max-width: 480px) {
+    .docuaid-chatbot-window {
+        width: 100% !important;
+        height: 100% !important;
+        right: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        border-radius: 0 !important;
+    }
+
+    .docuaid-chatbot-icon {
+        bottom: 16px !important;
+        right: 16px !important;
+    }
+}

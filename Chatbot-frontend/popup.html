@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuAid</title>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            width: 250px;
+            padding: 15px;
+            margin: 0;
+            background: linear-gradient(45deg, #467DF6, #E54AA0);
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        h1 {
+            font-size: 18px;
+            margin: 0;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .logo img {
+            width: 48px;
+            height: 48px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .status {
+            font-size: 12px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .footer {
+            font-size: 11px;
+            text-align: center;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="images/icon48.png" alt="DocuAid Logo">
+        </div>
+        <h1>DocuAid Assistant</h1>
+
+        <div class="buttons">
+            <button id="toggleBtn">Open DocuAid</button>
+            <button id="reloadBtn">Reload Extension</button>
+        </div>
+
+        <div class="status">
+            Status: Ready to assist
+        </div>
+
+        <div class="footer">
+            DocuAid v1.0 - Powered by AI
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

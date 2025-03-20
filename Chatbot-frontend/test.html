@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuAid Chatbot Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2a52be;
+            text-align: center;
+        }
+
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: linear-gradient(to right, #4776E6, #8E54E9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            min-height: 50px;
+            white-space: pre-wrap;
+        }
+
+        .error {
+            color: #d9534f;
+            background-color: #f2dede;
+            border: 1px solid #ebccd1;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .debug-info {
+            font-family: monospace;
+            font-size: 12px;
+            margin-top: 10px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            position: relative;
+        }
+
+        .loading:after {
+            content: "...";
+            animation: loading-dots 1.5s infinite;
+            display: inline-block;
+            width: 20px;
+            text-align: left;
+        }
+
+        @keyframes loading-dots {
+
+            0%,
+            20% {
+                content: ".";
+            }
+
+            40% {
+                content: "..";
+            }
+
+            60%,
+            100% {
+                content: "...";
+            }
+        }
+
+        .success-message {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #dff0d8;
+            border: 1px solid #d6e9c6;
+            color: #3c763d;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .content-preview {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>DocuAid Chatbot Test</h1>
+
+        <div class="test-section">
+            <h2>Health Check</h2>
+            <button id="health-check-btn">Check API Health</button>
+            <div id="health-result" class="result"></div>
+            <div id="health-debug" class="debug-info"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Chat Test</h2>
+            <label for="question">Ask a question:</label>
+            <input type="text" id="question" placeholder="What is the capital of France?">
+            <button id="send-btn">Send Message</button>
+            <div id="chat-result" class="result"></div>
+            <div id="chat-debug" class="debug-info"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Web Extraction Test</h2>
+            <label for="url">URL to extract:</label>
+            <input type="text" id="url" placeholder="https://en.wikipedia.org/wiki/Artificial_intelligence">
+            <button id="extract-btn">Extract Content</button>
+            <div id="extract-result" class="result"></div>
+            <div id="extract-debug" class="debug-info"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3001';
+        let extractedContent = null;
+
+        // Debug info function
+        function logDebug(id, message, data) {
+            const debugElement = document.getElementById(id);
+            const timestamp = new Date().toISOString();
+            let debugMsg = `[${timestamp}] ${message}`;
+
+            if (data) {
+                debugMsg += `\n${JSON.stringify(data, null, 2)}`;
+            }
+
+            debugElement.textContent = debugMsg;
+            console.log(message, data);
+        }
+
+        // Health check
+        document.getElementById('health-check-btn').addEventListener('click', async () => {
+            const resultElement = document.getElementById('health-result');
+
+            try {
+                logDebug('health-debug', 'Sending health check request...');
+
+                const response = await fetch(`${API_URL}/health`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                    mode: 'cors',
+                    credentials: 'include'
+                });
+
+                logDebug('health-debug', 'Got response:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: Object.fromEntries([...response.headers])
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                resultElement.textContent = JSON.stringify(data, null, 2);
+                resultElement.classList.remove('error');
+            } catch (error) {
+                console.error('Health check failed:', error);
+                resultElement.textContent = `Error: ${error.message}`;
+                resultElement.classList.add('error');
+                logDebug('health-debug', 'Health check failed:', { error: error.toString() });
+            }
+        });
+
+        // Chat test
+        document.getElementById('send-btn').addEventListener('click', async () => {
+            const questionInput = document.getElementById('question');
+            const resultElement = document.getElementById('chat-result');
+            const question = questionInput.value.trim();
+
+            if (!question) {
+                resultElement.textContent = 'Please enter a question';
+                resultElement.classList.add('error');
+                return;
+            }
+
+            try {
+                logDebug('chat-debug', 'Sending chat request...', { question });
+
+                // Prepare request body with context if we have extracted content
+                const requestData = { question };
+                if (extractedContent) {
+                    requestData.context = {
+                        type: 'webpage',
+                        title: extractedContent.title,
+                        content: extractedContent.content,
+                        url: extractedContent.url
+                    };
+                    logDebug('chat-debug', 'Including extracted content as context',
+                        { title: extractedContent.title, contentLength: extractedContent.content.length });
+                }
+
+                const response = await fetch(`${API_URL}/api/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    mode: 'cors',
+                    credentials: 'include',
+                    body: JSON.stringify(requestData)
+                });
+
+                logDebug('chat-debug', 'Got response:', {
+                    status: response.status,
+                    statusText: response.statusText
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Handle the response based on the available fields
+                let answerText = '';
+                if (data.answer) {
+                    answerText = data.answer;
+                } else if (data.response) {
+                    answerText = data.response;
+                } else {
+                    answerText = JSON.stringify(data, null, 2);
+                }
+
+                resultElement.textContent = answerText;
+                resultElement.classList.remove('error');
+
+                // Log metadata if available
+                if (data.metadata) {
+                    logDebug('chat-debug', 'Response metadata:', data.metadata);
+                }
+            } catch (error) {
+                console.error('Chat request failed:', error);
+                resultElement.textContent = `Error: ${error.message}`;
+                resultElement.classList.add('error');
+                logDebug('chat-debug', 'Chat request failed:', { error: error.toString() });
+            }
+        });
+
+        // Web extraction test
+        document.getElementById('extract-btn').addEventListener('click', async () => {
+            const urlInput = document.getElementById('url');
+            const resultElement = document.getElementById('extract-result');
+            const url = urlInput.value.trim();
+
+            if (!url) {
+                resultElement.textContent = 'Please enter a URL';
+                resultElement.classList.add('error');
+                return;
+            }
+
+            try {
+                logDebug('extract-debug', 'Sending extraction request...', { url });
+
+                // Show loading state
+                resultElement.innerHTML = '<div class="loading">Extracting content... Please wait.</div>';
+
+                const response = await fetch(`${API_URL}/api/extract`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    mode: 'cors',
+                    credentials: 'include',
+                    body: JSON.stringify({ url })
+                });
+
+                logDebug('extract-debug', 'Got response:', {
+                    status: response.status,
+                    statusText: response.statusText
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Store the extracted content for chat use
+                extractedContent = data;
+
+                // Calculate content size in KB for logging
+                const contentSize = Math.round((data.content ? data.content.length : 0) / 1024 * 10) / 10;
+                logDebug('extract-debug', 'Content extracted and stored for chat',
+                    { title: data.title, contentSize: contentSize + 'KB' });
+
+                // Display only the first 500 characters of content to avoid overloading the UI
+                if (data.content && data.content.length > 500) {
+                    data.content = data.content.substring(0, 500) + '... (content truncated for display)';
+                }
+
+                resultElement.innerHTML = `
+                    <h3>${data.title || 'Untitled'}</h3>
+                    <p><strong>Source:</strong> ${data.url}</p>
+                    <p><strong>Extraction Method:</strong> ${data.extraction_method || 'Unknown'}</p>
+                    <p><strong>Content Size:</strong> ${contentSize}KB</p>
+                    <div class="content-preview">${data.content || 'No content extracted'}</div>
+                    <div class="success-message">Content extracted successfully! You can now ask questions about this page.</div>
+                `;
+                resultElement.classList.remove('error');
+            } catch (error) {
+                console.error('Extraction request failed:', error);
+                resultElement.textContent = `Error: ${error.message}`;
+                resultElement.classList.add('error');
+                logDebug('extract-debug', 'Extraction request failed:', { error: error.toString() });
+            }
+        });
+
+        // Add event listeners for Enter key in input fields
+        document.getElementById('question').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('send-btn').click();
+            }
+        });
+
+        document.getElementById('url').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('extract-btn').click();
+            }
+        });
+    </script>
+</body>
+
+</html>

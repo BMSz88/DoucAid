@@ -1,0 +1,27 @@
+{
+    "name": "chatbot-backend",
+    "version": "1.0.0",
+    "description": "Backend for the chatbot with web content extraction capabilities",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "node src/index.js",
+        "dev": "nodemon src/index.js",
+        "test:pinecone": "node src/tests/pinecone.test.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "cors": "^2.8.5",
+        "dotenv": "^16.3.1",
+        "mongoose": "^8.0.3",
+        "openai": "^4.24.1",
+        "cheerio": "^1.0.0-rc.12",
+        "axios": "^1.6.2",
+        "@mozilla/readability": "^0.4.4",
+        "jsdom": "^22.1.0",
+        "langchain": "^0.0.200",
+        "@pinecone-database/pinecone": "^1.1.2"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.2"
+    }
+}
