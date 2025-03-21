@@ -95,7 +95,7 @@ jobs:
           npm ci
           echo "Using Railway CLI version:"
           railway --version
-          CI=true railway up
+          CI=true railway up --service chatbot-backend
       
       - name: Verify Deployment
         run: |
