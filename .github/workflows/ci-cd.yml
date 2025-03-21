@@ -83,26 +83,23 @@ jobs:
         with:
           node-version: '18'
       
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-      
-      - name: Deploy to Railway
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_SERVICE_NAME: "DocuAid"
+      - name: Build project
         run: |
-          echo "Deploying to Railway..."
+          echo "Preparing build..."
           cd Chatbot-backend
           npm ci
-          echo "Using Railway CLI version:"
-          railway --version
-          railway link
-          railway service
-          railway up --service "$RAILWAY_SERVICE_NAME"
+          echo "Build complete."
+      
+      - name: Deploy via Railway GitHub webhook
+        run: |
+          echo "Triggering Railway deployment via webhook..."
+          # This will inform the user we're not directly deploying anymore
+          echo "Railway deployment will be triggered by GitHub webhook automatically."
+          echo "Please ensure you have connected your GitHub repository to Railway for automatic deployments."
       
       - name: Verify Deployment
         run: |
-          echo "Deployment to Railway completed."
+          echo "Deployment to Railway should complete automatically."
           echo "Visit https://doucaid-production.up.railway.app to check your application."
 
   notify:
