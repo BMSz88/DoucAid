@@ -17,6 +17,7 @@ const apiConfig = {
             window.location.hostname === '127.0.0.1';
 
         // Use Railway URL by default, fallback to local only for development
+        // Note: Railway automatically handles the port, so we don't need to specify it
         return isLocalDev ? 'http://localhost:3001' : 'https://doucaid-production.up.railway.app';
     },
 
@@ -25,7 +26,7 @@ const apiConfig = {
         console.error('[DocuAid] API Error:', error);
 
         // Check for specific error types
-        if (error.name === 'PineconeError') {
+        if (error.name === 'PineconeError' || error.message && error.message.includes('Pinecone')) {
             console.warn('[DocuAid] Pinecone error - continuing without vector store');
             return {
                 success: false,
@@ -35,7 +36,8 @@ const apiConfig = {
         }
 
         if (error.message && (error.message.includes('Failed to fetch') ||
-            error.message.includes('NetworkError'))) {
+            error.message.includes('NetworkError') ||
+            error.message.includes('Failed to connect'))) {
             return {
                 success: false,
                 error: 'Network error: Could not connect to the API service. Please check your connection.',

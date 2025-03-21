@@ -9,11 +9,12 @@ const { parseQuestion, shouldProcessQuestion, getErrorMessage } = require('./ser
 const { createContentIndex, generateAgenticResponse } = require('./services/agenticAI');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+// Use Railway's PORT environment variable with multiple fallbacks
+const PORT = process.env.PORT || process.env.RAILWAY_PORT || 3001;
 
 // Enhanced CORS configuration
 const corsOptions = {
-    origin: true, // Allow any origin
+    origin: '*', // Allow any origin for Railway deployment
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
     credentials: true,
@@ -123,11 +124,14 @@ app.post('/api/extract', async (req, res) => {
 
 app.post('/api/chat', async (req, res) => {
     try {
-        let { question, context } = req.body;
-        console.log(`Received question: ${question}`);
+        // Extract either message or question from request to support both formats
+        const userInput = req.body.question || req.body.message;
+        const { context } = req.body;
+
+        console.log(`Received question: ${userInput}`);
         console.log(`Context provided: ${context ? 'Yes' : 'No'}`);
 
-        if (!question) {
+        if (!userInput) {
             return res.status(400).json({
                 error: 'Question is required',
                 message: 'Please provide a question to process'
@@ -135,7 +139,7 @@ app.post('/api/chat', async (req, res) => {
         }
 
         // Parse and correct the question if needed
-        const parsedQuestion = await parseQuestion(question);
+        const parsedQuestion = await parseQuestion(userInput);
         console.log(`Question parsed: ${parsedQuestion.parsedQuestion}`);
         console.log(`Corrected: ${parsedQuestion.corrected}`);
 
@@ -150,17 +154,16 @@ app.post('/api/chat', async (req, res) => {
         }
 
         // Use the corrected question if available
-        if (parsedQuestion.corrected) {
-            question = parsedQuestion.parsedQuestion;
-        }
+        const question = parsedQuestion.corrected ? parsedQuestion.parsedQuestion : userInput;
 
         // Generate response using Agentic AI
         console.log(`Generating response for: ${question}`);
         try {
             // Create proper context object from extracted content if available
-            if (!context && req.app.locals.lastExtractedContent) {
+            let contextData = context;
+            if (!contextData && req.app.locals.lastExtractedContent) {
                 console.log('Using last extracted content as context');
-                context = {
+                contextData = {
                     type: 'webpage',
                     title: req.app.locals.lastExtractedContent.title,
                     content: req.app.locals.lastExtractedContent.content,
@@ -168,7 +171,7 @@ app.post('/api/chat', async (req, res) => {
                 };
             }
 
-            const result = await generateAgenticResponse(question, context);
+            const result = await generateAgenticResponse(question, contextData);
             console.log(`Response generated successfully. Strategy: ${result.metadata?.strategy}`);
 
             // Add question parsing metadata to the response
@@ -223,7 +226,18 @@ app.get('/health', (req, res) => {
     });
 });
 
+// Root endpoint for Railway health check
+app.get('/', (req, res) => {
+    res.json({
+        status: 'OK',
+        message: 'DocuAid API is running',
+        timestamp: new Date().toISOString()
+    });
+});
+
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
+    console.log(`OpenAI API Key loaded from env: ${process.env.OPENAI_API_KEY ? 'Yes (length: ' + process.env.OPENAI_API_KEY.length + ')' : 'No'}`);
+    console.log(`Using OpenAI API Key: ${process.env.OPENAI_API_KEY ? 'Yes' : 'No'}`);
 }); 
