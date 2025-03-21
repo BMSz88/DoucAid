@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuAid Chatbot Test Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        .test-buttons {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .test-button {
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #467DF6, #E54AA0);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: opacity 0.2s;
+        }
+
+        .test-button:hover {
+            opacity: 0.9;
+        }
+
+        .debug-panel {
+            margin-top: 20px;
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        h3 {
+            margin-top: 30px;
+            color: #555;
+        }
+
+        .article {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #467DF6;
+        }
+
+        .article h2 {
+            color: #333;
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>DocuAid Chatbot Test Page</h1>
+
+        <p>This is a test page for the DocuAid chatbot. You should see a chat bubble in the bottom right corner of this
+            page. Click on it to open the chatbot.</p>
+
+        <p>The chatbot should allow you to:</p>
+        <ul>
+            <li>Send messages and receive responses</li>
+            <li>Extract content from this page</li>
+            <li>Toggle between light and dark mode</li>
+            <li>Clear the chat history</li>
+        </ul>
+
+        <p>If the chatbot doesn't appear or doesn't work correctly, use the debug tools below.</p>
+
+        <div class="test-buttons">
+            <button class="test-button" id="toggle-test">Toggle Chatbot</button>
+            <button class="test-button" id="check-elements">Check UI Elements</button>
+            <button class="test-button" id="fix-emergency">Emergency Fix</button>
+        </div>
+
+        <div class="debug-panel" id="debug-output">Debug output will appear here...</div>
+
+        <div class="article">
+            <h2>Sri Lanka</h2>
+            <p>Sri Lanka, historically known as Ceylon, and officially the Democratic Socialist Republic of Sri Lanka,
+                is an island country in South Asia. It lies in the Indian Ocean, southwest of the Bay of Bengal,
+                separated from the Indian peninsula by the Gulf of Mannar and the Palk Strait. It shares a maritime
+                border with the Maldives in the southwest and India in the northwest. Sri Jayawardenepura Kotte is the
+                legislative capital of Sri Lanka and the largest city, Colombo is the administrative and judicial
+                capital which is the nation's political, financial and cultural centre. Kandy is the second-largest
+                urban area and also the capital of the last native kingdom of Sri Lanka. The most spoken language
+                Sinhala, is spoken by the majority of the population (approximately 17 million). Tamil is also spoken by
+                approximately five million people, making it the second most-spoken language in Sri Lanka.</p>
+
+            <p>Sri Lanka has a population of approximately 22 million and is home to several cultures, languages and
+                ethnicities. The Sinhalese people form the majority of the population, followed by the Sri Lankan
+                Tamils, who are the largest minority group and are concentrated in northern Sri Lanka; both groups have
+                played an influential role in the island's history. Other long-established groups include the Moors,
+                Indian Tamils, Burghers, Malays, Chinese, and Vedda.</p>
+
+            <p>Sri Lanka's documented history goes back 3,000 years, with evidence of prehistoric human settlements
+                dating back 125,000 years. The earliest known Buddhist writings of Sri Lanka, known collectively as the
+                Pali Canon, date to the fourth Buddhist council, which took place in 29 BCE. Also called the Pearl of
+                the Indian Ocean, or the Granary of the East, Sri Lanka's geographic location and deep harbours have
+                made it of great strategic importance, from the earliest days of the ancient Silk Road trade route to
+                today's so-called maritime Silk Road. Because its location made it a major trading hub, it was already
+                known to both East Asians and Europeans as long ago as the Anuradhapura period. During a period of great
+                political crisis in the Kingdom of Kotte, the Portuguese arrived in Sri Lanka and sought to control its
+                maritime trade, with a part of Sri Lanka subsequently becoming a Portuguese possession. After the
+                Sinhalese–Portuguese War, the Dutch colonial empire and the Kingdom of Kandy took control of those
+                areas. Dutch Ceylon was taken by the British Empire, which extended control over the whole island,
+                colonising it as British Ceylon from 1815 to 1948. A national movement for political independence arose
+                in the early 20th century, and in 1948, Ceylon became a dominion. It was succeeded by the republic of
+                Sri Lanka in 1972. Sri Lanka's more recent history was marred by the 26-year Sri Lankan Civil War, which
+                began in 1983 and ended in 2009, when the Sri Lanka Armed Forces defeated the Liberation Tigers of Tamil
+                Eelam.</p>
+
+            <p>Sri Lanka is a developing country, ranking 78th on the Human Development Index. It is the highest-ranked
+                South Asian nation in terms of development and has the second-highest per capita income in South Asia.
+                The country has had a long history of engagement with modern international groups; it is a founding
+                member of the SAARC, the G77 and the Non-Aligned Movement, as well as a member of the United Nations and
+                the Commonwealth of Nations.</p>
+        </div>
+    </div>
+
+    <!-- Load configuration -->
+    <script src="config.js"></script>
+
+    <!-- Load chatbot script -->
+    <script src="script.js"></script>
+
+    <!-- Debug functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Debug output area
+            const debugOutput = document.getElementById('debug-output');
+
+            // Debug button handlers
+            document.getElementById('toggle-test').addEventListener('click', function () {
+                if (window.docuaidDebug && window.docuaidDebug.toggleChatbot) {
+                    const result = window.docuaidDebug.toggleChatbot();
+                    debugOutput.textContent = 'Toggled chatbot. Active: ' + result;
+                } else {
+                    debugOutput.textContent = 'Error: docuaidDebug.toggleChatbot not available';
+                }
+            });
+
+            document.getElementById('check-elements').addEventListener('click', function () {
+                if (window.docuaidDebug && window.docuaidDebug.checkElements) {
+                    const elements = window.docuaidDebug.checkElements();
+                    debugOutput.textContent = 'UI Elements:\n' + JSON.stringify(elements, null, 2);
+                } else {
+                    debugOutput.textContent = 'Error: docuaidDebug.checkElements not available';
+                }
+            });
+
+            document.getElementById('fix-emergency').addEventListener('click', function () {
+                if (window.docuaidDebug && window.docuaidDebug.fixEmergency) {
+                    window.docuaidDebug.fixEmergency();
+                    debugOutput.textContent = 'Emergency fix applied to chatbot UI';
+                } else {
+                    debugOutput.textContent = 'Error: docuaidDebug.fixEmergency not available';
+                }
+            });
+
+            // Initial debug output
+            setTimeout(function () {
+                try {
+                    debugOutput.textContent = 'Chatbot initialized status:\nAPI URL: ' +
+                        apiConfig.API_URL +
+                        '\nElements loaded: ' +
+                        (document.querySelector('#docuaid-extension') ? 'Yes' : 'No');
+                } catch (e) {
+                    debugOutput.textContent = 'Error checking status: ' + e.message;
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>

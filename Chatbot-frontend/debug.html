@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuAid Chatbot Debug Mode</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .debug-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background-color: #6c63ff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background-color: #5a52d5;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-online {
+            background-color: #4caf50;
+        }
+
+        .status-offline {
+            background-color: #f44336;
+        }
+
+        .backend-response {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>DocuAid Chatbot Debug Mode</h1>
+
+    <div class="debug-section">
+        <p>This is a debugging page for the DocuAid chatbot. You should see a chat icon in the bottom right corner of
+            the screen.</p>
+
+        <div>
+            <span class="status-indicator" id="online-indicator"></span>
+            <span id="online-status">Checking online status...</span>
+        </div>
+        <div>
+            <span class="status-indicator" id="backend-indicator"></span>
+            <span id="backend-status">Checking backend...</span>
+        </div>
+    </div>
+
+    <div class="debug-section">
+        <h2>Debug Controls</h2>
+        <div>
+            <button id="test-connection">Test Connection</button>
+            <button id="check-visibility">Check Visibility</button>
+            <button id="toggle-chatbot">Toggle Chatbot</button>
+            <button id="clear-logs">Clear Logs</button>
+        </div>
+    </div>
+
+    <div class="debug-section">
+        <h2>Debug Information</h2>
+        <pre id="debug-logs">Debug logs will appear here...</pre>
+    </div>
+
+    <!-- Chatbot Container -->
+    <div id="docuaid-extension">
+        <div class="chatbot-icon" id="chatbot-icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="white">
+                <path
+                    d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z" />
+                <path d="M7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z" />
+            </svg>
+        </div>
+
+        <div class="chatbot-container" id="chatbot-container">
+            <div class="chatbot-header">
+                <div class="chatbot-title">DocuAid</div>
+                <div class="chatbot-controls">
+                    <button id="close-button">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                            <path
+                                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="message system-message">
+                    <div class="message-content">
+                        Welcome to DocuAid!<br>
+                        How can I help you with your documentation today?
+                    </div>
+                </div>
+            </div>
+
+            <div class="user-input-container">
+                <textarea id="user-input" placeholder="Type your message here..."></textarea>
+                <button class="send-button" id="send-button">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="chatbot-footer">
+                <button class="action-button clear-button">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                        <path
+                            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+                    </svg>
+                </button>
+                <button class="action-button theme-button">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                        <path
+                            d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z" />
+                    </svg>
+                </button>
+                <button class="action-button extract-button">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+                    </svg>
+                </button>
+                <div class="version">DocuAid V1.0</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+    <script src="debug.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const debugLogs = document.getElementById('debug-logs');
+            const testConnectionBtn = document.getElementById('test-connection');
+            const checkVisibilityBtn = document.getElementById('check-visibility');
+            const toggleChatbotBtn = document.getElementById('toggle-chatbot');
+            const clearLogsBtn = document.getElementById('clear-logs');
+            const onlineIndicator = document.getElementById('online-indicator');
+            const onlineStatus = document.getElementById('online-status');
+            const backendIndicator = document.getElementById('backend-indicator');
+            const backendStatus = document.getElementById('backend-status');
+
+            // Log debug info
+            function addLog(message) {
+                const now = new Date();
+                const timestamp = `[${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}]`;
+                debugLogs.textContent += `${timestamp} ${message}\n`;
+                debugLogs.scrollTop = debugLogs.scrollHeight;
+            }
+
+            // Check online status
+            if (navigator.onLine) {
+                onlineIndicator.className = 'status-indicator status-online';
+                onlineStatus.textContent = 'Online';
+                addLog('Connected to the internet');
+            } else {
+                onlineIndicator.className = 'status-indicator status-offline';
+                onlineStatus.textContent = 'Offline';
+                addLog('WARNING: No internet connection');
+            }
+
+            // Test backend connection
+            async function testBackendConnection() {
+                try {
+                    addLog('Testing connection to backend API...');
+
+                    const apiUrl = config.API_URL || 'https://doucaid-production.up.railway.app';
+                    const healthEndpoint = config.ENDPOINTS?.HEALTH || '/health';
+                    const url = `${apiUrl}${healthEndpoint}`;
+
+                    addLog(`Sending request to: ${url}`);
+
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' },
+                        mode: 'cors'
+                    });
+
+                    if (response.ok) {
+                        backendIndicator.className = 'status-indicator status-online';
+                        backendStatus.textContent = `Backend is online (${apiUrl})`;
+                        addLog(`Backend API is online (Status: ${response.status})`);
+                    } else {
+                        backendIndicator.className = 'status-indicator status-offline';
+                        backendStatus.textContent = `Backend error: ${response.status}`;
+                        addLog(`Backend API error: ${response.status} ${response.statusText}`);
+                    }
+
+                    return response;
+                } catch (error) {
+                    backendIndicator.className = 'status-indicator status-offline';
+                    backendStatus.textContent = 'Backend connection failed';
+                    addLog(`Backend connection error: ${error.message}`);
+                }
+            }
+
+            // Check element visibility
+            function checkElementVisibility() {
+                const chatbotIcon = document.getElementById('chatbot-icon');
+                const chatbotContainer = document.getElementById('chatbot-container');
+
+                addLog('Checking UI element visibility:');
+
+                if (chatbotIcon) {
+                    const iconStyles = window.getComputedStyle(chatbotIcon);
+                    addLog(`- Icon: visibility=${iconStyles.visibility}, display=${iconStyles.display}, z-index=${iconStyles.zIndex}`);
+                } else {
+                    addLog('- Icon: NOT FOUND');
+                }
+
+                if (chatbotContainer) {
+                    const containerStyles = window.getComputedStyle(chatbotContainer);
+                    addLog(`- Container: visibility=${containerStyles.visibility}, display=${containerStyles.display}, z-index=${containerStyles.zIndex}`);
+                    addLog(`- Container active? ${chatbotContainer.classList.contains('active')}`);
+                } else {
+                    addLog('- Container: NOT FOUND');
+                }
+
+                // Count instances
+                const allIcons = document.querySelectorAll('[id="chatbot-icon"]');
+                const allContainers = document.querySelectorAll('[id="chatbot-container"]');
+
+                if (allIcons.length > 1 || allContainers.length > 1) {
+                    addLog(`WARNING: Found multiple instances (${allIcons.length} icons, ${allContainers.length} containers)`);
+                }
+            }
+
+            // Toggle chatbot visibility
+            function toggleChatbot() {
+                const chatbotContainer = document.getElementById('chatbot-container');
+
+                if (chatbotContainer) {
+                    if (chatbotContainer.classList.contains('active')) {
+                        chatbotContainer.classList.remove('active');
+                        addLog('Chatbot container hidden');
+                    } else {
+                        chatbotContainer.classList.add('active');
+                        addLog('Chatbot container shown');
+                    }
+                } else {
+                    addLog('ERROR: Cannot find chatbot container element');
+                }
+            }
+
+            // Event listeners
+            testConnectionBtn.addEventListener('click', testBackendConnection);
+            checkVisibilityBtn.addEventListener('click', checkElementVisibility);
+            toggleChatbotBtn.addEventListener('click', toggleChatbot);
+            clearLogsBtn.addEventListener('click', function () {
+                debugLogs.textContent = '';
+                addLog('Logs cleared');
+            });
+
+            // Initial checks
+            testBackendConnection();
+
+            // Log browser info
+            addLog(`Browser: ${navigator.userAgent}`);
+
+            setTimeout(checkElementVisibility, 1000);
+        });
+    </script>
+</body>
+
+</html>
