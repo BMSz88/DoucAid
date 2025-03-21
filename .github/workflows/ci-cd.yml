@@ -84,6 +84,7 @@ jobs:
       - name: Deploy to Railway
         run: |
           echo "Deploying to Railway..."
+          railway link --token "$RAILWAY_TOKEN"
           railway up --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
