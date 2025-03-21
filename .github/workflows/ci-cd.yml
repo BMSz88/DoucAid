@@ -85,8 +85,9 @@ jobs:
       - name: Deploy to Railway
         run: |
           echo "Deploying to Railway..."
-          cd Chatbot-backend
-          railway up --service chatbot-backend
+          ls -la
+          railway link --project DocuAid
+          railway up --service DocuAid
       
       - name: Verify Deployment
         run: |
