@@ -93,7 +93,9 @@ jobs:
           echo "Deploying to Railway..."
           cd Chatbot-backend
           npm ci
-          RAILWAY_STATIC_BUILDPACK=1 railway up
+          echo "Using Railway CLI version:"
+          railway --version
+          CI=true railway up
       
       - name: Verify Deployment
         run: |
