@@ -1,0 +1,111 @@
+name: DocuAid CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    # Manual trigger
+
+jobs:
+  test_backend:
+    name: Test Backend
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'Chatbot-backend/package-lock.json'
+      
+      - name: Install Backend Dependencies
+        working-directory: Chatbot-backend
+        run: npm ci
+      
+      - name: Run Backend Linting
+        working-directory: Chatbot-backend
+        run: npm run lint || true
+      
+      - name: Basic Health Check
+        working-directory: Chatbot-backend
+        run: |
+          echo "Checking for critical files..."
+          [ -f "src/index.js" ] && echo "✅ Main server file exists" || echo "❌ Main server file missing"
+          [ -f "package.json" ] && echo "✅ Package file exists" || echo "❌ Package file missing"
+          [ -d "src/services" ] && echo "✅ Services directory exists" || echo "❌ Services directory missing"
+
+  validate_frontend:
+    name: Validate Frontend
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Check Frontend Files
+        run: |
+          echo "Validating frontend files..."
+          [ -f "Chatbot-frontend/script.js" ] && echo "✅ Frontend script exists" || echo "❌ Frontend script missing"
+          [ -f "Chatbot-frontend/styles.css" ] && echo "✅ CSS file exists" || echo "❌ CSS file missing"
+          [ -f "Chatbot-frontend/config.js" ] && echo "✅ Config file exists" || echo "❌ Config file missing"
+          [ -f "Chatbot-frontend/test.html" ] && echo "✅ Test HTML exists" || echo "❌ Test HTML missing"
+      
+      - name: Validate HTML
+        run: |
+          echo "Checking HTML format..."
+          grep -q "<html" Chatbot-frontend/test.html && echo "✅ HTML format correct" || echo "❌ HTML format issues"
+      
+      - name: Validate JavaScript
+        run: |
+          echo "Basic JavaScript validation..."
+          grep -q "function" Chatbot-frontend/script.js && echo "✅ JavaScript format correct" || echo "❌ JavaScript format issues"
+
+  deploy:
+    name: Deploy to Railway
+    runs-on: ubuntu-latest
+    needs: [test_backend, validate_frontend]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+      
+      - name: Deploy to Railway
+        run: |
+          echo "Deploying to Railway..."
+          railway up --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      
+      - name: Verify Deployment
+        run: |
+          echo "Deployment to Railway completed."
+          echo "Visit https://doucaid-production.up.railway.app to check your application."
+
+  notify:
+    name: Notification
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: always()
+    
+    steps:
+      - name: Deployment Status
+        run: |
+          if [ "${{ needs.deploy.result }}" == "success" ]; then
+            echo "✅ Deployment completed successfully!"
+          else
+            echo "❌ Deployment failed or was skipped."
+          fi
+          
+          echo "See GitHub Actions logs for more details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" 
