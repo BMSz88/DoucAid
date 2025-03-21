@@ -279,15 +279,14 @@ function sendMessage() {
 
     console.log('[DocuAid] Sending message to:', `${apiUrl}${apiConfig.CHAT_ENDPOINT}`);
 
-    // Create the request body with both 'question' and 'message' parameters to ensure compatibility
+    // Create the request body with the question parameter
     const requestBody = {
-        question: userMessage,
-        message: userMessage
+        question: userMessage
     };
 
     console.log('[DocuAid] Request body:', JSON.stringify(requestBody));
 
-    // Send message to API with both parameters
+    // Send message to API
     fetch(`${apiUrl}${apiConfig.CHAT_ENDPOINT}`, {
         method: 'POST',
         headers: {
@@ -305,16 +304,24 @@ function sendMessage() {
             // Remove typing indicator
             removeTypingIndicator(typingIndicator);
 
+            if (!data || (!data.answer && !data.response)) {
+                throw new Error('Invalid response format');
+            }
+
             // Add bot response to chat
-            addMessage('bot', data.answer || data.response || 'I received your message.');
+            const botResponse = data.answer || data.response;
+            addMessage('bot', botResponse);
         })
         .catch(error => {
             console.error('[DocuAid] Error:', error);
             removeTypingIndicator(typingIndicator);
 
             let errorMessage = 'Sorry, I encountered an error while processing your request. Please try again later.';
+
             if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
                 errorMessage = 'Sorry, I could not connect to the server. Please check your connection and try again.';
+            } else if (error.message.includes('Invalid response format')) {
+                errorMessage = 'Sorry, I received an invalid response from the server. Please try again.';
             }
 
             addSystemMessage(errorMessage);
@@ -376,14 +383,15 @@ function extractContent() {
 
     console.log('[DocuAid] Sending content to API for extraction:', `${apiUrl}${apiConfig.EXTRACT_ENDPOINT}`);
 
-    // Create the request body with all possible parameters to ensure compatibility
+    // Create the request body
     const extractRequestBody = {
         url: url,
         title: pageTitle,
-        content: pageContent
+        content: pageContent,
+        html: document.documentElement.outerHTML
     };
 
-    console.log('[DocuAid] Extract request body:', JSON.stringify({ url }));
+    console.log('[DocuAid] Extract request body length:', JSON.stringify(extractRequestBody).length);
 
     // Send content to API
     fetch(`${apiUrl}${apiConfig.EXTRACT_ENDPOINT}`, {
@@ -403,6 +411,10 @@ function extractContent() {
             // Remove typing indicator
             removeTypingIndicator(typingIndicator);
 
+            if (!data || (!data.content && !data.title)) {
+                throw new Error('Invalid extraction response format');
+            }
+
             // Show success message
             let displayContent = '';
             if (data.title) {
@@ -420,11 +432,22 @@ function extractContent() {
             removeTypingIndicator(typingIndicator);
 
             let errorMessage = 'Sorry, I encountered an error while extracting content. Please try again later.';
+
             if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
                 errorMessage = 'Sorry, I could not connect to the server. Please check your connection and try again.';
+            } else if (error.message.includes('Invalid extraction response format')) {
+                errorMessage = 'Sorry, I received an invalid response while extracting content. Please try again.';
             }
 
             addSystemMessage(errorMessage);
+
+            // Try to handle the error using the config error handler
+            if (apiConfig.handleApiError) {
+                const errorResult = apiConfig.handleApiError(error);
+                if (errorResult.isPineconeError) {
+                    console.log('[DocuAid] Continuing without vector store');
+                }
+            }
         });
 }
 

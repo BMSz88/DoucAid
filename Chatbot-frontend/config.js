@@ -17,20 +17,32 @@ const apiConfig = {
             window.location.hostname === '127.0.0.1';
 
         // Use Railway URL by default, fallback to local only for development
-        return isLocalDev ? 'http://localhost:3001' : 'https://doucaid-production.up.railway.app';
+        return isLocalDev ? 'http://localhost:3002' : 'https://doucaid-production.up.railway.app';
     },
 
     // Handle API connection errors gracefully
     handleApiError: function (error) {
         console.error('[DocuAid] API Error:', error);
-        if (error.message && error.message.includes('Failed to fetch') ||
-            error.message.includes('NetworkError')) {
+
+        // Check for specific error types
+        if (error.name === 'PineconeError') {
+            console.warn('[DocuAid] Pinecone error - continuing without vector store');
+            return {
+                success: false,
+                error: 'Vector store temporarily unavailable - basic functionality will continue',
+                isPineconeError: true
+            };
+        }
+
+        if (error.message && (error.message.includes('Failed to fetch') ||
+            error.message.includes('NetworkError'))) {
             return {
                 success: false,
                 error: 'Network error: Could not connect to the API service. Please check your connection.',
                 isConnectionError: true
             };
         }
+
         return {
             success: false,
             error: 'An error occurred: ' + (error.message || 'Unknown error'),
