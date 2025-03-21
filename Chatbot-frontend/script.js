@@ -277,13 +277,15 @@ function sendMessage() {
     const apiUrl = typeof apiConfig.getApiUrl === 'function' ?
         apiConfig.getApiUrl() : apiConfig.API_URL;
 
-    // Send message to API
+    console.log('[DocuAid] Sending message to:', `${apiUrl}${apiConfig.CHAT_ENDPOINT}`);
+
+    // Send message to API - using 'question' parameter instead of 'message' to match backend expectations
     fetch(`${apiUrl}${apiConfig.CHAT_ENDPOINT}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ message: userMessage })
+        body: JSON.stringify({ question: userMessage })
     })
         .then(response => {
             if (!response.ok) {
@@ -296,7 +298,7 @@ function sendMessage() {
             removeTypingIndicator(typingIndicator);
 
             // Add bot response to chat
-            addMessage('bot', data.response || 'I received your message.');
+            addMessage('bot', data.answer || data.response || 'I received your message.');
         })
         .catch(error => {
             console.error('[DocuAid] Error:', error);
@@ -364,6 +366,8 @@ function extractContent() {
     const apiUrl = typeof apiConfig.getApiUrl === 'function' ?
         apiConfig.getApiUrl() : apiConfig.API_URL;
 
+    console.log('[DocuAid] Sending content to API for extraction...');
+
     // Send content to API
     fetch(`${apiUrl}${apiConfig.EXTRACT_ENDPOINT}`, {
         method: 'POST',
@@ -371,9 +375,9 @@ function extractContent() {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            content: pageContent,
+            url: url,
             title: pageTitle,
-            url: url
+            content: pageContent
         })
     })
         .then(response => {
@@ -386,8 +390,17 @@ function extractContent() {
             // Remove typing indicator
             removeTypingIndicator(typingIndicator);
 
-            // Add bot response to chat
-            addMessage('bot', data.response || 'I\'ve processed the page content.');
+            // Show success message
+            let displayContent = '';
+            if (data.title) {
+                displayContent += `**${data.title}**\n\n`;
+            }
+            displayContent += `Content extracted successfully! (${data.content ? Math.round(data.content.length / 1000) : 0}K characters)`;
+            if (data.extraction_method) {
+                displayContent += `\n\nMethod: ${data.extraction_method}`;
+            }
+
+            addSystemMessage(displayContent);
         })
         .catch(error => {
             console.error('[DocuAid] Extraction error:', error);
