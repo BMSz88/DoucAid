@@ -78,16 +78,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-      
       - name: Deploy to Railway
-        run: |
-          echo "Deploying to Railway..."
-          echo "$RAILWAY_TOKEN" | railway login
-          railway up --detach
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        uses: railwayapp/railway-action@v0.1.3
+        with:
+          railway_token: ${{ secrets.RAILWAY_TOKEN }}
+          detach: true
       
       - name: Verify Deployment
         run: |
