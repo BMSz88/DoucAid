@@ -75,24 +75,17 @@ jobs:
     needs: [test_backend, validate_frontend]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     
+    container: ghcr.io/railwayapp/cli:latest
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+    
     steps:
       - uses: actions/checkout@v3
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-      
       - name: Deploy to Railway
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
           echo "Deploying to Railway..."
           cd Chatbot-backend
-          railway login
           railway up
       
       - name: Verify Deployment
