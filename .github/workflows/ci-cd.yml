@@ -78,11 +78,22 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Deploy to Railway
-        uses: railwayapp/railway-action@latest
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          railway_token: ${{ secrets.RAILWAY_TOKEN }}
-          detach: true
+          node-version: '18'
+          
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+      
+      - name: Deploy to Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          echo "Deploying to Railway..."
+          cd Chatbot-backend
+          railway login --apikey "$RAILWAY_TOKEN"
+          railway up
       
       - name: Verify Deployment
         run: |
