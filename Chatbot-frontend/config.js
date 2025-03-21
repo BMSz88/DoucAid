@@ -17,7 +17,7 @@ const apiConfig = {
             window.location.hostname === '127.0.0.1';
 
         // Use Railway URL by default, fallback to local only for development
-        return isLocalDev ? 'http://localhost:3002' : 'https://doucaid-production.up.railway.app';
+        return isLocalDev ? 'http://localhost:3001' : 'https://doucaid-production.up.railway.app';
     },
 
     // Handle API connection errors gracefully

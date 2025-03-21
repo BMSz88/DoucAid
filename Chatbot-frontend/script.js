@@ -258,7 +258,7 @@ function removeTypingIndicator(indicator) {
     }
 }
 
-function sendMessage() {
+async function sendMessage() {
     const userInput = document.querySelector('#docuaid-extension #user-input');
     const userMessage = userInput.value.trim();
 
@@ -273,59 +273,68 @@ function sendMessage() {
     // Show typing indicator
     const typingIndicator = showTypingIndicator();
 
-    // Get API URL either from config or function
-    const apiUrl = typeof apiConfig.getApiUrl === 'function' ?
-        apiConfig.getApiUrl() : apiConfig.API_URL;
+    try {
+        // Get API URL either from config or function
+        const apiUrl = typeof apiConfig.getApiUrl === 'function' ?
+            apiConfig.getApiUrl() : apiConfig.API_URL;
 
-    console.log('[DocuAid] Sending message to:', `${apiUrl}${apiConfig.CHAT_ENDPOINT}`);
+        console.log('[DocuAid] Sending message to:', `${apiUrl}${apiConfig.CHAT_ENDPOINT}`);
 
-    // Create the request body with the question parameter
-    const requestBody = {
-        question: userMessage
-    };
+        // Create the request body with both parameters to ensure compatibility
+        const requestBody = {
+            question: userMessage,
+            message: userMessage
+        };
 
-    console.log('[DocuAid] Request body:', JSON.stringify(requestBody));
+        console.log('[DocuAid] Request body:', JSON.stringify(requestBody));
 
-    // Send message to API
-    fetch(`${apiUrl}${apiConfig.CHAT_ENDPOINT}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Remove typing indicator
-            removeTypingIndicator(typingIndicator);
-
-            if (!data || (!data.answer && !data.response)) {
-                throw new Error('Invalid response format');
-            }
-
-            // Add bot response to chat
-            const botResponse = data.answer || data.response;
-            addMessage('bot', botResponse);
-        })
-        .catch(error => {
-            console.error('[DocuAid] Error:', error);
-            removeTypingIndicator(typingIndicator);
-
-            let errorMessage = 'Sorry, I encountered an error while processing your request. Please try again later.';
-
-            if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-                errorMessage = 'Sorry, I could not connect to the server. Please check your connection and try again.';
-            } else if (error.message.includes('Invalid response format')) {
-                errorMessage = 'Sorry, I received an invalid response from the server. Please try again.';
-            }
-
-            addSystemMessage(errorMessage);
+        const response = await fetch(`${apiUrl}${apiConfig.CHAT_ENDPOINT}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
         });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Remove typing indicator
+        removeTypingIndicator(typingIndicator);
+
+        if (!data || (!data.answer && !data.response)) {
+            throw new Error('Invalid response format');
+        }
+
+        // Add bot response to chat
+        const botResponse = data.answer || data.response;
+        addMessage('bot', botResponse);
+
+    } catch (error) {
+        console.error('[DocuAid] Error:', error);
+        removeTypingIndicator(typingIndicator);
+
+        let errorMessage = 'Sorry, I encountered an error while processing your request. Please try again later.';
+
+        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+            errorMessage = 'Sorry, I could not connect to the server. Please check your connection and try again.';
+        } else if (error.message.includes('Invalid response format')) {
+            errorMessage = 'Sorry, I received an invalid response from the server. Please try again.';
+        }
+
+        addSystemMessage(errorMessage);
+
+        // Try to handle the error using the config error handler
+        if (apiConfig.handleApiError) {
+            const errorResult = apiConfig.handleApiError(error);
+            if (errorResult.isPineconeError) {
+                console.log('[DocuAid] Continuing without vector store');
+            }
+        }
+    }
 }
 
 function extractContent() {
