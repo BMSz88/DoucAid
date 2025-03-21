@@ -89,13 +89,16 @@ jobs:
       - name: Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE_NAME: "DocuAid"
         run: |
           echo "Deploying to Railway..."
           cd Chatbot-backend
           npm ci
           echo "Using Railway CLI version:"
           railway --version
-          railway up
+          railway link
+          railway service
+          railway up --service "$RAILWAY_SERVICE_NAME"
       
       - name: Verify Deployment
         run: |
