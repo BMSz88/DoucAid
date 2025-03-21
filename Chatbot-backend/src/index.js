@@ -46,9 +46,16 @@ app.use((err, req, res, next) => {
 
 // MongoDB Connection - Optional
 if (process.env.MONGODB_URI) {
-    mongoose.connect(process.env.MONGODB_URI)
+    mongoose.connect(process.env.MONGODB_URI, {
+        serverSelectionTimeoutMS: 5000, // Give up initial connection after 5 seconds
+        socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+        family: 4 // Use IPv4, skip trying IPv6
+    })
         .then(() => console.log('Connected to MongoDB'))
-        .catch((err) => console.error('MongoDB connection error:', err));
+        .catch((err) => {
+            console.error('MongoDB connection error:', err);
+            console.log('Continuing without database connection. Some features may be limited.');
+        });
 } else {
     console.log('MongoDB URI not provided, skipping database connection');
 }
