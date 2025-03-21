@@ -279,13 +279,21 @@ function sendMessage() {
 
     console.log('[DocuAid] Sending message to:', `${apiUrl}${apiConfig.CHAT_ENDPOINT}`);
 
-    // Send message to API - using 'question' parameter instead of 'message' to match backend expectations
+    // Create the request body with both 'question' and 'message' parameters to ensure compatibility
+    const requestBody = {
+        question: userMessage,
+        message: userMessage
+    };
+
+    console.log('[DocuAid] Request body:', JSON.stringify(requestBody));
+
+    // Send message to API with both parameters
     fetch(`${apiUrl}${apiConfig.CHAT_ENDPOINT}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ question: userMessage })
+        body: JSON.stringify(requestBody)
     })
         .then(response => {
             if (!response.ok) {
@@ -366,7 +374,16 @@ function extractContent() {
     const apiUrl = typeof apiConfig.getApiUrl === 'function' ?
         apiConfig.getApiUrl() : apiConfig.API_URL;
 
-    console.log('[DocuAid] Sending content to API for extraction...');
+    console.log('[DocuAid] Sending content to API for extraction:', `${apiUrl}${apiConfig.EXTRACT_ENDPOINT}`);
+
+    // Create the request body with all possible parameters to ensure compatibility
+    const extractRequestBody = {
+        url: url,
+        title: pageTitle,
+        content: pageContent
+    };
+
+    console.log('[DocuAid] Extract request body:', JSON.stringify({ url }));
 
     // Send content to API
     fetch(`${apiUrl}${apiConfig.EXTRACT_ENDPOINT}`, {
@@ -374,11 +391,7 @@ function extractContent() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            url: url,
-            title: pageTitle,
-            content: pageContent
-        })
+        body: JSON.stringify(extractRequestBody)
     })
         .then(response => {
             if (!response.ok) {

@@ -3,7 +3,7 @@ const apiConfig = {
     // API base URL - can be either remote or local
     API_URL: 'https://doucaid-production.up.railway.app',
     // For local development, uncomment the line below
-    // API_URL: 'http://localhost:3002',
+    // API_URL: 'http://localhost:3001',
 
     // API endpoints
     CHAT_ENDPOINT: '/api/chat',
@@ -16,8 +16,8 @@ const apiConfig = {
         const isLocalDev = window.location.hostname === 'localhost' ||
             window.location.hostname === '127.0.0.1';
 
-        // Try local server first, if that fails, use remote
-        return isLocalDev ? 'http://localhost:3002' : 'https://doucaid-production.up.railway.app';
+        // Use Railway URL by default, fallback to local only for development
+        return isLocalDev ? 'http://localhost:3001' : 'https://doucaid-production.up.railway.app';
     },
 
     // Handle API connection errors gracefully
