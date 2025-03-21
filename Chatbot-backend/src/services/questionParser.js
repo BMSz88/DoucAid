@@ -5,12 +5,9 @@ require('dotenv').config();
 const apiKey = process.env.OPENAI_API_KEY;
 console.log('OpenAI API Key loaded from env:', apiKey ? `Yes (length: ${apiKey.length})` : 'No');
 
-// Fallback to hardcoded key if environment variable isn't loading
-const openAIKey = apiKey || 'REDACTED_API_KEY<<';
-console.log('Using OpenAI API Key:', openAIKey ? 'Yes' : 'No');
-
+// Initialize OpenAI with API key from environment
 const openai = new OpenAI({
-    apiKey: openAIKey
+    apiKey: apiKey
 });
 
 /**
