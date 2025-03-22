@@ -685,6 +685,18 @@ function addMessage(type, content) {
     const messageContent = document.createElement('div');
     messageContent.className = 'message-content';
     messageContent.innerHTML = content;
+    
+    // Add copy button for bot messages
+    if (type === 'bot') {
+        const copyButton = document.createElement('button');
+        copyButton.className = 'copy-button';
+        copyButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" fill="currentColor" /></svg>';
+        copyButton.title = 'Copy to clipboard';
+        copyButton.addEventListener('click', () => {
+            copyMessageToClipboard(content);
+        });
+        messageElement.appendChild(copyButton);
+    }
 
     messageElement.appendChild(messageContent);
     messagesContainer.appendChild(messageElement);
@@ -694,6 +706,80 @@ function addMessage(type, content) {
 
     // Scroll to bottom with a smooth animation
     scrollToBottom(messagesContainer);
+}
+
+// Function to copy message content to clipboard
+function copyMessageToClipboard(html) {
+    // Create a temporary div to hold the HTML content
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    
+    // Get the text content from the HTML
+    const textContent = tempDiv.textContent || tempDiv.innerText || '';
+    
+    // Use the Clipboard API if available
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textContent)
+            .then(() => {
+                showCopySuccessToast();
+            })
+            .catch(err => {
+                console.error('[DocuAid] Failed to copy text: ', err);
+                fallbackCopyToClipboard(textContent);
+            });
+    } else {
+        fallbackCopyToClipboard(textContent);
+    }
+}
+
+// Fallback method for clipboard copy
+function fallbackCopyToClipboard(text) {
+    try {
+        // Create text area
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        
+        // Make it invisible
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = 0;
+        
+        document.body.appendChild(textArea);
+        textArea.select();
+        
+        // Execute copy command
+        const successful = document.execCommand('copy');
+        
+        // Clean up
+        document.body.removeChild(textArea);
+        
+        if (successful) {
+            showCopySuccessToast();
+        }
+    } catch (err) {
+        console.error('[DocuAid] Fallback copy failed: ', err);
+    }
+}
+
+// Show a toast notification when copy succeeds
+function showCopySuccessToast() {
+    let toast = document.getElementById('docuaid-copy-toast');
+    
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'docuaid-copy-toast';
+        toast.className = 'copy-toast';
+        toast.textContent = 'Copied to clipboard!';
+        
+        document.querySelector('#docuaid-extension').appendChild(toast);
+    }
+    
+    // Show the toast
+    toast.classList.add('active');
+    
+    // Hide after 2 seconds
+    setTimeout(() => {
+        toast.classList.remove('active');
+    }, 2000);
 }
 
 // Smart scroll to bottom with animation

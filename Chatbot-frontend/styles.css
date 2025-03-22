@@ -189,6 +189,7 @@
 
 #docuaid-extension .bot-message {
     align-self: flex-start !important;
+    position: relative !important;
 }
 
 #docuaid-extension .user-message {
@@ -1194,4 +1195,60 @@ body.dark-mode .system-message .message-content {
     100% {
         transform: scale(1) !important;
     }
+}
+
+/* Copy button for messages */
+#docuaid-extension .copy-button {
+    position: absolute !important;
+    top: 5px !important;
+    right: 5px !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 24px !important;
+    height: 24px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    opacity: 0 !important;
+    transition: opacity 0.2s !important;
+    z-index: 1000 !important;
+}
+
+#docuaid-extension .bot-message:hover .copy-button {
+    opacity: 1 !important;
+}
+
+#docuaid-extension.dark-mode .copy-button {
+    background: rgba(50, 50, 50, 0.8) !important;
+}
+
+#docuaid-extension .copy-button svg {
+    fill: #555 !important;
+}
+
+#docuaid-extension.dark-mode .copy-button svg {
+    fill: #ccc !important;
+}
+
+/* Toast notification */
+#docuaid-extension .copy-toast {
+    position: fixed !important;
+    bottom: 30px !important;
+    left: 50% !important;
+    transform: translateX(-50%) translateY(100px) !important;
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    color: white !important;
+    padding: 10px 20px !important;
+    border-radius: 5px !important;
+    font-size: 14px !important;
+    opacity: 0 !important;
+    transition: all 0.3s ease !important;
+    z-index: 100002 !important;
+}
+
+#docuaid-extension .copy-toast.active {
+    transform: translateX(-50%) translateY(0) !important;
+    opacity: 1 !important;
 }
