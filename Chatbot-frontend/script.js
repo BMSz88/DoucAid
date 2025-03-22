@@ -1569,12 +1569,36 @@ function generateDemoResponse(userMessage) {
                                window.docuaidExtractedContent.content && 
                                window.docuaidExtractedContent.content.length > 0;
     
-    // If we have extracted content, use it to generate a response
+    // Special handling for common phrases regardless of extraction
+    if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi')) {
+        return 'Hello! How can I help you today?';
+    } else if (lowerCaseMessage.includes('thank')) {
+        return 'You\'re welcome! If you have any more questions, feel free to ask.';
+    } else if (lowerCaseMessage.includes('help')) {
+        return 'I\'m here to help! You can ask me questions about the content on this page after extraction, or general knowledge questions anytime.';
+    }
+    
+    // For questions about settings or the chatbot itself
+    if (lowerCaseMessage.includes('settings')) {
+        return 'You can access settings by clicking the gear icon in the top right corner of the chatbot window.';
+    } else if (lowerCaseMessage.includes('extract')) {
+        return 'I can extract content from the page for you. Just click the extract button at the bottom of the chat window.';
+    } else if (lowerCaseMessage.includes('what') && lowerCaseMessage.includes('page')) {
+        return 'This page appears to be about ' + document.title + '. I can extract more specific information if you\'d like.';
+    }
+    
+    // Check for Sri Lanka related questions regardless of extraction
+    const sriLankaResponse = generateSriLankaFallbackResponse(userMessage);
+    if (sriLankaResponse) {
+        return sriLankaResponse;
+    }
+    
+    // If content has been extracted, use it for more specific answers
     if (hasExtractedContent) {
         return generateAnswerFromExtractedContent(userMessage);
     } else {
-        // Otherwise, generate a response based on general knowledge
-        return generateGeneralKnowledgeResponse(userMessage);
+        // For questions that would benefit from extraction but don't require it
+        return 'I understand you\'re asking about "' + userMessage + '". I can provide a better answer if you extract the content from this page first by clicking the extract button, but I\'ll do my best to help anyway.\n\nBased on general knowledge, I can tell you that this topic might relate to ' + document.title + '. For more specific information, please try extracting the content.';
     }
 }
 
