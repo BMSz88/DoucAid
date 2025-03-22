@@ -14,6 +14,55 @@ if (typeof apiConfig === 'undefined') {
     };
 }
 
+// Chat history data structure
+let chatHistory = [];
+
+// Function to get the current chat session ID
+function getChatSessionId() {
+    // Create a new session ID if one doesn't exist
+    let sessionId = localStorage.getItem('docuaid-current-session-id');
+    if (!sessionId) {
+        sessionId = 'session_' + new Date().toISOString().replace(/[:.]/g, '_');
+        localStorage.setItem('docuaid-current-session-id', sessionId);
+    }
+    return sessionId;
+}
+
+// Function to save message to chat history
+function saveMessageToHistory(type, content) {
+    // Check if history storage is enabled
+    const storeHistory = localStorage.getItem('docuaid-store-history') !== 'false'; // Default true
+    if (!storeHistory) return;
+    
+    const currentSession = getChatSessionId();
+    const timestamp = new Date().toISOString();
+    const message = {
+        type: type,
+        content: content,
+        timestamp: timestamp,
+        sessionId: currentSession,
+        url: window.location.href,
+        pageTitle: document.title
+    };
+    
+    // Get existing history from localStorage
+    let history = JSON.parse(localStorage.getItem('docuaid-chat-history') || '[]');
+    
+    // Add the new message
+    history.push(message);
+    
+    // Limit history to 500 messages (to prevent localStorage overflow)
+    if (history.length > 500) {
+        history = history.slice(history.length - 500);
+    }
+    
+    // Save updated history
+    localStorage.setItem('docuaid-chat-history', JSON.stringify(history));
+    
+    // Update in-memory history
+    chatHistory = history;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('[DocuAid] Content script loaded');
     initChatbot();
@@ -566,6 +615,9 @@ function addMessage(type, content) {
     messageElement.appendChild(messageContent);
     messagesContainer.appendChild(messageElement);
 
+    // Save message to history
+    saveMessageToHistory(type, content);
+
     // Scroll to bottom
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
@@ -581,6 +633,9 @@ function addSystemMessage(content) {
 
     messageElement.appendChild(messageContent);
     messagesContainer.appendChild(messageElement);
+
+    // Save system message to history
+    saveMessageToHistory('system', content);
 
     // Scroll to bottom
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
