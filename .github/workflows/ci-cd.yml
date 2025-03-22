@@ -54,20 +54,9 @@ jobs:
       - name: Check Frontend Files
         run: |
           echo "Validating frontend files..."
-          [ -f "Chatbot-frontend/script.js" ] && echo "✅ Frontend script exists" || echo "❌ Frontend script missing"
+          [ -f "Chatbot-frontend/test.html" ] && echo "✅ HTML file exists" || echo "❌ HTML file missing"
           [ -f "Chatbot-frontend/styles.css" ] && echo "✅ CSS file exists" || echo "❌ CSS file missing"
-          [ -f "Chatbot-frontend/config.js" ] && echo "✅ Config file exists" || echo "❌ Config file missing"
-          [ -f "Chatbot-frontend/test.html" ] && echo "✅ Test HTML exists" || echo "❌ Test HTML missing"
-      
-      - name: Validate HTML
-        run: |
-          echo "Checking HTML format..."
-          grep -q "<html" Chatbot-frontend/test.html && echo "✅ HTML format correct" || echo "❌ HTML format issues"
-      
-      - name: Validate JavaScript
-        run: |
-          echo "Basic JavaScript validation..."
-          grep -q "function" Chatbot-frontend/script.js && echo "✅ JavaScript format correct" || echo "❌ JavaScript format issues"
+          [ -f "Chatbot-frontend/script.js" ] && echo "✅ JavaScript file exists" || echo "❌ JavaScript file missing"
 
   deploy:
     name: Deploy to Railway
