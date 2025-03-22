@@ -1343,3 +1343,32 @@ body.dark-mode .system-message .message-content {
         opacity: 1;
     }
 }
+
+/* Clear chat button styles */
+.clear-chat-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 4px;
+    margin-right: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.clear-chat-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #333;
+}
+
+.dark-mode .clear-chat-button {
+    color: #aaa;
+}
+
+.dark-mode .clear-chat-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}

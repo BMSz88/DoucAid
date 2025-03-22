@@ -97,7 +97,7 @@ function initChatbot() {
 
     // Create chatbot header
     const chatbotHeader = document.createElement('div');
-    chatbotHeader.className = 'chatbot-header';
+    chatbotHeader.className = 'chat-header';
     chatbotContainer.appendChild(chatbotHeader);
 
     // Create chatbot title
@@ -110,6 +110,14 @@ function initChatbot() {
     const chatbotControls = document.createElement('div');
     chatbotControls.className = 'chatbot-controls';
     chatbotHeader.appendChild(chatbotControls);
+
+    // Create clear chat button
+    const clearChatButton = document.createElement('button');
+    clearChatButton.className = 'clear-chat-button';
+    clearChatButton.id = 'clear-chat';
+    clearChatButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>';
+    clearChatButton.setAttribute('title', 'Clear chat');
+    chatbotControls.appendChild(clearChatButton);
 
     // Create settings button
     const settingsButton = document.createElement('button');
@@ -675,6 +683,12 @@ function setupEventListeners() {
     
     // Load saved settings
     loadSavedSettings();
+
+    // Add event listener for clear chat button
+    const clearChatButton = document.querySelector('#docuaid-extension #clear-chat');
+    if (clearChatButton) {
+        clearChatButton.addEventListener('click', clearChat);
+    }
 }
 
 function addMessage(type, content) {
@@ -1246,13 +1260,12 @@ function extractContent(callback) {
 
 function clearChat() {
     const messagesContainer = document.querySelector('#docuaid-extension .chatbot-messages');
-
-    // Remove all messages except the welcome message
-    while (messagesContainer.childNodes.length > 1) {
-        messagesContainer.removeChild(messagesContainer.lastChild);
-    }
-
-    addSystemMessage('Chat cleared.');
+    
+    // Clear all messages
+    messagesContainer.innerHTML = '';
+    
+    // Add welcome message
+    addMessage('bot', 'Hello! I\'m DocuAid Assistant. How can I help you understand this document?');
 }
 
 function checkHealth() {
