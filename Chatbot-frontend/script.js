@@ -500,7 +500,14 @@ function initChatbot() {
     // Create version text
     const versionText = document.createElement('div');
     versionText.className = 'version';
-    versionText.textContent = 'v1.0.0';
+    // Replace simple text with linked version
+    const versionLink = document.createElement('a');
+    versionLink.href = 'https://www.docuaid.online';
+    versionLink.target = '_blank';
+    versionLink.textContent = 'DocuAid V1.0';
+    versionLink.style.color = 'inherit';
+    versionLink.style.textDecoration = 'none';
+    versionText.appendChild(versionLink);
     chatbotFooter.appendChild(versionText);
 
     // Add welcome message
