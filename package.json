@@ -1,0 +1,15 @@
+{
+  "name": "docuaid",
+  "version": "1.0.0",
+  "description": "DocuAid - AI-powered chatbot for document assistance",
+  "scripts": {
+    "backend": "cd Chatbot-backend && node src/index.js",
+    "backend:dev": "cd Chatbot-backend && npx nodemon src/index.js",
+    "frontend": "cd Chatbot-frontend && python -m http.server 8010",
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend\"",
+    "start": "concurrently \"npm run backend\" \"npm run frontend\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 
