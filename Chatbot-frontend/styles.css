@@ -476,7 +476,7 @@ body.dark-mode .system-message .message-content {
     width: 100%;
     height: 100%;
     background-color: #fff;
-    z-index: 10002;
+    z-index: 100000;
     display: flex;
     flex-direction: column;
     overflow: hidden;

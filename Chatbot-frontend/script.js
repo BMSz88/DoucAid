@@ -497,11 +497,17 @@ function setupEventListeners() {
                 settingsPanel.style.opacity = '1';
                 settingsPanel.style.visibility = 'visible';
                 settingsPanel.style.pointerEvents = 'auto';
+                settingsPanel.style.display = 'flex';
+                settingsPanel.style.zIndex = '100000';
+                
+                // Debug alert
+                alert('Settings panel should be visible now');
                 
                 console.log('[DocuAid] Settings panel active state:', settingsPanel.classList.contains('active'));
                 console.log('[DocuAid] Settings panel computed style:', window.getComputedStyle(settingsPanel).transform);
             } else {
                 console.error('[DocuAid] Settings panel not found!');
+                alert('Settings panel not found!');
             }
         });
     } else {
@@ -869,7 +875,9 @@ window.docuaidDebug = {
             header: document.querySelector('#docuaid-extension .chatbot-header'),
             messages: document.querySelector('#docuaid-extension .chatbot-messages'),
             inputContainer: document.querySelector('#docuaid-extension .user-input-container'),
-            footer: document.querySelector('#docuaid-extension .chatbot-footer')
+            footer: document.querySelector('#docuaid-extension .chatbot-footer'),
+            settingsPanel: document.querySelector('#docuaid-extension #settings-panel'),
+            settingsButton: document.querySelector('#docuaid-extension #settings-button')
         };
 
         console.log('[DocuAid Debug] UI Elements:', elements);
@@ -892,6 +900,28 @@ window.docuaidDebug = {
             container.style.transform = 'translateY(0)';
             container.classList.add('active');
             console.log('[DocuAid Debug] Emergency fix applied');
+        }
+    },
+    
+    showSettings: function() {
+        const settingsPanel = document.querySelector('#docuaid-extension #settings-panel');
+        if (settingsPanel) {
+            // Add active class
+            settingsPanel.classList.add('active');
+            
+            // Apply explicit styles to ensure visibility
+            settingsPanel.style.transform = 'translateX(0)';
+            settingsPanel.style.opacity = '1';
+            settingsPanel.style.visibility = 'visible';
+            settingsPanel.style.pointerEvents = 'auto';
+            settingsPanel.style.display = 'flex';
+            settingsPanel.style.zIndex = '100000';
+            
+            console.log('[DocuAid Debug] Settings panel should be visible now');
+            return true;
+        } else {
+            console.error('[DocuAid Debug] Settings panel not found!');
+            return false;
         }
     }
 };
