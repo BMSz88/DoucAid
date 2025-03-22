@@ -491,7 +491,14 @@ function initChatbot() {
     userInput.id = 'user-input';
     userInput.placeholder = 'Ask me anything...';
     userInput.rows = 1;
+    userInput.maxLength = 2000; // Set max length
     userInputContainer.appendChild(userInput);
+
+    // Create character counter
+    const charCounter = document.createElement('div');
+    charCounter.className = 'char-counter';
+    charCounter.innerHTML = '0/2000';
+    userInputContainer.appendChild(charCounter);
 
     // Create send button
     const sendButton = document.createElement('button');
@@ -710,6 +717,32 @@ function setupEventListeners() {
     const clearChatButton = document.querySelector('#docuaid-extension #clear-chat');
     if (clearChatButton) {
         clearChatButton.addEventListener('click', clearChat);
+    }
+
+    // Add auto-resize and character counter for input
+    const userInput = document.querySelector('#docuaid-extension #user-input');
+    const charCounter = document.querySelector('#docuaid-extension .char-counter');
+    
+    if (userInput && charCounter) {
+        // Update character counter
+        userInput.addEventListener('input', function() {
+            // Update character count
+            const currentLength = userInput.value.length;
+            charCounter.innerHTML = `${currentLength}/2000`;
+            
+            // Change color when approaching limit
+            if (currentLength > 1800) {
+                charCounter.classList.add('char-limit-warning');
+            } else {
+                charCounter.classList.remove('char-limit-warning');
+            }
+            
+            // Auto-resize the textarea
+            autoResizeTextarea(userInput);
+        });
+        
+        // Initial sizing
+        autoResizeTextarea(userInput);
     }
 }
 
@@ -2004,4 +2037,24 @@ function generateAnswerFromExtractedContent(userMessage) {
     
     // If we couldn't match the question to any of our patterns
     return `I've analyzed the document about ${title}. While I found extensive information, I couldn't pinpoint the exact answer to your specific question. You might find it helpful to ask a more specific question or rephrase your query.`;
+}
+
+// Function to auto-resize textarea based on content
+function autoResizeTextarea(textarea) {
+    // Reset height to calculate correct scrollHeight
+    textarea.style.height = 'auto';
+    
+    // Calculate new height based on scrollHeight (with max height limit)
+    const maxHeight = 150; // Maximum height in pixels
+    const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+    
+    // Apply new height
+    textarea.style.height = newHeight + 'px';
+    
+    // Add/remove scrollbar if needed
+    if (textarea.scrollHeight > maxHeight) {
+        textarea.style.overflowY = 'auto';
+    } else {
+        textarea.style.overflowY = 'hidden';
+    }
 }

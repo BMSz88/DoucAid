@@ -1401,3 +1401,40 @@ body.dark-mode .system-message .message-content {
     background-color: rgba(255, 255, 255, 0.1);
     color: #fff;
 }
+
+/* Character counter styles */
+.char-counter {
+    position: absolute;
+    bottom: 8px;
+    right: 50px;
+    font-size: 11px;
+    color: #999;
+    pointer-events: none;
+    transition: color 0.3s;
+}
+
+.char-limit-warning {
+    color: #e74c3c;
+}
+
+/* Enhanced input area styles */
+.user-input-container {
+    position: relative;
+}
+
+#user-input {
+    transition: height 0.2s;
+    min-height: 40px;
+    max-height: 150px;
+    overflow-y: hidden;
+    padding-right: 50px;
+    resize: none;
+}
+
+.dark-mode .char-counter {
+    color: #aaa;
+}
+
+.dark-mode .char-limit-warning {
+    color: #ff6b6b;
+}
