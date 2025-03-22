@@ -71,9 +71,18 @@ document.addEventListener('DOMContentLoaded', () => {
 function initChatbot() {
     console.log('[DocuAid] Initializing chatbot...');
 
+    // Check if chatbot already exists
+    if (document.getElementById('docuaid-extension')) {
+        console.log('[DocuAid] Chatbot already initialized');
+        return;
+    }
+
     // Create main container
     const docuaidExtension = document.createElement('div');
     docuaidExtension.id = 'docuaid-extension';
+    docuaidExtension.style.position = 'fixed';
+    docuaidExtension.style.zIndex = '9997';
+    docuaidExtension.style.fontFamily = 'Arial, sans-serif';
     document.body.appendChild(docuaidExtension);
 
     // Check for saved dark mode preference
@@ -83,22 +92,89 @@ function initChatbot() {
         docuaidExtension.classList.add('dark-mode');
     }
 
-    // Create chatbot icon
+    // Create chatbot icon with explicit styles to ensure visibility
     const chatbotIcon = document.createElement('div');
     chatbotIcon.className = 'chatbot-icon';
     chatbotIcon.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16 13H13V16C13 16.55 12.55 17 12 17C11.45 17 11 16.55 11 16V13H8C7.45 13 7 12.55 7 12C7 11.45 7.45 11 8 11H11V8C11 7.45 11.45 7 12 7C12.55 7 13 7.45 13 8V11H16C16.55 11 17 11.45 17 12C17 12.55 16.55 13 16 13Z" fill="white"/></svg>';
+    
+    // Apply inline styles to ensure visibility
+    chatbotIcon.style.position = 'fixed';
+    chatbotIcon.style.bottom = '20px';
+    chatbotIcon.style.right = '20px';
+    chatbotIcon.style.width = '50px';
+    chatbotIcon.style.height = '50px';
+    chatbotIcon.style.backgroundColor = '#467DF6';
+    chatbotIcon.style.borderRadius = '50%';
+    chatbotIcon.style.display = 'flex';
+    chatbotIcon.style.justifyContent = 'center';
+    chatbotIcon.style.alignItems = 'center';
+    chatbotIcon.style.cursor = 'pointer';
+    chatbotIcon.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
+    chatbotIcon.style.zIndex = '9998';
+    chatbotIcon.style.visibility = 'visible';
+    chatbotIcon.style.opacity = '1';
+    chatbotIcon.style.transition = 'all 0.3s ease';
+    chatbotIcon.style.border = 'none';
+    
     docuaidExtension.appendChild(chatbotIcon);
 
     // Create chatbot container
     const chatbotContainer = document.createElement('div');
     chatbotContainer.className = 'chatbot-container';
     chatbotContainer.id = 'chatbot-container';
+
+    // Apply explicit styles to ensure correct initial state
+    chatbotContainer.style.position = 'fixed';
+    chatbotContainer.style.bottom = '80px';
+    chatbotContainer.style.right = '20px';
+    chatbotContainer.style.width = '350px';
+    chatbotContainer.style.height = '500px';
+    chatbotContainer.style.maxHeight = '70vh';
+    chatbotContainer.style.backgroundColor = '#fff';
+    chatbotContainer.style.borderRadius = '10px';
+    chatbotContainer.style.boxShadow = '0 5px 25px rgba(0, 0, 0, 0.2)';
+    chatbotContainer.style.display = 'flex';
+    chatbotContainer.style.flexDirection = 'column';
+    chatbotContainer.style.opacity = '0';
+    chatbotContainer.style.visibility = 'hidden';
+    chatbotContainer.style.transform = 'translateY(20px)';
+    chatbotContainer.style.transition = 'all 0.3s ease';
+    chatbotContainer.style.zIndex = '9999';
+    chatbotContainer.style.pointerEvents = 'none';
+    chatbotContainer.style.overflow = 'hidden';
+    chatbotContainer.style.border = 'none';
+
     docuaidExtension.appendChild(chatbotContainer);
 
     // Create chatbot header
     const chatbotHeader = document.createElement('div');
     chatbotHeader.className = 'chat-header';
     chatbotContainer.appendChild(chatbotHeader);
+
+    // Create messages container with explicit styles
+    const messagesContainer = document.createElement('div');
+    messagesContainer.className = 'chatbot-messages';
+    messagesContainer.id = 'messages';
+    
+    // Apply explicit styles to ensure correct rendering
+    messagesContainer.style.flex = '1';
+    messagesContainer.style.overflowY = 'auto';
+    messagesContainer.style.overflowX = 'hidden';
+    messagesContainer.style.padding = '15px';
+    messagesContainer.style.display = 'flex';
+    messagesContainer.style.flexDirection = 'column';
+    messagesContainer.style.gap = '10px';
+    messagesContainer.style.scrollBehavior = 'smooth';
+    messagesContainer.style.backgroundColor = 'transparent';
+    
+    // Append messages container to chatbot container
+    chatbotContainer.appendChild(messagesContainer);
+    
+    // Add initial welcome message
+    const welcomeMessage = document.createElement('div');
+    welcomeMessage.className = 'message bot-message';
+    welcomeMessage.innerHTML = '<div class="message-content">Hello! I\'m your DocuAid Assistant. How can I help you today?</div>';
+    messagesContainer.appendChild(welcomeMessage);
 
     // Create chatbot title
     const chatbotTitle = document.createElement('div');
@@ -483,12 +559,6 @@ function initChatbot() {
     
     chatbotContainer.appendChild(historyModal);
 
-    // Create messages container
-    const messagesContainer = document.createElement('div');
-    messagesContainer.className = 'chatbot-messages';
-    messagesContainer.id = 'chatbot-messages';
-    chatbotContainer.appendChild(messagesContainer);
-
     // Create user input container
     const userInputContainer = document.createElement('div');
     userInputContainer.className = 'user-input-container';
@@ -629,53 +699,56 @@ function setupEventListeners() {
     const closeSettingsButton = document.querySelector('#docuaid-extension #close-settings-button');
     const settingsPanel = document.querySelector('#docuaid-extension #settings-panel');
     const docuaidExtension = document.getElementById('docuaid-extension');
+    
+    if (!chatbotIcon) {
+        console.error('[DocuAid] Chatbot icon not found!');
+        return;
+    }
+
+    if (!chatbotContainer) {
+        console.error('[DocuAid] Chatbot container not found!');
+        return;
+    }
 
     // Set up event listeners
-    chatbotIcon.addEventListener('click', function () {
+    chatbotIcon.addEventListener('click', function (e) {
         console.log('[DocuAid] Chatbot icon clicked');
+        e.stopPropagation(); // Prevent event bubbling
+        
+        // Add active class to show the chatbot
         chatbotContainer.classList.add('active');
 
-        // Ensure the chatbot is visible with these explicit styles
-        chatbotContainer.style.opacity = '1';
-        chatbotContainer.style.visibility = 'visible';
-        chatbotContainer.style.pointerEvents = 'auto';
-        chatbotContainer.style.transform = 'translateY(0)';
+        // Ensure the chatbot is visible with explicit styles
         chatbotContainer.style.display = 'flex';
         chatbotContainer.style.flexDirection = 'column';
-
-        // Make sure the controls are visible too
-        const controls = document.querySelector('.chatbot-controls');
-        if (controls) {
-            controls.style.opacity = '1';
-            controls.style.visibility = 'visible';
-        }
-
-        // Initialize the chat area if it hasn't been initialized yet
-        if (!document.querySelector('.chatbot-messages')) {
-            initChatArea();
-            
-            // Check if we should auto-extract content
-            const autoExtract = localStorage.getItem('docuaid-auto-extract') !== 'false'; // Default to true
-            const hasExtractedContent = window.docuaidExtractedContent && 
-                                      window.docuaidExtractedContent.content && 
-                                      window.docuaidExtractedContent.content.length > 0;
-            
-            if (autoExtract && !hasExtractedContent) {
-                // Automatically extract content when opened for the first time
-                setTimeout(() => {
-                    extractContent();
-                }, 1000);
-            }
+        chatbotContainer.style.opacity = '1';
+        chatbotContainer.style.visibility = 'visible';
+        chatbotContainer.style.transform = 'translateY(0)';
+        chatbotContainer.style.pointerEvents = 'auto';
+        chatbotContainer.style.zIndex = '10000';
+        
+        // Focus the input field
+        if (userInput) {
+            setTimeout(() => userInput.focus(), 300);
         }
     });
 
-    closeBtn.addEventListener('click', function () {
-        console.log('[DocuAid] Close button clicked');
-        chatbotContainer.classList.remove('active');
-        chatbotContainer.style.opacity = '0';
-        chatbotContainer.style.visibility = 'hidden';
-        chatbotContainer.style.pointerEvents = 'none';
-    });
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function (e) {
+            console.log('[DocuAid] Close button clicked');
+            e.stopPropagation(); // Prevent event bubbling
+            
+            chatbotContainer.classList.remove('active');
+            
+            // Hide with explicit styles
+            chatbotContainer.style.opacity = '0';
+            chatbotContainer.style.visibility = 'hidden';
+            chatbotContainer.style.pointerEvents = 'none';
+            chatbotContainer.style.transform = 'translateY(20px)';
+        });
+    } else {
+        console.error('[DocuAid] Close button not found!');
+    }
 
     // Settings button click handler
     if (settingsButton) {
@@ -880,7 +953,23 @@ function setupEventListeners() {
 }
 
 function addMessage(type, content) {
-    const messagesContainer = document.querySelector('#docuaid-extension .chatbot-messages');
+    const messagesContainer = document.getElementById('messages');
+    if (!messagesContainer) {
+        console.error('[DocuAid] Messages container not found');
+        
+        // Try to find container with alternative selectors as fallback
+        const altContainer = document.querySelector('#docuaid-extension .chatbot-messages') || 
+                            document.querySelector('.chatbot-messages');
+        
+        if (!altContainer) {
+            console.error('[DocuAid] Could not find messages container with alternative selectors');
+            return;
+        }
+        
+        console.log('[DocuAid] Using alternative messages container');
+        messagesContainer = altContainer;
+    }
+    
     const messageElement = document.createElement('div');
     messageElement.className = `message ${type}-message`;
 
@@ -1034,19 +1123,23 @@ function showCopySuccessToast() {
 
 // Smart scroll to bottom with animation
 function scrollToBottom(container) {
-    // Check if user is already at the bottom before the new message
-    const isAtBottom = container.scrollHeight - container.clientHeight <= container.scrollTop + 50;
+    if (!container) {
+        console.error('[DocuAid] Container not provided for scrollToBottom');
+        return;
+    }
     
-    if (isAtBottom) {
-        // User was already at the bottom, scroll smoothly
-        container.scrollTo({
-            top: container.scrollHeight,
-            behavior: 'smooth'
-        });
-    } else {
-        // User was reading previous messages, don't auto-scroll
-        // Instead, show a "new message" indicator
-        showNewMessageIndicator(container);
+    try {
+        // Smooth scroll to bottom
+        setTimeout(() => {
+            container.scrollTo({
+                top: container.scrollHeight,
+                behavior: 'smooth'
+            });
+        }, 100);
+    } catch (error) {
+        console.error('[DocuAid] Error scrolling to bottom:', error);
+        // Fallback to basic scrolling
+        container.scrollTop = container.scrollHeight;
     }
 }
 
@@ -1203,6 +1296,23 @@ async function sendMessage() {
 
 // Function to show loading indicator
 function showLoadingIndicator() {
+    let messagesContainer = document.getElementById('messages');
+    if (!messagesContainer) {
+        console.error('[DocuAid] Messages container not found in showLoadingIndicator');
+        
+        // Try to find container with alternative selectors as fallback
+        const altContainer = document.querySelector('#docuaid-extension .chatbot-messages') || 
+                           document.querySelector('.chatbot-messages');
+        
+        if (!altContainer) {
+            console.error('[DocuAid] Could not find messages container with alternative selectors');
+            return;
+        }
+        
+        console.log('[DocuAid] Using alternative messages container');
+        messagesContainer = altContainer;
+    }
+    
     const loadingMessage = document.createElement('div');
     loadingMessage.className = 'message bot-message loading-message';
     loadingMessage.id = 'loading-indicator';
@@ -1217,10 +1327,9 @@ function showLoadingIndicator() {
     }
     
     loadingMessage.appendChild(loadingDots);
-    document.getElementById('messages').appendChild(loadingMessage);
+    messagesContainer.appendChild(loadingMessage);
     
     // Scroll to bottom of chat
-    const messagesContainer = document.getElementById('messages');
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
@@ -1447,13 +1556,37 @@ function extractContent(callback) {
 }
 
 function clearChat() {
-    const messagesContainer = document.querySelector('#docuaid-extension .chatbot-messages');
+    let messagesContainer = document.getElementById('messages');
+    if (!messagesContainer) {
+        console.error('[DocuAid] Messages container not found in clearChat');
+        
+        // Try to find container with alternative selectors as fallback
+        const altContainer = document.querySelector('#docuaid-extension .chatbot-messages') || 
+                           document.querySelector('.chatbot-messages');
+        
+        if (!altContainer) {
+            console.error('[DocuAid] Could not find messages container with alternative selectors');
+            return;
+        }
+        
+        console.log('[DocuAid] Using alternative messages container');
+        messagesContainer = altContainer;
+    }
     
     // Clear all messages
     messagesContainer.innerHTML = '';
     
     // Add welcome message
-    addMessage('bot', 'Hello! I\'m DocuAid Assistant. How can I help you understand this document?');
+    const welcomeMessage = document.createElement('div');
+    welcomeMessage.className = 'message bot-message';
+    welcomeMessage.innerHTML = '<div class="message-content">Chat cleared. How can I help you today?</div>';
+    messagesContainer.appendChild(welcomeMessage);
+    
+    // Reset current session ID
+    const newSessionId = 'session_' + new Date().toISOString().replace(/[:.]/g, '_');
+    localStorage.setItem('docuaid-current-session-id', newSessionId);
+    
+    console.log('[DocuAid] Chat cleared, new session created:', newSessionId);
 }
 
 function checkHealth() {
@@ -1542,6 +1675,23 @@ if (document.readyState === 'loading') {
 } else {
     initChatbot();
 }
+
+// Add a window load event for redundancy
+window.addEventListener('load', function() {
+    // Check if chatbot has already been initialized
+    if (!document.getElementById('docuaid-extension')) {
+        console.log('[DocuAid] Initializing via window load event');
+        initChatbot();
+    }
+});
+
+// Add a safety timeout to ensure initialization
+setTimeout(function() {
+    if (!document.getElementById('docuaid-extension')) {
+        console.log('[DocuAid] Delayed initialization');
+        initChatbot();
+    }
+}, 1000);
 
 // Load saved settings function
 function loadSavedSettings() {
@@ -2191,3 +2341,32 @@ function autoResizeTextarea(textarea) {
         textarea.style.overflowY = 'hidden';
     }
 }
+
+// Additional initialization methods to ensure chatbot appears
+// Initialize immediately if document is already loaded
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    console.log('[DocuAid] Initializing immediately - document already loaded');
+    setTimeout(function() {
+        if (!document.getElementById('docuaid-extension')) {
+            initChatbot();
+        }
+    }, 100);
+}
+
+// Add window load event as additional safety measure
+window.addEventListener('load', function() {
+    console.log('[DocuAid] Window load event triggered');
+    if (!document.getElementById('docuaid-extension')) {
+        console.log('[DocuAid] Initializing via window load event');
+        initChatbot();
+    }
+});
+
+// Add a safety timeout to ensure initialization happens
+setTimeout(function() {
+    console.log('[DocuAid] Delayed initialization check');
+    if (!document.getElementById('docuaid-extension')) {
+        console.log('[DocuAid] Performing delayed initialization');
+        initChatbot();
+    }
+}, 1000);
