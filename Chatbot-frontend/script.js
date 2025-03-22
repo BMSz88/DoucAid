@@ -911,21 +911,20 @@ function removeTypingIndicator(indicator) {
     }
 }
 
+// Function to send message to the bot
 async function sendMessage() {
-    const userInput = document.querySelector('#docuaid-extension #user-input');
-    const userMessage = userInput.value.trim();
-
-    if (!userMessage) return;
-
+    const userMessage = document.getElementById('user-input').value.trim();
+    if(userMessage.length === 0) return;
+    
+    // Clear the input field
+    document.getElementById('user-input').value = '';
+    
     // Add user message to chat
-    addMessage('user', userMessage);
-
-    // Clear input
-    userInput.value = '';
-
-    // Show typing indicator
-    const typingIndicator = showTypingIndicator();
-
+    addMessage(userMessage, 'user');
+    
+    // Show loading indicator
+    showLoadingIndicator();
+    
     try {
         // Get API URL either from config or function
         const apiUrl = typeof apiConfig.getApiUrl === 'function' ?
@@ -994,6 +993,40 @@ async function sendMessage() {
                 console.log('[DocuAid] Continuing without vector store');
             }
         }
+    } finally {
+        // Hide loading indicator regardless of success or failure
+        hideLoadingIndicator();
+    }
+}
+
+// Function to show loading indicator
+function showLoadingIndicator() {
+    const loadingMessage = document.createElement('div');
+    loadingMessage.className = 'message bot-message loading-message';
+    loadingMessage.id = 'loading-indicator';
+    
+    const loadingDots = document.createElement('div');
+    loadingDots.className = 'loading-dots';
+    
+    for (let i = 0; i < 3; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        loadingDots.appendChild(dot);
+    }
+    
+    loadingMessage.appendChild(loadingDots);
+    document.getElementById('messages').appendChild(loadingMessage);
+    
+    // Scroll to bottom of chat
+    const messagesContainer = document.getElementById('messages');
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Function to hide loading indicator
+function hideLoadingIndicator() {
+    const loadingIndicator = document.getElementById('loading-indicator');
+    if (loadingIndicator) {
+        loadingIndicator.remove();
     }
 }
 
