@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuAid Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        .content-section {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+            background-color: #f1f1f1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+    <!-- Include the chatbot styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>DocuAid Test Page</h1>
+        
+        <div class="content-section">
+            <h2>About DocuAid</h2>
+            <p>DocuAid is an AI-powered chatbot that helps users find information within documents, articles, and webpages. It provides intelligent answers to questions about the content you're viewing.</p>
+            <p>Key features include:</p>
+            <ul>
+                <li>Content extraction from webpages</li>
+                <li>Natural language understanding</li>
+                <li>Context-aware responses</li>
+                <li>Document navigation assistance</li>
+                <li>User authentication and chat history</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>How to Use</h2>
+            <p>The DocuAid chatbot appears in the bottom right corner of the screen. Click on the chat icon to open the interface. You can ask questions about the content on this page, and DocuAid will provide relevant answers.</p>
+            <p>Example questions to try:</p>
+            <ul>
+                <li>"What is DocuAid?"</li>
+                <li>"What are the main features of DocuAid?"</li>
+                <li>"How do I use this chatbot?"</li>
+                <li>"Tell me about user authentication"</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Authentication Features</h2>
+            <p>DocuAid now includes user authentication with the following capabilities:</p>
+            <ul>
+                <li>User registration with username, email, and password</li>
+                <li>Secure login with JWT authentication</li>
+                <li>Password hashing for security</li>
+                <li>Persistent chat history across sessions</li>
+                <li>Profile management</li>
+            </ul>
+            <p>Your chat history is stored securely and can be accessed when you log in from any device.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Technical Information</h2>
+            <p>DocuAid is built with a robust tech stack:</p>
+            <ul>
+                <li>Frontend: HTML, CSS, JavaScript</li>
+                <li>Backend: Node.js with Express</li>
+                <li>Database: MongoDB for user data and chat history</li>
+                <li>Authentication: JWT (JSON Web Tokens)</li>
+                <li>AI: OpenAI GPT models</li>
+                <li>Vector Database: Pinecone for content indexing</li>
+            </ul>
+            <p>The system architecture follows a client-server model with RESTful API endpoints for communication.</p>
+        </div>
+    </div>
+
+    <!-- Include the chatbot scripts -->
+    <script src="config.js"></script>
+    <script src="login.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
