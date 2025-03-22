@@ -500,14 +500,10 @@ function setupEventListeners() {
                 settingsPanel.style.display = 'flex';
                 settingsPanel.style.zIndex = '100000';
                 
-                // Debug alert
-                alert('Settings panel should be visible now');
-                
                 console.log('[DocuAid] Settings panel active state:', settingsPanel.classList.contains('active'));
                 console.log('[DocuAid] Settings panel computed style:', window.getComputedStyle(settingsPanel).transform);
             } else {
                 console.error('[DocuAid] Settings panel not found!');
-                alert('Settings panel not found!');
             }
         });
     } else {

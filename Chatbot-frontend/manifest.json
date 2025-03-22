@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "DocuAid Assistant",
-    "version": "1.0",
-    "description": "A chatbot that helps you understand web content and answer questions",
+    "name": "DocuAid",
+    "version": "1.0.0",
+    "description": "DocuAid Chatbot Assistant",
     "action": {
         "default_popup": "popup.html",
         "default_icon": {
@@ -12,22 +12,23 @@
         }
     },
     "permissions": [
+        "scripting",
         "storage",
         "activeTab"
     ],
     "host_permissions": [
-        "http://localhost:3001/*"
+        "<all_urls>"
     ],
     "content_scripts": [
         {
             "matches": [
                 "<all_urls>"
             ],
-            "css": [
-                "content.css"
-            ],
             "js": [
-                "content.js"
+                "script.js"
+            ],
+            "css": [
+                "styles.css"
             ]
         }
     ],
@@ -39,7 +40,8 @@
     "web_accessible_resources": [
         {
             "resources": [
-                "images/*"
+                "script.js",
+                "styles.css"
             ],
             "matches": [
                 "<all_urls>"
@@ -47,6 +49,6 @@
         }
     ],
     "content_security_policy": {
-        "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' http://localhost:3001 https://*.openai.com;"
+        "extension_pages": "script-src 'self'; object-src 'self'"
     }
 }
