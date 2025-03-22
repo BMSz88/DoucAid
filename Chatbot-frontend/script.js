@@ -866,17 +866,17 @@ function setupEventListeners() {
 
     if (closeBtn) {
         closeBtn.addEventListener('click', function (e) {
-            console.log('[DocuAid] Close button clicked');
+        console.log('[DocuAid] Close button clicked');
             e.stopPropagation(); // Prevent event bubbling
             
-            chatbotContainer.classList.remove('active');
+        chatbotContainer.classList.remove('active');
             
             // Hide with explicit styles
-            chatbotContainer.style.opacity = '0';
-            chatbotContainer.style.visibility = 'hidden';
-            chatbotContainer.style.pointerEvents = 'none';
+        chatbotContainer.style.opacity = '0';
+        chatbotContainer.style.visibility = 'hidden';
+        chatbotContainer.style.pointerEvents = 'none';
             chatbotContainer.style.transform = 'translateY(20px)';
-        });
+    });
     } else {
         console.error('[DocuAid] Close button not found!');
     }
@@ -1339,43 +1339,43 @@ function removeTypingIndicator(indicator) {
 
 // Function to send message to the bot
 async function sendMessage() {
-    const userMessage = document.getElementById('user-input').value.trim();
+    const userInput = document.getElementById('user-input');
+    const userMessage = userInput ? userInput.value.trim() : '';
+    
     if(userMessage.length === 0) return;
     
     // Clear the input field
-    document.getElementById('user-input').value = '';
-    
-    // Add user message to chat
-    addMessage(userMessage, 'user');
-    
-    // Show loading indicator
-    showLoadingIndicator();
-    
-    try {
-        // Get API URL either from config or function
-        const apiUrl = typeof apiConfig.getApiUrl === 'function' ?
-            apiConfig.getApiUrl() : apiConfig.API_URL;
-
-        console.log('[DocuAid] Sending message to:', `${apiUrl}${apiConfig.CHAT_ENDPOINT}`);
-
-        // Create the request body with both parameters to ensure compatibility
-        const requestBody = {
-            question: userMessage,
-            message: userMessage
-        };
-
-        console.log('[DocuAid] Request body:', JSON.stringify(requestBody));
+    if (userInput) {
+        userInput.value = '';
         
+        // Reset the character counter if it exists
+        const charCounter = document.querySelector('#docuaid-extension .char-counter');
+        if (charCounter) {
+            charCounter.innerHTML = '0/2000';
+            charCounter.classList.remove('char-limit-warning');
+        }
+        
+        // Reset textarea height
+        autoResizeTextarea(userInput);
+    }
+
+    // Add user message to chat
+    addMessage('user', userMessage);
+
+    // Show typing indicator instead of loading
+    const typingIndicator = showTypingIndicator();
+
+    try {
         // Check if content has been extracted
         const hasExtractedContent = window.docuaidExtractedContent && 
                                    window.docuaidExtractedContent.content && 
                                    window.docuaidExtractedContent.content.length > 0;
                                    
-        // If no content has been extracted, and the setting is enabled, extract it automatically
-        // Default to true if not explicitly set to false
-        const autoExtract = localStorage.getItem('docuaid-auto-extract') !== 'false';
+        // Check if auto-extract setting is enabled (default to false to prevent automatic extraction)
+        const autoExtract = localStorage.getItem('docuaid-auto-extract') === 'true';
         
-        if (!hasExtractedContent && autoExtract) {
+        // If no content has been extracted and auto-extract is enabled, extract first
+        if (!hasExtractedContent && autoExtract && userMessage.toLowerCase().includes('this page')) {
             // Remove typing indicator temporarily
             removeTypingIndicator(typingIndicator);
             
@@ -1385,18 +1385,25 @@ async function sendMessage() {
                 sendMessageWithContent(userMessage);
             });
         }
-
+        
         // Simulate API call with timeout
         await new Promise(resolve => setTimeout(resolve, 1500));
         
-        // Generate a demo response
-        const demoResponse = generateDemoResponse(userMessage);
+        // Generate a response
+        let response;
+        if (hasExtractedContent) {
+            // If we have extracted content, use it to generate a response
+            response = generateAnswerFromExtractedContent(userMessage);
+        } else {
+            // Otherwise, generate a response based on general knowledge
+            response = generateGeneralKnowledgeResponse(userMessage);
+        }
         
         // Remove typing indicator
         removeTypingIndicator(typingIndicator);
 
         // Add bot response to chat
-        addMessage('bot', demoResponse);
+        addMessage('bot', response);
 
     } catch (error) {
         console.error('[DocuAid] Error:', error);
@@ -1513,6 +1520,11 @@ async function sendMessageWithContent(userMessage, hadError = false) {
 function generateSriLankaFallbackResponse(userMessage) {
     const lowerCaseMessage = userMessage.toLowerCase();
     
+    // If the message doesn't mention Sri Lanka, return null
+    if (!lowerCaseMessage.includes('sri lanka')) {
+        return null;
+    }
+    
     // Define common Sri Lanka topics and their answers
     const sriLankaFacts = {
         "capital": "Sri Jayawardenepura Kotte is the administrative capital of Sri Lanka, while Colombo is the commercial capital and largest city.",
@@ -1534,23 +1546,18 @@ function generateSriLankaFallbackResponse(userMessage) {
     
     // Check each topic to see if it's mentioned in the user message
     for (const [topic, answer] of Object.entries(sriLankaFacts)) {
-        if (lowerCaseMessage.includes(topic) && lowerCaseMessage.includes('sri lanka')) {
+        if (lowerCaseMessage.includes(topic)) {
             return answer;
         }
     }
     
     // Handle variations of 'Where is Sri Lanka'
-    if ((lowerCaseMessage.includes('where') || lowerCaseMessage.includes('located')) && lowerCaseMessage.includes('sri lanka')) {
-        return "Sri Lanka is an island nation located in South Asia, in the Indian Ocean, southeast of India.";
+    if (lowerCaseMessage.includes('where') || lowerCaseMessage.includes('located')) {
+        return "Sri Lanka is an island nation located in South Asia, in the Indian Ocean. It sits southeast of India and is separated from the Indian subcontinent by the Gulf of Mannar and the Palk Strait.";
     }
     
-    // Handle variations of 'What is Sri Lanka known for'
-    if ((lowerCaseMessage.includes('what') && lowerCaseMessage.includes('known for')) && lowerCaseMessage.includes('sri lanka')) {
-        return "Sri Lanka is known for its diverse landscapes, rich cultural heritage, ancient ruins, beautiful beaches, Ceylon tea, spices, wildlife (especially elephants and leopards), and friendly people.";
-    }
-    
-    // Generic fallback
-    return "I have information about Sri Lanka, a beautiful island nation in South Asia known for its diverse landscapes, rich cultural heritage, and historical significance. If you have a specific question about Sri Lanka, please feel free to ask.";
+    // Generic Sri Lanka query
+    return "Sri Lanka is an island nation in South Asia known for its diverse landscapes, rich cultural heritage, and historical significance. It's famous for its ancient Buddhist ruins, beautiful beaches, tea plantations, and wildlife. Is there a specific aspect of Sri Lanka you'd like to know more about?";
 }
 
 // Helper function to generate demo responses
@@ -1562,24 +1569,12 @@ function generateDemoResponse(userMessage) {
                                window.docuaidExtractedContent.content && 
                                window.docuaidExtractedContent.content.length > 0;
     
-    if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi')) {
-        return 'Hello! How can I help you understand this document?';
-    } else if (lowerCaseMessage.includes('settings')) {
-        return 'You can access settings by clicking the gear icon in the top right corner of the chatbot window.';
-    } else if (lowerCaseMessage.includes('extract')) {
-        return 'I can extract content from the page for you. Just click the extract button at the bottom of the chat window.';
-    } else if (lowerCaseMessage.includes('help')) {
-        return 'I\'m here to help you understand the content on this page. You can ask me questions about the document, and I\'ll do my best to answer them based on the content.';
-    } else if (lowerCaseMessage.includes('thank')) {
-        return 'You\'re welcome! If you have any more questions, feel free to ask.';
-    } else if (lowerCaseMessage.includes('what') && lowerCaseMessage.includes('page')) {
-        return 'This page appears to be about ' + document.title + '. I can extract more specific information if you\'d like.';
-    } else if (!hasExtractedContent) {
-        // If no content has been extracted yet, suggest to extract
-        return 'I understand you\'re asking about "' + userMessage + '". To provide the most accurate information, I\'d recommend extracting the content from this page first by clicking the extract button at the bottom of the chat.';
-    } else {
-        // Use the extracted content to generate a more meaningful response
+    // If we have extracted content, use it to generate a response
+    if (hasExtractedContent) {
         return generateAnswerFromExtractedContent(userMessage);
+    } else {
+        // Otherwise, generate a response based on general knowledge
+        return generateGeneralKnowledgeResponse(userMessage);
     }
 }
 
@@ -1588,40 +1583,40 @@ function extractContent(callback) {
     addSystemMessage('Extracting content from the current page...');
 
     try {
-        // Get the page content
-        const pageTitle = document.title;
-        const url = window.location.href;
+    // Get the page content
+    const pageTitle = document.title;
+    const url = window.location.href;
 
-        // For better extraction, get text content from main content areas
-        let pageContent = '';
+    // For better extraction, get text content from main content areas
+    let pageContent = '';
 
-        // Try to target main content areas first
-        const contentSelectors = [
-            'article', 'main', '.content', '#content',
-            '.article', '.post', '.page-content',
-            '[role="main"]', 'section'
-        ];
+    // Try to target main content areas first
+    const contentSelectors = [
+        'article', 'main', '.content', '#content',
+        '.article', '.post', '.page-content',
+        '[role="main"]', 'section'
+    ];
 
-        let contentElement = null;
-        for (const selector of contentSelectors) {
-            const elements = document.querySelectorAll(selector);
-            if (elements && elements.length > 0) {
-                // Find the largest content block
-                let largestElement = elements[0];
-                for (const el of elements) {
-                    if (el.textContent.length > largestElement.textContent.length) {
-                        largestElement = el;
-                    }
+    let contentElement = null;
+    for (const selector of contentSelectors) {
+        const elements = document.querySelectorAll(selector);
+        if (elements && elements.length > 0) {
+            // Find the largest content block
+            let largestElement = elements[0];
+            for (const el of elements) {
+                if (el.textContent.length > largestElement.textContent.length) {
+                    largestElement = el;
                 }
-                contentElement = largestElement;
-                break;
             }
+            contentElement = largestElement;
+            break;
         }
+    }
 
-        // If no main content area found, use document.body
-        pageContent = contentElement ?
-            contentElement.textContent.trim() :
-            document.body.textContent.trim();
+    // If no main content area found, use document.body
+    pageContent = contentElement ?
+        contentElement.textContent.trim() :
+        document.body.textContent.trim();
 
         // Fallback if content is too short
         if (pageContent.length < 100) {
@@ -1629,41 +1624,41 @@ function extractContent(callback) {
             pageContent = document.body.textContent.trim();
         }
 
-        // Limit content size to avoid API issues (max 50K characters)
-        if (pageContent.length > 50000) {
-            console.log('[DocuAid] Content too large, truncating');
-            pageContent = pageContent.substring(0, 50000);
-            addSystemMessage('Content is very large, using only the first part of the page.');
-        }
+    // Limit content size to avoid API issues (max 50K characters)
+    if (pageContent.length > 50000) {
+        console.log('[DocuAid] Content too large, truncating');
+        pageContent = pageContent.substring(0, 50000);
+        addSystemMessage('Content is very large, using only the first part of the page.');
+    }
 
-        // Show typing indicator
-        const typingIndicator = showTypingIndicator();
+    // Show typing indicator
+    const typingIndicator = showTypingIndicator();
 
-        // Simulate content extraction for demo
-        setTimeout(() => {
+    // Simulate content extraction for demo
+    setTimeout(() => {
             try {
-                // Remove typing indicator
-                removeTypingIndicator(typingIndicator);
-                
-                // Show success message
-                let displayContent = '';
-                if (pageTitle) {
-                    displayContent += `**${pageTitle}**\n\n`;
-                }
-                displayContent += `Content extracted successfully! (${Math.round(pageContent.length / 1000)}K characters)`;
-                displayContent += `\n\nMethod: Direct HTML Content Extraction`;
-                
-                addSystemMessage(displayContent);
-                
-                // Store the extracted content for later use
-                window.docuaidExtractedContent = {
-                    title: pageTitle,
-                    content: pageContent,
-                    url: url,
-                    timestamp: new Date().toISOString()
-                };
-                
-                console.log('[DocuAid] Content extracted and stored locally:', window.docuaidExtractedContent);
+        // Remove typing indicator
+        removeTypingIndicator(typingIndicator);
+        
+        // Show success message
+        let displayContent = '';
+        if (pageTitle) {
+            displayContent += `**${pageTitle}**\n\n`;
+        }
+        displayContent += `Content extracted successfully! (${Math.round(pageContent.length / 1000)}K characters)`;
+        displayContent += `\n\nMethod: Direct HTML Content Extraction`;
+        
+        addSystemMessage(displayContent);
+        
+        // Store the extracted content for later use
+        window.docuaidExtractedContent = {
+            title: pageTitle,
+            content: pageContent,
+            url: url,
+            timestamp: new Date().toISOString()
+        };
+        
+        console.log('[DocuAid] Content extracted and stored locally:', window.docuaidExtractedContent);
                 
                 // Call the callback if provided
                 if (typeof callback === 'function') {
@@ -1674,7 +1669,7 @@ function extractContent(callback) {
                 removeTypingIndicator(typingIndicator);
                 addSystemMessage('Sorry, I encountered an error processing the extracted content.');
             }
-        }, 2000);
+    }, 2000);
     } catch (error) {
         console.error('[DocuAid] Error during content extraction:', error);
         addSystemMessage('Sorry, I encountered an error while extracting content from this page. Please try again or try with a different page.');
@@ -2501,3 +2496,66 @@ setTimeout(function() {
         initChatbot();
     }
 }, 1000);
+
+// Function to generate responses based on general knowledge
+function generateGeneralKnowledgeResponse(userMessage) {
+    console.log('[DocuAid] Generating general knowledge response');
+    
+    const lowerCaseMessage = userMessage.toLowerCase();
+    
+    // Basic greeting responses
+    if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi') || lowerCaseMessage.includes('hey')) {
+        return 'Hello! I\'m DocuAid Assistant. How can I help you today?';
+    }
+    
+    // Help responses
+    if (lowerCaseMessage.includes('help') || lowerCaseMessage.includes('what can you do')) {
+        return 'I can help you in several ways:\n\n' +
+               '1. Answer questions about general topics\n' +
+               '2. Extract and analyze content from this page\n' +
+               '3. Provide information about Sri Lanka\n' +
+               '4. Assist with document understanding\n\n' +
+               'Feel free to ask me anything!';
+    }
+    
+    // Thank you responses
+    if (lowerCaseMessage.includes('thank') || lowerCaseMessage.includes('thanks')) {
+        return 'You\'re welcome! Is there anything else I can help you with?';
+    }
+    
+    // About the chatbot
+    if ((lowerCaseMessage.includes('who are you') || lowerCaseMessage.includes('what are you')) || 
+        (lowerCaseMessage.includes('about') && lowerCaseMessage.includes('yourself'))) {
+        return 'I\'m DocuAid Assistant, an AI-powered chatbot designed to help you understand documents and answer your questions. I can extract content from web pages and provide relevant information based on the content.';
+    }
+    
+    // Extraction explanation
+    if (lowerCaseMessage.includes('extract') || 
+        (lowerCaseMessage.includes('how') && lowerCaseMessage.includes('content'))) {
+        return 'To extract content from this page, click the "Extract" button at the bottom of the chat. This will help me understand the page content better and provide more accurate answers to your questions.';
+    }
+    
+    // Settings related queries
+    if (lowerCaseMessage.includes('settings') || lowerCaseMessage.includes('preferences')) {
+        return 'You can access settings by clicking the gear icon in the top right corner of the chat. There, you can adjust theme preferences, font size, and other options.';
+    }
+    
+    // Check for Sri Lanka related questions
+    const sriLankaResponse = generateSriLankaFallbackResponse(userMessage);
+    if (sriLankaResponse !== null) {
+        return sriLankaResponse;
+    }
+    
+    // Check for current page context
+    if (lowerCaseMessage.includes('this page') || lowerCaseMessage.includes('this document') || 
+        lowerCaseMessage.includes('current page')) {
+        return 'To answer questions about this specific page, I recommend clicking the "Extract" button first. ' +
+               'This will help me analyze the content and provide more accurate answers. ' +
+               'Currently, I\'m responding based on my general knowledge.';
+    }
+    
+    // Default response for unknown questions
+    return 'I understand your question about "' + userMessage + '". ' +
+           'I can provide better assistance if you extract the content from this page first using the Extract button, ' +
+           'or if you ask me about general topics or about Sri Lanka, which I have specific information about.';
+}
