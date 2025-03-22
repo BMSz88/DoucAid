@@ -1192,3 +1192,283 @@ function setupSettingsEventListeners() {
         });
     }
 }
+
+// Function to load chat history from localStorage
+function loadChatHistory() {
+    try {
+        const historyJson = localStorage.getItem('docuaid-chat-history');
+        if (!historyJson) {
+            return [];
+        }
+        
+        const history = JSON.parse(historyJson);
+        if (!Array.isArray(history)) {
+            console.error('[DocuAid] Invalid chat history format');
+            return [];
+        }
+        
+        return history;
+    } catch (error) {
+        console.error('[DocuAid] Error loading chat history:', error);
+        return [];
+    }
+}
+
+// Function to group messages by session
+function groupMessagesBySession(messages) {
+    const sessions = {};
+    
+    messages.forEach(message => {
+        const sessionId = message.sessionId || 'unknown_session';
+        
+        if (!sessions[sessionId]) {
+            sessions[sessionId] = {
+                id: sessionId,
+                url: message.url || '',
+                pageTitle: message.pageTitle || 'Unknown Page',
+                date: message.timestamp ? new Date(message.timestamp) : new Date(),
+                messages: []
+            };
+        }
+        
+        sessions[sessionId].messages.push(message);
+    });
+    
+    // Convert to array and sort by date (newest first)
+    return Object.values(sessions).sort((a, b) => b.date - a.date);
+}
+
+// Function to render sessions list
+function renderSessionsList(sessions) {
+    const sessionListEl = document.getElementById('session-list');
+    if (!sessionListEl) return;
+    
+    // Clear existing sessions
+    sessionListEl.innerHTML = '';
+    
+    if (sessions.length === 0) {
+        const emptyState = document.createElement('div');
+        emptyState.className = 'session-empty-state';
+        emptyState.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <p>No chat history found</p>
+        `;
+        sessionListEl.appendChild(emptyState);
+        return;
+    }
+    
+    // Render each session as a list item
+    sessions.forEach(session => {
+        const sessionItem = document.createElement('div');
+        sessionItem.className = 'session-item';
+        sessionItem.dataset.sessionId = session.id;
+        
+        const sessionTitle = document.createElement('div');
+        sessionTitle.className = 'session-title';
+        sessionTitle.textContent = session.pageTitle || 'Chat Session';
+        
+        const sessionDate = document.createElement('div');
+        sessionDate.className = 'session-date';
+        sessionDate.textContent = formatDate(session.date);
+        
+        sessionItem.appendChild(sessionTitle);
+        sessionItem.appendChild(sessionDate);
+        
+        // Add click event to show this session
+        sessionItem.addEventListener('click', () => {
+            // Remove active class from all sessions
+            document.querySelectorAll('.session-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Add active class to this session
+            sessionItem.classList.add('active');
+            
+            // Render this session's messages
+            renderSessionMessages(session);
+        });
+        
+        sessionListEl.appendChild(sessionItem);
+    });
+}
+
+// Function to render a session's messages
+function renderSessionMessages(session) {
+    const sessionMessagesEl = document.getElementById('session-messages');
+    if (!sessionMessagesEl) return;
+    
+    // Clear existing messages
+    sessionMessagesEl.innerHTML = '';
+    
+    if (!session.messages || session.messages.length === 0) {
+        const emptyState = document.createElement('div');
+        emptyState.className = 'session-empty-state';
+        emptyState.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <p>No messages in this session</p>
+        `;
+        sessionMessagesEl.appendChild(emptyState);
+        return;
+    }
+    
+    // Add session info at the top
+    const sessionInfo = document.createElement('div');
+    sessionInfo.className = 'session-info';
+    sessionInfo.innerHTML = `
+        <h3>${session.pageTitle || 'Chat Session'}</h3>
+        <p>${session.url ? `<a href="${session.url}" target="_blank">${session.url}</a>` : ''}</p>
+        <p class="session-date">${formatDate(session.date, true)}</p>
+    `;
+    sessionMessagesEl.appendChild(sessionInfo);
+    
+    // Create messages container
+    const messagesContainer = document.createElement('div');
+    messagesContainer.className = 'history-messages-container';
+    
+    // Add each message
+    session.messages.forEach(message => {
+        const messageEl = document.createElement('div');
+        messageEl.className = `history-message ${message.type}-message`;
+        
+        const contentEl = document.createElement('div');
+        contentEl.className = 'message-content';
+        contentEl.innerHTML = message.content;
+        
+        const timestampEl = document.createElement('div');
+        timestampEl.className = 'history-timestamp';
+        timestampEl.textContent = formatTime(message.timestamp);
+        
+        messageEl.appendChild(contentEl);
+        messageEl.appendChild(timestampEl);
+        messagesContainer.appendChild(messageEl);
+    });
+    
+    sessionMessagesEl.appendChild(messagesContainer);
+    
+    // Add "Load in Chat" button
+    const loadButton = document.createElement('button');
+    loadButton.className = 'settings-button';
+    loadButton.textContent = 'Load in Current Chat';
+    loadButton.addEventListener('click', () => {
+        loadSessionInCurrentChat(session);
+    });
+    
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'history-actions';
+    buttonContainer.appendChild(loadButton);
+    
+    sessionMessagesEl.appendChild(buttonContainer);
+}
+
+// Function to show chat history viewer
+function showChatHistory() {
+    // Load history from storage
+    const history = loadChatHistory();
+    
+    // Group by session
+    const sessions = groupMessagesBySession(history);
+    
+    // Render sessions list
+    renderSessionsList(sessions);
+    
+    // Show history modal
+    const historyModal = document.getElementById('history-modal');
+    if (historyModal) {
+        historyModal.classList.add('active');
+        historyModal.style.transform = 'translateX(0)';
+        historyModal.style.opacity = '1';
+        historyModal.style.visibility = 'visible';
+        historyModal.style.pointerEvents = 'auto';
+        historyModal.style.display = 'flex';
+        historyModal.style.zIndex = '100001';
+    }
+}
+
+// Function to load a session into the current chat
+function loadSessionInCurrentChat(session) {
+    // Clear current chat
+    clearChat();
+    
+    // Close history modal
+    const historyModal = document.getElementById('history-modal');
+    if (historyModal) {
+        historyModal.classList.remove('active');
+        historyModal.style.transform = 'translateX(100%)';
+        historyModal.style.opacity = '0';
+        historyModal.style.visibility = 'hidden';
+        historyModal.style.pointerEvents = 'none';
+    }
+    
+    // Need a slight delay to ensure the chat is cleared
+    setTimeout(() => {
+        // Add welcome message first
+        addMessage('bot', 'Hello! I\'m DocuAid Assistant. How can I help you understand this document?');
+        
+        // Add each message from the session
+        session.messages.forEach(message => {
+            if (message.type === 'system') {
+                addSystemMessage(message.content);
+            } else {
+                // Don't add initial welcome message again
+                if (message.content !== 'Hello! I\'m DocuAid Assistant. How can I help you understand this document?') {
+                    addMessage(message.type, message.content);
+                }
+            }
+        });
+        
+        // Show info that this is loaded from history
+        addSystemMessage(`Loaded chat history from ${formatDate(session.date)}`);
+    }, 100);
+}
+
+// Helper function to format date
+function formatDate(date, includeTime = false) {
+    if (!(date instanceof Date)) {
+        if (typeof date === 'string') {
+            date = new Date(date);
+        } else {
+            return 'Unknown date';
+        }
+    }
+    
+    // Check if date is today
+    const today = new Date();
+    const isToday = date.getDate() === today.getDate() &&
+                  date.getMonth() === today.getMonth() &&
+                  date.getFullYear() === today.getFullYear();
+    
+    // Check if date is yesterday
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const isYesterday = date.getDate() === yesterday.getDate() &&
+                      date.getMonth() === yesterday.getMonth() &&
+                      date.getFullYear() === yesterday.getFullYear();
+    
+    if (isToday) {
+        return includeTime ? `Today at ${formatTime(date)}` : 'Today';
+    } else if (isYesterday) {
+        return includeTime ? `Yesterday at ${formatTime(date)}` : 'Yesterday';
+    } else {
+        const options = { month: 'short', day: 'numeric' };
+        if (date.getFullYear() !== today.getFullYear()) {
+            options.year = 'numeric';
+        }
+        const formattedDate = date.toLocaleDateString(undefined, options);
+        return includeTime ? `${formattedDate} at ${formatTime(date)}` : formattedDate;
+    }
+}
+
+// Helper function to format time
+function formatTime(timestamp) {
+    const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
+    return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+}
