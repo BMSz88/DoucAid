@@ -1038,45 +1038,40 @@ async function sendMessageWithContent(userMessage, hadError = false) {
 function generateSriLankaFallbackResponse(userMessage) {
     const lowerCaseMessage = userMessage.toLowerCase();
     
-    // Handle specific Sri Lanka related questions
-    if (lowerCaseMessage.includes('capital') && lowerCaseMessage.includes('sri lanka')) {
-        return "Sri Jayawardenepura Kotte is the administrative capital of Sri Lanka, while Colombo is the commercial capital and largest city.";
+    // Define common Sri Lanka topics and their answers
+    const sriLankaFacts = {
+        "capital": "Sri Jayawardenepura Kotte is the administrative capital of Sri Lanka, while Colombo is the commercial capital and largest city.",
+        "population": "As of recent estimates, Sri Lanka has a population of approximately 22 million people.",
+        "language": "The official languages of Sri Lanka are Sinhala and Tamil. English is also commonly used, especially in government and education.",
+        "religion": "Buddhism is the majority religion in Sri Lanka, practiced by about 70% of the population. Other religions include Hinduism, Islam, and Christianity.",
+        "currency": "The currency of Sri Lanka is the Sri Lankan Rupee (LKR).",
+        "independence": "Sri Lanka gained independence from British rule on February 4, 1948.",
+        "flag": "The Sri Lankan flag features a golden lion holding a sword on a maroon background with four Bo tree leaves in the corners. The flag also has orange and green vertical stripes representing the Tamil and Muslim communities.",
+        "president": "I have information about Sri Lanka's political system, but for the most current information about who is serving as president, you might want to check a more up-to-date source.",
+        "tourist": "Sri Lanka is famous for its ancient ruins, beautiful beaches, tea plantations, wildlife, and cultural heritage. Popular tourist destinations include Sigiriya Rock Fortress, Kandy, Galle Fort, Yala National Park, and the hill country around Nuwara Eliya.",
+        "food": "Sri Lankan cuisine is known for its complex flavors and spices. Popular dishes include rice and curry, hoppers (a type of pancake), string hoppers, kottu roti, and various seafood dishes. The cuisine often features coconut, chili peppers, and an array of spices.",
+        "history": "Sri Lanka has a rich history dating back over 3,000 years. It was known as Ceylon during colonial times and has been influenced by various cultures including Indian, Portuguese, Dutch, and British.",
+        "weather": "Sri Lanka has a tropical climate with distinct wet and dry seasons. The weather varies by region, with the central highlands being cooler than the coastal areas.",
+        "economy": "Sri Lanka's economy is based on agriculture, tourism, and exports like tea, spices, textiles, and rubber. Tea exports, particularly Ceylon tea, are a significant source of revenue.",
+        "geography": "Sri Lanka is an island nation in South Asia, located in the Indian Ocean. It features diverse landscapes including mountains, rainforests, beaches, and plains.",
+        "wildlife": "Sri Lanka has diverse wildlife including elephants, leopards, sloth bears, and various species of birds. It's known for having one of the highest densities of leopards in the world."
+    };
+    
+    // Check each topic to see if it's mentioned in the user message
+    for (const [topic, answer] of Object.entries(sriLankaFacts)) {
+        if (lowerCaseMessage.includes(topic) && lowerCaseMessage.includes('sri lanka')) {
+            return answer;
+        }
     }
     
-    if (lowerCaseMessage.includes('population') && lowerCaseMessage.includes('sri lanka')) {
-        return "As of recent estimates, Sri Lanka has a population of approximately 22 million people.";
+    // Handle variations of 'Where is Sri Lanka'
+    if ((lowerCaseMessage.includes('where') || lowerCaseMessage.includes('located')) && lowerCaseMessage.includes('sri lanka')) {
+        return "Sri Lanka is an island nation located in South Asia, in the Indian Ocean, southeast of India.";
     }
     
-    if (lowerCaseMessage.includes('language') && lowerCaseMessage.includes('sri lanka')) {
-        return "The official languages of Sri Lanka are Sinhala and Tamil. English is also commonly used, especially in government and education.";
-    }
-    
-    if (lowerCaseMessage.includes('religion') && lowerCaseMessage.includes('sri lanka')) {
-        return "Buddhism is the majority religion in Sri Lanka, practiced by about 70% of the population. Other religions include Hinduism, Islam, and Christianity.";
-    }
-    
-    if (lowerCaseMessage.includes('currency') && lowerCaseMessage.includes('sri lanka')) {
-        return "The currency of Sri Lanka is the Sri Lankan Rupee (LKR).";
-    }
-    
-    if (lowerCaseMessage.includes('independence') && lowerCaseMessage.includes('sri lanka')) {
-        return "Sri Lanka gained independence from British rule on February 4, 1948.";
-    }
-    
-    if (lowerCaseMessage.includes('flag') && lowerCaseMessage.includes('sri lanka')) {
-        return "The Sri Lankan flag features a golden lion holding a sword on a maroon background with four Bo tree leaves in the corners. The flag also has orange and green vertical stripes representing the Tamil and Muslim communities.";
-    }
-    
-    if (lowerCaseMessage.includes('president') && lowerCaseMessage.includes('sri lanka')) {
-        return "I have information about Sri Lanka's political system, but for the most current information about who is serving as president, you might want to check a more up-to-date source.";
-    }
-    
-    if (lowerCaseMessage.includes('tourist') && lowerCaseMessage.includes('sri lanka')) {
-        return "Sri Lanka is famous for its ancient ruins, beautiful beaches, tea plantations, wildlife, and cultural heritage. Popular tourist destinations include Sigiriya Rock Fortress, Kandy, Galle Fort, Yala National Park, and the hill country around Nuwara Eliya.";
-    }
-    
-    if (lowerCaseMessage.includes('food') && lowerCaseMessage.includes('sri lanka')) {
-        return "Sri Lankan cuisine is known for its complex flavors and spices. Popular dishes include rice and curry, hoppers (a type of pancake), string hoppers, kottu roti, and various seafood dishes. The cuisine often features coconut, chili peppers, and an array of spices.";
+    // Handle variations of 'What is Sri Lanka known for'
+    if ((lowerCaseMessage.includes('what') && lowerCaseMessage.includes('known for')) && lowerCaseMessage.includes('sri lanka')) {
+        return "Sri Lanka is known for its diverse landscapes, rich cultural heritage, ancient ruins, beautiful beaches, Ceylon tea, spices, wildlife (especially elephants and leopards), and friendly people.";
     }
     
     // Generic fallback
