@@ -111,6 +111,22 @@ function initChatbot() {
     chatbotControls.className = 'chatbot-controls';
     chatbotHeader.appendChild(chatbotControls);
 
+    // Create theme toggle button
+    const themeToggleButton = document.createElement('button');
+    themeToggleButton.className = 'theme-toggle-button';
+    themeToggleButton.id = 'theme-toggle';
+    
+    // Set the initial icon based on the current theme
+    const isDarkMode = docuaidExtension.classList.contains('dark-mode');
+    if (isDarkMode) {
+        themeToggleButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"></path></svg>';
+    } else {
+        themeToggleButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+    }
+    
+    themeToggleButton.setAttribute('title', isDarkMode ? 'Switch to light mode' : 'Switch to dark mode');
+    chatbotControls.appendChild(themeToggleButton);
+
     // Create clear chat button
     const clearChatButton = document.createElement('button');
     clearChatButton.className = 'clear-chat-button';
@@ -539,6 +555,7 @@ function setupEventListeners() {
     const settingsButton = document.querySelector('#docuaid-extension #settings-button');
     const closeSettingsButton = document.querySelector('#docuaid-extension #close-settings-button');
     const settingsPanel = document.querySelector('#docuaid-extension #settings-panel');
+    const docuaidExtension = document.getElementById('docuaid-extension');
 
     // Set up event listeners
     chatbotIcon.addEventListener('click', function () {
@@ -660,8 +677,7 @@ function setupEventListeners() {
         clearButton.addEventListener('click', clearChat);
     }
     
-    // Theme toggling
-    const docuaidExtension = document.getElementById('docuaid-extension');
+    // Theme toggling in chat header
     const themeToggleBtn = document.querySelector('#docuaid-extension #theme-toggle');
     
     if (themeToggleBtn) {
@@ -673,8 +689,14 @@ function setupEventListeners() {
             const isDarkMode = docuaidExtension.classList.contains('dark-mode');
             localStorage.setItem('docuaid-dark-mode', isDarkMode);
             
-            // Update the button icon
-            updateThemeButtonIcon(isDarkMode);
+            // Update button title and icon
+            themeToggleBtn.setAttribute('title', isDarkMode ? 'Switch to light mode' : 'Switch to dark mode');
+            
+            if (isDarkMode) {
+                themeToggleBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"></path></svg>';
+            } else {
+                themeToggleBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+            }
         });
     }
     
@@ -1374,6 +1396,7 @@ function loadSavedSettings() {
     // Load font size setting
     const savedFontSize = localStorage.getItem('docuaid-font-size') || 'medium';
     const fontSizeSelect = document.getElementById('font-size-select');
+    
     
     if (fontSizeSelect) {
         fontSizeSelect.value = savedFontSize;

@@ -1372,3 +1372,32 @@ body.dark-mode .system-message .message-content {
     background-color: rgba(255, 255, 255, 0.1);
     color: #fff;
 }
+
+/* Theme toggle button styles */
+.theme-toggle-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 4px;
+    margin-right: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.theme-toggle-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #333;
+}
+
+.dark-mode .theme-toggle-button {
+    color: #aaa;
+}
+
+.dark-mode .theme-toggle-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
