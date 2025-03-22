@@ -707,17 +707,17 @@ body.dark-mode .system-message .message-content {
 }
 
 #docuaid-extension .about-info {
-    font-size: 13px;
-    color: #666;
-    line-height: 1.6;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
 }
 
 #docuaid-extension .about-info p {
-    margin-bottom: 5px;
+    margin: 8px 0;
 }
 
 #docuaid-extension .about-info a {
-    color: #467DF6;
+    color: #7b68ee;
     text-decoration: none;
 }
 
@@ -725,49 +725,145 @@ body.dark-mode .system-message .message-content {
     text-decoration: underline;
 }
 
-/* Dark Mode Settings Styles */
-#docuaid-extension.dark-mode .settings-section {
-    border-color: #3d3d3d;
+/* Login UI Components */
+#docuaid-extension .login-container {
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
 }
 
-#docuaid-extension.dark-mode .settings-section-title {
-    color: #6B90F0;
+#docuaid-extension .form-group {
+    margin-bottom: 15px;
 }
 
-#docuaid-extension.dark-mode .toggle-switch-label {
-    background: #444;
+#docuaid-extension .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #444;
 }
 
-#docuaid-extension.dark-mode .toggle-switch-label .toggle-switch-switch {
-    background: #666;
+#docuaid-extension .form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
 }
 
-#docuaid-extension.dark-mode .toggle-label {
-    color: #b0b0b0;
+#docuaid-extension .primary-button {
+    background-color: #7b68ee;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
 }
 
-#docuaid-extension.dark-mode .settings-select,
-#docuaid-extension.dark-mode .settings-input {
-    background-color: #3d3d3d;
-    border-color: #555;
-    color: #f0f0f0;
+#docuaid-extension .secondary-button {
+    background-color: #e0e0e0;
+    color: #444;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
 }
 
-#docuaid-extension.dark-mode .settings-select:focus,
-#docuaid-extension.dark-mode .settings-input:focus {
-    border-color: #6B90F0;
+#docuaid-extension .danger-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
 }
 
-#docuaid-extension.dark-mode .toggle-visibility-button {
-    color: #b0b0b0;
+#docuaid-extension .form-footer {
+    margin-top: 15px;
+    text-align: center;
 }
 
-#docuaid-extension.dark-mode .about-info {
-    color: #b0b0b0;
+#docuaid-extension .form-footer a {
+    color: #7b68ee;
+    text-decoration: none;
+    font-size: 0.9em;
 }
 
-#docuaid-extension.dark-mode .about-info a {
-    color: #6B90F0;
+#docuaid-extension .form-footer a:hover {
+    text-decoration: underline;
+}
+
+#docuaid-extension .user-profile {
+    padding: 15px;
+}
+
+#docuaid-extension .profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#docuaid-extension .profile-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #7b68ee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+#docuaid-extension .profile-avatar span {
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+#docuaid-extension .profile-info {
+    flex: 1;
+}
+
+#docuaid-extension .profile-info h4 {
+    margin: 0 0 5px 0;
+    font-size: 1.1em;
+}
+
+#docuaid-extension .profile-info p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+#docuaid-extension .profile-actions {
+    margin-top: 15px;
+}
+
+/* Dark mode styles for login UI */
+#docuaid-extension.dark-mode .login-container {
+    background-color: #2a2a2a;
+}
+
+#docuaid-extension.dark-mode .form-group label {
+    color: #e0e0e0;
+}
+
+#docuaid-extension.dark-mode .secondary-button {
+    background-color: #444;
+    color: #e0e0e0;
+}
+
+#docuaid-extension.dark-mode .form-footer a {
+    color: #b39dff;
+}
+
+#docuaid-extension.dark-mode .profile-info h4 {
+    color: #e0e0e0;
+}
+
+#docuaid-extension.dark-mode .profile-info p {
+    color: #aaa;
 }
 
 /* Font Size Styles */
@@ -1154,4 +1250,52 @@ body.dark-mode .system-message .message-content {
 
 #docuaid-extension.dark-mode .session-empty-state svg {
     color: #666;
+}
+
+/* Dark Mode Settings Styles */
+#docuaid-extension.dark-mode .settings-section {
+    border-color: #3d3d3d;
+}
+
+#docuaid-extension.dark-mode .settings-section-title {
+    color: #6B90F0;
+}
+
+#docuaid-extension.dark-mode .toggle-switch-label {
+    background: #444;
+}
+
+#docuaid-extension.dark-mode .toggle-switch-label .toggle-switch-switch {
+    background: #666;
+}
+
+#docuaid-extension.dark-mode .toggle-label {
+    color: #b0b0b0;
+}
+
+#docuaid-extension.dark-mode .settings-select,
+#docuaid-extension.dark-mode .settings-input {
+    background-color: #3d3d3d;
+    border-color: #555;
+    color: #f0f0f0;
+}
+
+#docuaid-extension.dark-mode .settings-select:focus,
+#docuaid-extension.dark-mode .settings-input:focus {
+    border-color: #6B90F0;
+}
+
+#docuaid-extension.dark-mode .toggle-visibility-button {
+    color: #b0b0b0;
+}
+
+/* Login UI Components */
+#docuaid-extension .login-container {
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+}
+
+#docuaid-extension .form-group {
+    margin-bottom: 15px;
 }

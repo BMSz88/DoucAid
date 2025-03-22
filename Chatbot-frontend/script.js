@@ -516,6 +516,9 @@ function initChatbot() {
     // Setup event listeners
     setupEventListeners();
 
+    // Check if user is logged in
+    checkUserLoginStatus();
+
     console.log('[DocuAid] Chatbot initialized successfully');
 }
 
@@ -1229,6 +1232,226 @@ function setupSettingsEventListeners() {
                 historyModal.style.pointerEvents = 'none';
             }
         });
+    }
+
+    // Toggle between login and signup forms
+    const signupToggle = document.getElementById('signup-toggle');
+    const loginToggle = document.getElementById('login-toggle');
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const userProfile = document.getElementById('user-profile');
+    
+    if (signupToggle) {
+        signupToggle.addEventListener('click', () => {
+            loginForm.style.display = 'none';
+            signupForm.style.display = 'block';
+            userProfile.style.display = 'none';
+        });
+    }
+    
+    if (loginToggle) {
+        loginToggle.addEventListener('click', () => {
+            loginForm.style.display = 'block';
+            signupForm.style.display = 'none';
+            userProfile.style.display = 'none';
+        });
+    }
+    
+    // Handle login form submission
+    const loginButton = document.getElementById('login-button');
+    if (loginButton) {
+        loginButton.addEventListener('click', () => {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                addSystemMessage('Please enter both username and password.');
+                return;
+            }
+            
+            // Simulate login API call
+            loginUser(username, password);
+        });
+    }
+    
+    // Handle signup form submission
+    const signupButton = document.getElementById('signup-button');
+    if (signupButton) {
+        signupButton.addEventListener('click', () => {
+            const username = document.getElementById('new-username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            if (!username || !email || !password || !confirmPassword) {
+                addSystemMessage('Please fill out all fields.');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                addSystemMessage('Passwords do not match.');
+                return;
+            }
+            
+            // Simulate signup API call
+            registerUser(username, email, password);
+        });
+    }
+    
+    // Handle logout
+    const logoutButton = document.getElementById('logout-button');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            logoutUser();
+        });
+    }
+    
+    // Handle forgot password
+    const forgotPassword = document.getElementById('forgot-password');
+    if (forgotPassword) {
+        forgotPassword.addEventListener('click', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            
+            if (!username) {
+                addSystemMessage('Please enter your username to reset password.');
+                return;
+            }
+            
+            // Simulate password reset
+            addSystemMessage(`Password reset link sent to the email associated with ${username}.`);
+        });
+    }
+}
+
+// Function to handle user login
+async function loginUser(username, password) {
+    try {
+        // In a real application, this would be an API call
+        // For now, we'll simulate a successful login
+        // Add loading indicator or disable buttons here
+        
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Store user info in localStorage
+        const userInfo = {
+            username: username,
+            email: `${username}@example.com`, // In a real app, this would come from the backend
+            loggedIn: true,
+            loginTime: new Date().toISOString()
+        };
+        
+        localStorage.setItem('docuaid-user', JSON.stringify(userInfo));
+        
+        // Update UI to show logged in state
+        updateUserProfileUI(userInfo);
+        
+        // Show success message
+        addSystemMessage(`Welcome back, ${username}!`);
+        
+    } catch (error) {
+        console.error('Login error:', error);
+        addSystemMessage('Login failed. Please try again.');
+    }
+}
+
+// Function to handle user registration
+async function registerUser(username, email, password) {
+    try {
+        // In a real application, this would be an API call
+        // For now, we'll simulate a successful registration
+        
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Store user info in localStorage
+        const userInfo = {
+            username: username,
+            email: email,
+            loggedIn: true,
+            loginTime: new Date().toISOString()
+        };
+        
+        localStorage.setItem('docuaid-user', JSON.stringify(userInfo));
+        
+        // Update UI to show logged in state
+        updateUserProfileUI(userInfo);
+        
+        // Show success message
+        addSystemMessage(`Account created successfully. Welcome, ${username}!`);
+        
+    } catch (error) {
+        console.error('Registration error:', error);
+        addSystemMessage('Registration failed. Please try again.');
+    }
+}
+
+// Function to handle user logout
+function logoutUser() {
+    // Remove user info from localStorage
+    localStorage.removeItem('docuaid-user');
+    
+    // Update UI to show logged out state
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const userProfile = document.getElementById('user-profile');
+    
+    if (loginForm && signupForm && userProfile) {
+        loginForm.style.display = 'block';
+        signupForm.style.display = 'none';
+        userProfile.style.display = 'none';
+        
+        // Clear form fields
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+    }
+    
+    // Show logout message
+    addSystemMessage('You have been logged out successfully.');
+}
+
+// Function to update the user profile UI
+function updateUserProfileUI(userInfo) {
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const userProfile = document.getElementById('user-profile');
+    const profileName = document.getElementById('profile-name');
+    const profileEmail = document.getElementById('profile-email');
+    const profileInitial = document.getElementById('profile-initial');
+    
+    if (loginForm && signupForm && userProfile && profileName && profileEmail && profileInitial) {
+        // Hide login/signup forms and show profile
+        loginForm.style.display = 'none';
+        signupForm.style.display = 'none';
+        userProfile.style.display = 'block';
+        
+        // Update profile information
+        profileName.textContent = userInfo.username;
+        profileEmail.textContent = userInfo.email;
+        profileInitial.textContent = userInfo.username.charAt(0).toUpperCase();
+    }
+}
+
+// Function to check if user is logged in on page load
+function checkUserLoginStatus() {
+    const userInfoString = localStorage.getItem('docuaid-user');
+    
+    if (userInfoString) {
+        try {
+            const userInfo = JSON.parse(userInfoString);
+            
+            // Check if login is still valid (e.g., not expired)
+            // In a real app, you might check token expiration here
+            if (userInfo.loggedIn) {
+                // Update UI to show logged in state
+                updateUserProfileUI(userInfo);
+            }
+        } catch (error) {
+            console.error('Error parsing user info:', error);
+            // Handle corrupted data by logging out
+            logoutUser();
+        }
     }
 }
 

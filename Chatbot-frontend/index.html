@@ -140,14 +140,65 @@
                         </div>
                     </div>
 
-                    <!-- About Section -->
+                    <!-- User Login Section (Replacing About Section) -->
                     <div class="settings-section">
-                        <h3 class="settings-section-title">About</h3>
-                        <div class="about-info">
-                            <p>Version: 1.0.0</p>
-                            <p>&copy; 2025 DocuAid. All rights reserved.</p>
-                            <p><a href="https://www.docuaid.online/privacy" target="_blank">Privacy Policy</a></p>
-                            <p><a href="https://www.docuaid.online/terms" target="_blank">Terms of Service</a></p>
+                        <h3 class="settings-section-title">User Login</h3>
+                        <div class="login-container" id="login-container">
+                            <div id="login-form" class="login-form">
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input type="text" id="username" class="settings-input" placeholder="Enter your username">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" id="password" class="settings-input" placeholder="Enter your password">
+                                </div>
+                                <div class="form-actions">
+                                    <button id="login-button" class="settings-button primary-button">Login</button>
+                                    <button id="signup-toggle" class="settings-button secondary-button">Sign Up</button>
+                                </div>
+                                <div class="form-footer">
+                                    <a href="#" id="forgot-password">Forgot password?</a>
+                                </div>
+                            </div>
+                            
+                            <div id="signup-form" class="signup-form" style="display: none;">
+                                <div class="form-group">
+                                    <label for="new-username">Username</label>
+                                    <input type="text" id="new-username" class="settings-input" placeholder="Choose a username">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" class="settings-input" placeholder="Enter your email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-password">Password</label>
+                                    <input type="password" id="new-password" class="settings-input" placeholder="Choose a password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirm-password">Confirm Password</label>
+                                    <input type="password" id="confirm-password" class="settings-input" placeholder="Confirm your password">
+                                </div>
+                                <div class="form-actions">
+                                    <button id="signup-button" class="settings-button primary-button">Sign Up</button>
+                                    <button id="login-toggle" class="settings-button secondary-button">Back to Login</button>
+                                </div>
+                            </div>
+                            
+                            <div id="user-profile" class="user-profile" style="display: none;">
+                                <div class="profile-header">
+                                    <div class="profile-avatar">
+                                        <span id="profile-initial">U</span>
+                                    </div>
+                                    <div class="profile-info">
+                                        <h4 id="profile-name">Username</h4>
+                                        <p id="profile-email">user@example.com</p>
+                                    </div>
+                                </div>
+                                <div class="profile-actions">
+                                    <button id="logout-button" class="settings-button danger-button">Logout</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
