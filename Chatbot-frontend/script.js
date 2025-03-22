@@ -1,3 +1,134 @@
+// Self-executing function to ensure immediate initialization
+(function() {
+    console.log('[DocuAid] Immediate execution started');
+    
+    // Create a style element to inject CSS directly
+    const style = document.createElement('style');
+    style.textContent = `
+        #docuaid-root {
+            position: fixed;
+            z-index: 9999;
+            font-family: Arial, sans-serif;
+        }
+        
+        #docuaid-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #467DF6;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 9998;
+            visibility: visible;
+            opacity: 1;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        #docuaid-container {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            max-height: 70vh;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 9999;
+            pointer-events: none;
+            overflow: hidden;
+            border: none;
+        }
+        
+        #docuaid-container.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        
+        #docuaid-messages {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            scroll-behavior: smooth;
+            background-color: transparent;
+        }
+        
+        .message {
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 80%;
+            position: relative;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background-color: #467DF6;
+            color: white;
+        }
+        
+        .bot-message {
+            align-self: flex-start;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Create root element
+    const rootElement = document.createElement('div');
+    rootElement.id = 'docuaid-root';
+    document.body.appendChild(rootElement);
+    
+    // Create chatbot icon
+    const chatbotIcon = document.createElement('div');
+    chatbotIcon.id = 'docuaid-icon';
+    chatbotIcon.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16 13H13V16C13 16.55 12.55 17 12 17C11.45 17 11 16.55 11 16V13H8C7.45 13 7 12.55 7 12C7 11.45 7.45 11 8 11H11V8C11 7.45 11.45 7 12 7C12.55 7 13 7.45 13 8V11H16C16.55 11 17 11.45 17 12C17 12.55 16.55 13 16 13Z" fill="white"/></svg>';
+    rootElement.appendChild(chatbotIcon);
+    
+    // Create chatbot container
+    const chatbotContainer = document.createElement('div');
+    chatbotContainer.id = 'docuaid-container';
+    rootElement.appendChild(chatbotContainer);
+    
+    // Create messages container
+    const messagesContainer = document.createElement('div');
+    messagesContainer.id = 'docuaid-messages';
+    chatbotContainer.appendChild(messagesContainer);
+    
+    // Add welcome message
+    const welcomeMessage = document.createElement('div');
+    welcomeMessage.className = 'message bot-message';
+    welcomeMessage.innerHTML = '<div class="message-content">Hello! I\'m your DocuAid Assistant. How can I help you today?</div>';
+    messagesContainer.appendChild(welcomeMessage);
+    
+    // Setup basic click event for icon
+    chatbotIcon.addEventListener('click', function() {
+        console.log('[DocuAid] Icon clicked in direct injection');
+        chatbotContainer.classList.add('active');
+    });
+    
+    console.log('[DocuAid] Direct injection complete');
+})();
+
 // Global API configuration
 if (typeof apiConfig === 'undefined') {
     window.apiConfig = {
