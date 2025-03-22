@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DocuAid Test</title>
+    <script src="../Chatbot-frontend/config.js"></script>
+    <script src="../Chatbot-frontend/login.js"></script>
+    <script src="../Chatbot-frontend/script.js"></script>
+    <link rel="stylesheet" href="../Chatbot-frontend/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        p {
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .debug {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        
+        button {
+            background-color: #467DF6;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        button:hover {
+            background-color: #3a66c5;
+        }
+    </style>
+</head>
+<body>
+    <h1>DocuAid Test Page</h1>
+    <p>This page is used to test the DocuAid chatbot functionality. You should see the chatbot icon in the bottom-right corner.</p>
+    
+    <div class="debug">
+        <p><strong>Debugging:</strong></p>
+        <button onclick="console.log(docuaidDebug.checkElements()); alert('Check browser console for details')">Check UI Elements</button>
+        <button onclick="docuaidDebug.toggleChatbot()">Toggle Chatbot</button>
+        <button onclick="docuaidDebug.fixEmergency()">Emergency Fix</button>
+    </div>
+    
+    <div class="content">
+        <h2>Sample Content for Testing</h2>
+        <p>This is sample content that the chatbot can extract and process. The DocuAid system is designed to help users understand documents and extract important information.</p>
+        
+        <p>DocuAid features include:</p>
+        <ul>
+            <li>Intelligent document analysis</li>
+            <li>Question answering based on document content</li>
+            <li>Content extraction and summarization</li>
+            <li>User-friendly interface with multiple customization options</li>
+        </ul>
+        
+        <p>This test page demonstrates how DocuAid can be integrated into any webpage to provide interactive assistance to users.</p>
+    </div>
+</body>
+</html> 
