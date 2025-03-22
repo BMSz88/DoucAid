@@ -1,134 +1,3 @@
-// Self-executing function to ensure immediate initialization
-(function() {
-    console.log('[DocuAid] Immediate execution started');
-    
-    // Create a style element to inject CSS directly
-    const style = document.createElement('style');
-    style.textContent = `
-        #docuaid-root {
-            position: fixed;
-            z-index: 9999;
-            font-family: Arial, sans-serif;
-        }
-        
-        #docuaid-icon {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background-color: #467DF6;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            z-index: 9998;
-            visibility: visible;
-            opacity: 1;
-            transition: all 0.3s ease;
-            border: none;
-        }
-        
-        #docuaid-container {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 350px;
-            height: 500px;
-            max-height: 70vh;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-            display: flex;
-            flex-direction: column;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-            z-index: 9999;
-            pointer-events: none;
-            overflow: hidden;
-            border: none;
-        }
-        
-        #docuaid-container.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-        
-        #docuaid-messages {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            scroll-behavior: smooth;
-            background-color: transparent;
-        }
-        
-        .message {
-            padding: 10px;
-            border-radius: 8px;
-            max-width: 80%;
-            position: relative;
-        }
-        
-        .user-message {
-            align-self: flex-end;
-            background-color: #467DF6;
-            color: white;
-        }
-        
-        .bot-message {
-            align-self: flex-start;
-            background-color: #f0f0f0;
-            color: #333;
-        }
-    `;
-    document.head.appendChild(style);
-    
-    // Create root element
-    const rootElement = document.createElement('div');
-    rootElement.id = 'docuaid-root';
-    document.body.appendChild(rootElement);
-    
-    // Create chatbot icon
-    const chatbotIcon = document.createElement('div');
-    chatbotIcon.id = 'docuaid-icon';
-    chatbotIcon.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16 13H13V16C13 16.55 12.55 17 12 17C11.45 17 11 16.55 11 16V13H8C7.45 13 7 12.55 7 12C7 11.45 7.45 11 8 11H11V8C11 7.45 11.45 7 12 7C12.55 7 13 7.45 13 8V11H16C16.55 11 17 11.45 17 12C17 12.55 16.55 13 16 13Z" fill="white"/></svg>';
-    rootElement.appendChild(chatbotIcon);
-    
-    // Create chatbot container
-    const chatbotContainer = document.createElement('div');
-    chatbotContainer.id = 'docuaid-container';
-    rootElement.appendChild(chatbotContainer);
-    
-    // Create messages container
-    const messagesContainer = document.createElement('div');
-    messagesContainer.id = 'docuaid-messages';
-    chatbotContainer.appendChild(messagesContainer);
-    
-    // Add welcome message
-    const welcomeMessage = document.createElement('div');
-    welcomeMessage.className = 'message bot-message';
-    welcomeMessage.innerHTML = '<div class="message-content">Hello! I\'m your DocuAid Assistant. How can I help you today?</div>';
-    messagesContainer.appendChild(welcomeMessage);
-    
-    // Setup basic click event for icon
-    chatbotIcon.addEventListener('click', function() {
-        console.log('[DocuAid] Icon clicked in direct injection');
-        chatbotContainer.classList.add('active');
-    });
-    
-    console.log('[DocuAid] Direct injection complete');
-})();
-
 // Global API configuration
 if (typeof apiConfig === 'undefined') {
     window.apiConfig = {
@@ -202,18 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
 function initChatbot() {
     console.log('[DocuAid] Initializing chatbot...');
 
-    // Check if chatbot already exists
-    if (document.getElementById('docuaid-extension')) {
-        console.log('[DocuAid] Chatbot already initialized');
-        return;
-    }
-
     // Create main container
     const docuaidExtension = document.createElement('div');
     docuaidExtension.id = 'docuaid-extension';
-    docuaidExtension.style.position = 'fixed';
-    docuaidExtension.style.zIndex = '9997';
-    docuaidExtension.style.fontFamily = 'Arial, sans-serif';
     document.body.appendChild(docuaidExtension);
 
     // Check for saved dark mode preference
@@ -223,89 +83,22 @@ function initChatbot() {
         docuaidExtension.classList.add('dark-mode');
     }
 
-    // Create chatbot icon with explicit styles to ensure visibility
+    // Create chatbot icon
     const chatbotIcon = document.createElement('div');
     chatbotIcon.className = 'chatbot-icon';
     chatbotIcon.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16 13H13V16C13 16.55 12.55 17 12 17C11.45 17 11 16.55 11 16V13H8C7.45 13 7 12.55 7 12C7 11.45 7.45 11 8 11H11V8C11 7.45 11.45 7 12 7C12.55 7 13 7.45 13 8V11H16C16.55 11 17 11.45 17 12C17 12.55 16.55 13 16 13Z" fill="white"/></svg>';
-    
-    // Apply inline styles to ensure visibility
-    chatbotIcon.style.position = 'fixed';
-    chatbotIcon.style.bottom = '20px';
-    chatbotIcon.style.right = '20px';
-    chatbotIcon.style.width = '50px';
-    chatbotIcon.style.height = '50px';
-    chatbotIcon.style.backgroundColor = '#467DF6';
-    chatbotIcon.style.borderRadius = '50%';
-    chatbotIcon.style.display = 'flex';
-    chatbotIcon.style.justifyContent = 'center';
-    chatbotIcon.style.alignItems = 'center';
-    chatbotIcon.style.cursor = 'pointer';
-    chatbotIcon.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
-    chatbotIcon.style.zIndex = '9998';
-    chatbotIcon.style.visibility = 'visible';
-    chatbotIcon.style.opacity = '1';
-    chatbotIcon.style.transition = 'all 0.3s ease';
-    chatbotIcon.style.border = 'none';
-    
     docuaidExtension.appendChild(chatbotIcon);
 
     // Create chatbot container
     const chatbotContainer = document.createElement('div');
     chatbotContainer.className = 'chatbot-container';
     chatbotContainer.id = 'chatbot-container';
-
-    // Apply explicit styles to ensure correct initial state
-    chatbotContainer.style.position = 'fixed';
-    chatbotContainer.style.bottom = '80px';
-    chatbotContainer.style.right = '20px';
-    chatbotContainer.style.width = '350px';
-    chatbotContainer.style.height = '500px';
-    chatbotContainer.style.maxHeight = '70vh';
-    chatbotContainer.style.backgroundColor = '#fff';
-    chatbotContainer.style.borderRadius = '10px';
-    chatbotContainer.style.boxShadow = '0 5px 25px rgba(0, 0, 0, 0.2)';
-    chatbotContainer.style.display = 'flex';
-    chatbotContainer.style.flexDirection = 'column';
-    chatbotContainer.style.opacity = '0';
-    chatbotContainer.style.visibility = 'hidden';
-    chatbotContainer.style.transform = 'translateY(20px)';
-    chatbotContainer.style.transition = 'all 0.3s ease';
-    chatbotContainer.style.zIndex = '9999';
-    chatbotContainer.style.pointerEvents = 'none';
-    chatbotContainer.style.overflow = 'hidden';
-    chatbotContainer.style.border = 'none';
-
     docuaidExtension.appendChild(chatbotContainer);
 
     // Create chatbot header
     const chatbotHeader = document.createElement('div');
-    chatbotHeader.className = 'chat-header';
+    chatbotHeader.className = 'chatbot-header';
     chatbotContainer.appendChild(chatbotHeader);
-
-    // Create messages container with explicit styles
-    const messagesContainer = document.createElement('div');
-    messagesContainer.className = 'chatbot-messages';
-    messagesContainer.id = 'messages';
-    
-    // Apply explicit styles to ensure correct rendering
-    messagesContainer.style.flex = '1';
-    messagesContainer.style.overflowY = 'auto';
-    messagesContainer.style.overflowX = 'hidden';
-    messagesContainer.style.padding = '15px';
-    messagesContainer.style.display = 'flex';
-    messagesContainer.style.flexDirection = 'column';
-    messagesContainer.style.gap = '10px';
-    messagesContainer.style.scrollBehavior = 'smooth';
-    messagesContainer.style.backgroundColor = 'transparent';
-    
-    // Append messages container to chatbot container
-    chatbotContainer.appendChild(messagesContainer);
-    
-    // Add initial welcome message
-    const welcomeMessage = document.createElement('div');
-    welcomeMessage.className = 'message bot-message';
-    welcomeMessage.innerHTML = '<div class="message-content">Hello! I\'m your DocuAid Assistant. How can I help you today?</div>';
-    messagesContainer.appendChild(welcomeMessage);
 
     // Create chatbot title
     const chatbotTitle = document.createElement('div');
@@ -318,44 +111,12 @@ function initChatbot() {
     chatbotControls.className = 'chatbot-controls';
     chatbotHeader.appendChild(chatbotControls);
 
-    // Create theme toggle button
-    const themeToggleButton = document.createElement('button');
-    themeToggleButton.className = 'theme-toggle-button';
-    themeToggleButton.id = 'theme-toggle';
-    
-    // Set the initial icon based on the current theme
-    const isDarkMode = docuaidExtension.classList.contains('dark-mode');
-    if (isDarkMode) {
-        themeToggleButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"></path></svg>';
-    } else {
-        themeToggleButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
-    }
-    
-    themeToggleButton.setAttribute('title', isDarkMode ? 'Switch to light mode' : 'Switch to dark mode');
-    chatbotControls.appendChild(themeToggleButton);
-
-    // Create clear chat button
-    const clearChatButton = document.createElement('button');
-    clearChatButton.className = 'clear-chat-button';
-    clearChatButton.id = 'clear-chat';
-    clearChatButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>';
-    clearChatButton.setAttribute('title', 'Clear chat');
-    chatbotControls.appendChild(clearChatButton);
-
     // Create settings button
     const settingsButton = document.createElement('button');
     settingsButton.className = 'settings-button';
     settingsButton.id = 'settings-button';
     settingsButton.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" /></svg>';
     chatbotControls.appendChild(settingsButton);
-
-    // Create help button for keyboard shortcuts
-    const helpButton = document.createElement('button');
-    helpButton.className = 'help-button';
-    helpButton.id = 'help-button';
-    helpButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
-    helpButton.setAttribute('title', 'Keyboard shortcuts');
-    chatbotControls.appendChild(helpButton);
 
     // Create close button
     const closeBtn = document.createElement('button');
@@ -690,6 +451,12 @@ function initChatbot() {
     
     chatbotContainer.appendChild(historyModal);
 
+    // Create messages container
+    const messagesContainer = document.createElement('div');
+    messagesContainer.className = 'chatbot-messages';
+    messagesContainer.id = 'chatbot-messages';
+    chatbotContainer.appendChild(messagesContainer);
+
     // Create user input container
     const userInputContainer = document.createElement('div');
     userInputContainer.className = 'user-input-container';
@@ -700,14 +467,7 @@ function initChatbot() {
     userInput.id = 'user-input';
     userInput.placeholder = 'Ask me anything...';
     userInput.rows = 1;
-    userInput.maxLength = 2000; // Set max length
     userInputContainer.appendChild(userInput);
-
-    // Create character counter
-    const charCounter = document.createElement('div');
-    charCounter.className = 'char-counter';
-    charCounter.innerHTML = '0/2000';
-    userInputContainer.appendChild(charCounter);
 
     // Create send button
     const sendButton = document.createElement('button');
@@ -753,64 +513,6 @@ function initChatbot() {
     // Add welcome message
     addMessage('bot', 'Hello! I\'m DocuAid Assistant. How can I help you understand this document?');
 
-    // Create shortcuts help modal
-    const shortcutsModal = document.createElement('div');
-    shortcutsModal.className = 'shortcuts-modal';
-    shortcutsModal.id = 'shortcuts-modal';
-    
-    const shortcutsContent = document.createElement('div');
-    shortcutsContent.className = 'shortcuts-content';
-    
-    const shortcutsHeader = document.createElement('div');
-    shortcutsHeader.className = 'shortcuts-header';
-    
-    const shortcutsTitle = document.createElement('h3');
-    shortcutsTitle.textContent = 'Keyboard Shortcuts';
-    shortcutsHeader.appendChild(shortcutsTitle);
-    
-    const closeShortcutsButton = document.createElement('button');
-    closeShortcutsButton.className = 'close-shortcuts-button';
-    closeShortcutsButton.id = 'close-shortcuts-button';
-    closeShortcutsButton.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg>';
-    shortcutsHeader.appendChild(closeShortcutsButton);
-    
-    shortcutsContent.appendChild(shortcutsHeader);
-    
-    const shortcutsList = document.createElement('div');
-    shortcutsList.className = 'shortcuts-list';
-    
-    // Add shortcuts
-    const shortcuts = [
-        { key: 'Ctrl + Enter', desc: 'Send message' },
-        { key: 'Esc', desc: 'Close chatbot' },
-        { key: 'Ctrl + L', desc: 'Clear chat' },
-        { key: 'Ctrl + K', desc: 'Focus input' },
-        { key: 'Ctrl + E', desc: 'Extract content' },
-        { key: 'Ctrl + D', desc: 'Toggle dark mode' },
-        { key: 'Ctrl + ?', desc: 'Show this help' }
-    ];
-    
-    shortcuts.forEach(shortcut => {
-        const shortcutItem = document.createElement('div');
-        shortcutItem.className = 'shortcut-item';
-        
-        const shortcutKey = document.createElement('div');
-        shortcutKey.className = 'shortcut-key';
-        shortcutKey.innerHTML = `<kbd>${shortcut.key}</kbd>`;
-        
-        const shortcutDesc = document.createElement('div');
-        shortcutDesc.className = 'shortcut-desc';
-        shortcutDesc.textContent = shortcut.desc;
-        
-        shortcutItem.appendChild(shortcutKey);
-        shortcutItem.appendChild(shortcutDesc);
-        shortcutsList.appendChild(shortcutItem);
-    });
-    
-    shortcutsContent.appendChild(shortcutsList);
-    shortcutsModal.appendChild(shortcutsContent);
-    docuaidExtension.appendChild(shortcutsModal);
-
     // Setup event listeners
     setupEventListeners();
 
@@ -829,57 +531,40 @@ function setupEventListeners() {
     const settingsButton = document.querySelector('#docuaid-extension #settings-button');
     const closeSettingsButton = document.querySelector('#docuaid-extension #close-settings-button');
     const settingsPanel = document.querySelector('#docuaid-extension #settings-panel');
-    const docuaidExtension = document.getElementById('docuaid-extension');
-    
-    if (!chatbotIcon) {
-        console.error('[DocuAid] Chatbot icon not found!');
-        return;
-    }
-
-    if (!chatbotContainer) {
-        console.error('[DocuAid] Chatbot container not found!');
-        return;
-    }
 
     // Set up event listeners
-    chatbotIcon.addEventListener('click', function (e) {
+    chatbotIcon.addEventListener('click', function () {
         console.log('[DocuAid] Chatbot icon clicked');
-        e.stopPropagation(); // Prevent event bubbling
-        
-        // Add active class to show the chatbot
         chatbotContainer.classList.add('active');
 
-        // Ensure the chatbot is visible with explicit styles
-        chatbotContainer.style.display = 'flex';
-        chatbotContainer.style.flexDirection = 'column';
+        // Ensure the chatbot is visible with these explicit styles
         chatbotContainer.style.opacity = '1';
         chatbotContainer.style.visibility = 'visible';
-        chatbotContainer.style.transform = 'translateY(0)';
         chatbotContainer.style.pointerEvents = 'auto';
-        chatbotContainer.style.zIndex = '10000';
-        
-        // Focus the input field
-        if (userInput) {
-            setTimeout(() => userInput.focus(), 300);
+        chatbotContainer.style.transform = 'translateY(0)';
+        chatbotContainer.style.display = 'flex';
+        chatbotContainer.style.flexDirection = 'column';
+
+        // Make sure the controls are visible too
+        const controls = document.querySelector('.chatbot-controls');
+        if (controls) {
+            controls.style.opacity = '1';
+            controls.style.visibility = 'visible';
+        }
+
+        // Initialize the chat area if it hasn't been initialized yet
+        if (!document.querySelector('.chatbot-messages')) {
+            initChatArea();
         }
     });
 
-    if (closeBtn) {
-        closeBtn.addEventListener('click', function (e) {
+    closeBtn.addEventListener('click', function () {
         console.log('[DocuAid] Close button clicked');
-            e.stopPropagation(); // Prevent event bubbling
-            
         chatbotContainer.classList.remove('active');
-            
-            // Hide with explicit styles
         chatbotContainer.style.opacity = '0';
         chatbotContainer.style.visibility = 'hidden';
         chatbotContainer.style.pointerEvents = 'none';
-            chatbotContainer.style.transform = 'translateY(20px)';
     });
-    } else {
-        console.error('[DocuAid] Close button not found!');
-    }
 
     // Settings button click handler
     if (settingsButton) {
@@ -954,7 +639,8 @@ function setupEventListeners() {
         clearButton.addEventListener('click', clearChat);
     }
     
-    // Theme toggling in chat header
+    // Theme toggling
+    const docuaidExtension = document.getElementById('docuaid-extension');
     const themeToggleBtn = document.querySelector('#docuaid-extension #theme-toggle');
     
     if (themeToggleBtn) {
@@ -966,14 +652,8 @@ function setupEventListeners() {
             const isDarkMode = docuaidExtension.classList.contains('dark-mode');
             localStorage.setItem('docuaid-dark-mode', isDarkMode);
             
-            // Update button title and icon
-            themeToggleBtn.setAttribute('title', isDarkMode ? 'Switch to light mode' : 'Switch to dark mode');
-            
-            if (isDarkMode) {
-                themeToggleBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"></path></svg>';
-            } else {
-                themeToggleBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
-            }
+            // Update the button icon
+            updateThemeButtonIcon(isDarkMode);
         });
     }
     
@@ -982,146 +662,16 @@ function setupEventListeners() {
     
     // Load saved settings
     loadSavedSettings();
-
-    // Add event listener for clear chat button
-    const clearChatButton = document.querySelector('#docuaid-extension #clear-chat');
-    if (clearChatButton) {
-        clearChatButton.addEventListener('click', clearChat);
-    }
-
-    // Add auto-resize and character counter for input
-    const userInput = document.querySelector('#docuaid-extension #user-input');
-    const charCounter = document.querySelector('#docuaid-extension .char-counter');
-    
-    if (userInput && charCounter) {
-        // Update character counter
-        userInput.addEventListener('input', function() {
-            // Update character count
-            const currentLength = userInput.value.length;
-            charCounter.innerHTML = `${currentLength}/2000`;
-            
-            // Change color when approaching limit
-            if (currentLength > 1800) {
-                charCounter.classList.add('char-limit-warning');
-            } else {
-                charCounter.classList.remove('char-limit-warning');
-            }
-            
-            // Auto-resize the textarea
-            autoResizeTextarea(userInput);
-        });
-        
-        // Initial sizing
-        autoResizeTextarea(userInput);
-    }
-
-    // Help button for keyboard shortcuts
-    const helpButton = document.querySelector('#docuaid-extension #help-button');
-    const shortcutsModal = document.querySelector('#docuaid-extension #shortcuts-modal');
-    const closeShortcutsButton = document.querySelector('#docuaid-extension #close-shortcuts-button');
-    
-    if (helpButton && shortcutsModal) {
-        helpButton.addEventListener('click', function() {
-            shortcutsModal.classList.add('active');
-        });
-    }
-    
-    if (closeShortcutsButton && shortcutsModal) {
-        closeShortcutsButton.addEventListener('click', function() {
-            shortcutsModal.classList.remove('active');
-        });
-    }
-    
-    // Setup global keyboard shortcuts
-    document.addEventListener('keydown', function(e) {
-        const chatbotContainer = document.querySelector('#docuaid-extension .chatbot-container');
-        const isChatbotActive = chatbotContainer && chatbotContainer.classList.contains('active');
-        const userInput = document.querySelector('#docuaid-extension #user-input');
-        const isInputFocused = document.activeElement === userInput;
-        
-        // ESC key to close chatbot
-        if (e.key === 'Escape' && isChatbotActive) {
-            document.querySelector('#docuaid-extension #close-btn').click();
-        }
-        
-        // Ctrl + Enter to send message (when input is focused)
-        if (e.ctrlKey && e.key === 'Enter' && isInputFocused) {
-            document.querySelector('#docuaid-extension #send-button').click();
-        }
-        
-        // Ctrl + L to clear chat
-        if (e.ctrlKey && e.key === 'l' && isChatbotActive) {
-            e.preventDefault(); // Prevent browser address bar focus
-            clearChat();
-        }
-        
-        // Ctrl + K to focus input
-        if (e.ctrlKey && e.key === 'k' && isChatbotActive) {
-            e.preventDefault();
-            userInput.focus();
-        }
-        
-        // Ctrl + E to extract content
-        if (e.ctrlKey && e.key === 'e' && isChatbotActive) {
-            e.preventDefault();
-            const extractButton = document.querySelector('#docuaid-extension #extract-btn');
-            if (extractButton) extractButton.click();
-        }
-        
-        // Ctrl + D to toggle dark mode
-        if (e.ctrlKey && e.key === 'd' && isChatbotActive) {
-            e.preventDefault();
-            const themeToggleBtn = document.querySelector('#docuaid-extension #theme-toggle');
-            if (themeToggleBtn) themeToggleBtn.click();
-        }
-        
-        // Ctrl + ? to show shortcuts help
-        if (e.ctrlKey && e.key === '/' && isChatbotActive) {
-            e.preventDefault();
-            shortcutsModal.classList.add('active');
-        }
-    });
 }
 
 function addMessage(type, content) {
-    const messagesContainer = document.getElementById('messages');
-    if (!messagesContainer) {
-        console.error('[DocuAid] Messages container not found');
-        
-        // Try to find container with alternative selectors as fallback
-        const altContainer = document.querySelector('#docuaid-extension .chatbot-messages') || 
-                            document.querySelector('.chatbot-messages');
-        
-        if (!altContainer) {
-            console.error('[DocuAid] Could not find messages container with alternative selectors');
-            return;
-        }
-        
-        console.log('[DocuAid] Using alternative messages container');
-        messagesContainer = altContainer;
-    }
-    
+    const messagesContainer = document.querySelector('#docuaid-extension .chatbot-messages');
     const messageElement = document.createElement('div');
     messageElement.className = `message ${type}-message`;
 
     const messageContent = document.createElement('div');
     messageContent.className = 'message-content';
-    
-    // Process the content to make URLs clickable
-    const processedContent = makeLinksClickable(content);
-    messageContent.innerHTML = processedContent;
-    
-    // Add copy button for bot messages
-    if (type === 'bot') {
-        const copyButton = document.createElement('button');
-        copyButton.className = 'copy-button';
-        copyButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" fill="currentColor" /></svg>';
-        copyButton.title = 'Copy to clipboard';
-        copyButton.addEventListener('click', () => {
-            copyMessageToClipboard(content);
-        });
-        messageElement.appendChild(copyButton);
-    }
+    messageContent.innerHTML = content;
 
     messageElement.appendChild(messageContent);
     messagesContainer.appendChild(messageElement);
@@ -1129,177 +679,8 @@ function addMessage(type, content) {
     // Save message to history
     saveMessageToHistory(type, content);
 
-    // Scroll to bottom with a smooth animation
-    scrollToBottom(messagesContainer);
-}
-
-// Function to convert URLs in text to clickable links
-function makeLinksClickable(text) {
-    // Regular expression to match URLs
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    
-    // Replace URLs with clickable links
-    return text.replace(urlRegex, (url) => {
-        // Check if URL is already in an HTML tag
-        const isInHtmlTag = isUrlInHtmlTag(text, url);
-        if (isInHtmlTag) {
-            return url;
-        }
-        
-        // Clean the URL to remove any trailing punctuation
-        let cleanUrl = url;
-        const lastChar = cleanUrl.slice(-1);
-        if (['.', ',', ')', ']', ';', ':', '!', '?'].includes(lastChar)) {
-            cleanUrl = cleanUrl.slice(0, -1);
-        }
-        
-        // Create a safe display URL (truncate if too long)
-        let displayUrl = cleanUrl;
-        if (displayUrl.length > 50) {
-            displayUrl = displayUrl.substring(0, 47) + '...';
-        }
-        
-        // Create a target="_blank" link with security attributes
-        return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="external-link">${displayUrl}</a>${lastChar === url.slice(-1) ? lastChar : ''}`;
-    });
-}
-
-// Helper function to check if URL is already in an HTML tag
-function isUrlInHtmlTag(text, url) {
-    const urlIndex = text.indexOf(url);
-    const beforeUrl = text.substring(0, urlIndex);
-    
-    // Count number of opening and closing tags before the URL
-    const openingTags = (beforeUrl.match(/<a/g) || []).length;
-    const closingTags = (beforeUrl.match(/<\/a>/g) || []).length;
-    
-    // If there are more opening tags than closing tags, 
-    // the URL is likely already in an HTML tag
-    return openingTags > closingTags;
-}
-
-// Function to copy message content to clipboard
-function copyMessageToClipboard(html) {
-    // Create a temporary div to hold the HTML content
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-    
-    // Get the text content from the HTML
-    const textContent = tempDiv.textContent || tempDiv.innerText || '';
-    
-    // Use the Clipboard API if available
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(textContent)
-            .then(() => {
-                showCopySuccessToast();
-            })
-            .catch(err => {
-                console.error('[DocuAid] Failed to copy text: ', err);
-                fallbackCopyToClipboard(textContent);
-            });
-    } else {
-        fallbackCopyToClipboard(textContent);
-    }
-}
-
-// Fallback method for clipboard copy
-function fallbackCopyToClipboard(text) {
-    try {
-        // Create text area
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        
-        // Make it invisible
-        textArea.style.position = 'fixed';
-        textArea.style.opacity = 0;
-        
-        document.body.appendChild(textArea);
-        textArea.select();
-        
-        // Execute copy command
-        const successful = document.execCommand('copy');
-        
-        // Clean up
-        document.body.removeChild(textArea);
-        
-        if (successful) {
-            showCopySuccessToast();
-        }
-    } catch (err) {
-        console.error('[DocuAid] Fallback copy failed: ', err);
-    }
-}
-
-// Show a toast notification when copy succeeds
-function showCopySuccessToast() {
-    let toast = document.getElementById('docuaid-copy-toast');
-    
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'docuaid-copy-toast';
-        toast.className = 'copy-toast';
-        toast.textContent = 'Copied to clipboard!';
-        
-        document.querySelector('#docuaid-extension').appendChild(toast);
-    }
-    
-    // Show the toast
-    toast.classList.add('active');
-    
-    // Hide after 2 seconds
-    setTimeout(() => {
-        toast.classList.remove('active');
-    }, 2000);
-}
-
-// Smart scroll to bottom with animation
-function scrollToBottom(container) {
-    if (!container) {
-        console.error('[DocuAid] Container not provided for scrollToBottom');
-        return;
-    }
-    
-    try {
-        // Smooth scroll to bottom
-        setTimeout(() => {
-            container.scrollTo({
-                top: container.scrollHeight,
-                behavior: 'smooth'
-            });
-        }, 100);
-    } catch (error) {
-        console.error('[DocuAid] Error scrolling to bottom:', error);
-        // Fallback to basic scrolling
-        container.scrollTop = container.scrollHeight;
-    }
-}
-
-// Show new message indicator when user isn't at the bottom
-function showNewMessageIndicator(container) {
-    // Check if indicator already exists
-    let indicator = document.querySelector('#docuaid-new-message-indicator');
-    
-    if (!indicator) {
-        indicator = document.createElement('div');
-        indicator.id = 'docuaid-new-message-indicator';
-        indicator.className = 'new-message-indicator';
-        indicator.innerHTML = '<span>New message ↓</span>';
-        indicator.addEventListener('click', () => {
-            // Scroll to bottom when clicked
-            container.scrollTo({
-                top: container.scrollHeight,
-                behavior: 'smooth'
-            });
-            // Hide the indicator
-            indicator.style.display = 'none';
-        });
-        
-        // Add to container
-        document.querySelector('#docuaid-extension .chatbot-container').appendChild(indicator);
-    } else {
-        // Show existing indicator
-        indicator.style.display = 'flex';
-    }
+    // Scroll to bottom
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
 function addSystemMessage(content) {
@@ -1337,73 +718,57 @@ function removeTypingIndicator(indicator) {
     }
 }
 
-// Function to send message to the bot
 async function sendMessage() {
-    const userInput = document.getElementById('user-input');
-    const userMessage = userInput ? userInput.value.trim() : '';
-    
-    if(userMessage.length === 0) return;
-    
-    // Clear the input field
-    if (userInput) {
-        userInput.value = '';
-        
-        // Reset the character counter if it exists
-        const charCounter = document.querySelector('#docuaid-extension .char-counter');
-        if (charCounter) {
-            charCounter.innerHTML = '0/2000';
-            charCounter.classList.remove('char-limit-warning');
-        }
-        
-        // Reset textarea height
-        autoResizeTextarea(userInput);
-    }
+    const userInput = document.querySelector('#docuaid-extension #user-input');
+    const userMessage = userInput.value.trim();
+
+    if (!userMessage) return;
 
     // Add user message to chat
     addMessage('user', userMessage);
 
-    // Show typing indicator instead of loading
+    // Clear input
+    userInput.value = '';
+
+    // Show typing indicator
     const typingIndicator = showTypingIndicator();
 
     try {
-        // Check if content has been extracted
-        const hasExtractedContent = window.docuaidExtractedContent && 
-                                   window.docuaidExtractedContent.content && 
-                                   window.docuaidExtractedContent.content.length > 0;
-                                   
-        // Check if auto-extract setting is enabled (default to false to prevent automatic extraction)
-        const autoExtract = localStorage.getItem('docuaid-auto-extract') === 'true';
-        
-        // If no content has been extracted and auto-extract is enabled, extract first
-        if (!hasExtractedContent && autoExtract && userMessage.toLowerCase().includes('this page')) {
-            // Remove typing indicator temporarily
-            removeTypingIndicator(typingIndicator);
-            
-            // Extract content and then proceed with answering
-            return extractContent(() => {
-                // After extraction is complete, call sendMessage again to process the original question
-                sendMessageWithContent(userMessage);
-            });
-        }
+        // Get API URL either from config or function
+        const apiUrl = typeof apiConfig.getApiUrl === 'function' ?
+            apiConfig.getApiUrl() : apiConfig.API_URL;
+
+        console.log('[DocuAid] Sending message to:', `${apiUrl}${apiConfig.CHAT_ENDPOINT}`);
+
+        // Create the request body with both parameters to ensure compatibility
+        const requestBody = {
+            question: userMessage,
+            message: userMessage
+        };
+
+        console.log('[DocuAid] Request body:', JSON.stringify(requestBody));
+
+        // Simulate API response for demo purposes
+        // In a production environment, use the actual API call:
+        // const response = await fetch(`${apiUrl}${apiConfig.CHAT_ENDPOINT}`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(requestBody)
+        // });
         
         // Simulate API call with timeout
         await new Promise(resolve => setTimeout(resolve, 1500));
         
-        // Generate a response
-        let response;
-        if (hasExtractedContent) {
-            // If we have extracted content, use it to generate a response
-            response = generateAnswerFromExtractedContent(userMessage);
-        } else {
-            // Otherwise, generate a response based on general knowledge
-            response = generateGeneralKnowledgeResponse(userMessage);
-        }
+        // Generate a demo response
+        const demoResponse = generateDemoResponse(userMessage);
         
         // Remove typing indicator
         removeTypingIndicator(typingIndicator);
 
         // Add bot response to chat
-        addMessage('bot', response);
+        addMessage('bot', demoResponse);
 
     } catch (error) {
         console.error('[DocuAid] Error:', error);
@@ -1426,195 +791,34 @@ async function sendMessage() {
                 console.log('[DocuAid] Continuing without vector store');
             }
         }
-    } finally {
-        // Hide loading indicator regardless of success or failure
-        hideLoadingIndicator();
     }
-}
-
-// Function to show loading indicator
-function showLoadingIndicator() {
-    let messagesContainer = document.getElementById('messages');
-    if (!messagesContainer) {
-        console.error('[DocuAid] Messages container not found in showLoadingIndicator');
-        
-        // Try to find container with alternative selectors as fallback
-        const altContainer = document.querySelector('#docuaid-extension .chatbot-messages') || 
-                           document.querySelector('.chatbot-messages');
-        
-        if (!altContainer) {
-            console.error('[DocuAid] Could not find messages container with alternative selectors');
-            return;
-        }
-        
-        console.log('[DocuAid] Using alternative messages container');
-        messagesContainer = altContainer;
-    }
-    
-    const loadingMessage = document.createElement('div');
-    loadingMessage.className = 'message bot-message loading-message';
-    loadingMessage.id = 'loading-indicator';
-    
-    const loadingDots = document.createElement('div');
-    loadingDots.className = 'loading-dots';
-    
-    for (let i = 0; i < 3; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'dot';
-        loadingDots.appendChild(dot);
-    }
-    
-    loadingMessage.appendChild(loadingDots);
-    messagesContainer.appendChild(loadingMessage);
-    
-    // Scroll to bottom of chat
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-}
-
-// Function to hide loading indicator
-function hideLoadingIndicator() {
-    const loadingIndicator = document.getElementById('loading-indicator');
-    if (loadingIndicator) {
-        loadingIndicator.remove();
-    }
-}
-
-// Helper function to send message when content is available
-async function sendMessageWithContent(userMessage, hadError = false) {
-    // If there was an error during extraction, respond differently
-    if (hadError) {
-        const errorResponse = "I apologize, but I encountered an error while extracting content from this page. I'll still try to answer your question with my general knowledge.";
-        addMessage('bot', errorResponse + "\n\n" + generateSriLankaFallbackResponse(userMessage));
-        return;
-    }
-    
-    const typingIndicator = showTypingIndicator();
-    
-    try {
-        // Simulate API call with timeout
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Generate a demo response using the extracted content
-        const demoResponse = generateDemoResponse(userMessage);
-        
-        // Remove typing indicator
-        removeTypingIndicator(typingIndicator);
-
-        // Add bot response to chat
-        addMessage('bot', demoResponse);
-    } catch (error) {
-        console.error('[DocuAid] Error:', error);
-        removeTypingIndicator(typingIndicator);
-        
-        addSystemMessage('Sorry, I encountered an error while processing your request with the extracted content.');
-        
-        // Still try to provide some response
-        const fallbackResponse = generateSriLankaFallbackResponse(userMessage);
-        if (fallbackResponse) {
-            addMessage('bot', "Let me try to answer with my general knowledge instead:\n\n" + fallbackResponse);
-        }
-    }
-}
-
-// Fallback responses for Sri Lanka related questions
-function generateSriLankaFallbackResponse(userMessage) {
-    const lowerCaseMessage = userMessage.toLowerCase();
-    
-    // If the message doesn't mention Sri Lanka, return null
-    if (!lowerCaseMessage.includes('sri lanka') && !lowerCaseMessage.includes('ceylon')) {
-        return null;
-    }
-    
-    // Define common Sri Lanka topics and their answers
-    const sriLankaFacts = {
-        "capital": "Sri Jayawardenepura Kotte is the administrative capital of Sri Lanka, while Colombo is the commercial capital and largest city.",
-        "population": "As of recent estimates, Sri Lanka has a population of approximately 22 million people.",
-        "language": "The official languages of Sri Lanka are Sinhala and Tamil. English is also commonly used, especially in government and education.",
-        "religion": "Buddhism is the majority religion in Sri Lanka, practiced by about 70% of the population. Other religions include Hinduism, Islam, and Christianity.",
-        "currency": "The currency of Sri Lanka is the Sri Lankan Rupee (LKR).",
-        "independence": "Sri Lanka gained independence from British rule on February 4, 1948.",
-        "flag": "The Sri Lankan flag features a golden lion holding a sword on a maroon background with four Bo tree leaves in the corners. The flag also has orange and green vertical stripes representing the Tamil and Muslim communities.",
-        "president": "I have information about Sri Lanka's political system, but for the most current information about who is serving as president, you might want to check a more up-to-date source.",
-        "tourist": "Sri Lanka is famous for its ancient ruins, beautiful beaches, tea plantations, wildlife, and cultural heritage. Popular tourist destinations include Sigiriya Rock Fortress, Kandy, Galle Fort, Yala National Park, and the hill country around Nuwara Eliya.",
-        "food": "Sri Lankan cuisine is known for its complex flavors and spices. Popular dishes include rice and curry, hoppers (a type of pancake), string hoppers, kottu roti, and various seafood dishes. The cuisine often features coconut, chili peppers, and an array of spices.",
-        "history": "Sri Lanka has a rich history dating back over 3,000 years. It was known as Ceylon during colonial times and has been influenced by various cultures including Indian, Portuguese, Dutch, and British.",
-        "weather": "Sri Lanka has a tropical climate with distinct wet and dry seasons. The weather varies by region, with the central highlands being cooler than the coastal areas.",
-        "economy": "Sri Lanka's economy is based on agriculture, tourism, and exports like tea, spices, textiles, and rubber. Tea exports, particularly Ceylon tea, are a significant source of revenue.",
-        "geography": "Sri Lanka is an island nation in South Asia, located in the Indian Ocean. It features diverse landscapes including mountains, rainforests, beaches, and plains.",
-        "wildlife": "Sri Lanka has diverse wildlife including elephants, leopards, sloth bears, and various species of birds. It's known for having one of the highest densities of leopards in the world.",
-        "tea": "Ceylon tea from Sri Lanka is renowned worldwide for its quality. Sri Lanka is one of the world's largest tea exporters, with tea plantations covering many of the island's highlands.",
-        "beaches": "Sri Lanka boasts beautiful beaches along its coastline. Popular beach destinations include Mirissa, Unawatuna, Bentota, Arugam Bay (for surfing), and Trincomalee.",
-        "size": "Sri Lanka is an island nation with a total area of approximately 65,610 square kilometers (25,332 square miles), making it slightly larger than West Virginia in the United States."
-    };
-    
-    // Check each topic to see if it's mentioned in the user message
-    for (const [topic, answer] of Object.entries(sriLankaFacts)) {
-        if (lowerCaseMessage.includes(topic)) {
-            return answer;
-        }
-    }
-    
-    // Handle variations of 'Where is Sri Lanka'
-    if (lowerCaseMessage.includes('where') || lowerCaseMessage.includes('located')) {
-        return "Sri Lanka is an island nation located in South Asia, in the Indian Ocean. It sits southeast of India and is separated from the Indian subcontinent by the Gulf of Mannar and the Palk Strait.";
-    }
-    
-    // Handle variations of 'Tell me about Sri Lanka'
-    if (lowerCaseMessage.includes('tell me about') || lowerCaseMessage.includes('what is') || lowerCaseMessage.includes('information')) {
-        return "Sri Lanka is an island nation in South Asia known for its diverse landscapes, rich cultural heritage, and historical significance. It's famous for its ancient Buddhist ruins, beautiful beaches, tea plantations, and wildlife. The country has a tropical climate and a culture influenced by various civilizations. Is there a specific aspect of Sri Lanka you'd like to know more about?";
-    }
-    
-    // Generic Sri Lanka query
-    return "Sri Lanka is an island nation in South Asia known for its diverse landscapes, rich cultural heritage, and historical significance. It's famous for its ancient Buddhist ruins, beautiful beaches, tea plantations, and wildlife. Is there a specific aspect of Sri Lanka you'd like to know more about?";
 }
 
 // Helper function to generate demo responses
 function generateDemoResponse(userMessage) {
     const lowerCaseMessage = userMessage.toLowerCase();
     
-    // Check if we have extracted content
-    const hasExtractedContent = window.docuaidExtractedContent && 
-                               window.docuaidExtractedContent.content && 
-                               window.docuaidExtractedContent.content.length > 0;
-    
-    // Special handling for common phrases regardless of extraction
     if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi')) {
-        return 'Hello! How can I help you today?';
-    } else if (lowerCaseMessage.includes('thank')) {
-        return 'You\'re welcome! If you have any more questions, feel free to ask.';
-    } else if (lowerCaseMessage.includes('help')) {
-        return 'I\'m here to help! You can ask me questions about the content on this page after extraction, or general knowledge questions anytime.';
-    }
-    
-    // For questions about settings or the chatbot itself
-    if (lowerCaseMessage.includes('settings')) {
+        return 'Hello! How can I help you understand this document?';
+    } else if (lowerCaseMessage.includes('settings')) {
         return 'You can access settings by clicking the gear icon in the top right corner of the chatbot window.';
     } else if (lowerCaseMessage.includes('extract')) {
         return 'I can extract content from the page for you. Just click the extract button at the bottom of the chat window.';
+    } else if (lowerCaseMessage.includes('help')) {
+        return 'I\'m here to help you understand the content on this page. You can ask me questions about the document, and I\'ll do my best to answer them based on the content.';
+    } else if (lowerCaseMessage.includes('thank')) {
+        return 'You\'re welcome! If you have any more questions, feel free to ask.';
     } else if (lowerCaseMessage.includes('what') && lowerCaseMessage.includes('page')) {
         return 'This page appears to be about ' + document.title + '. I can extract more specific information if you\'d like.';
-    }
-    
-    // Check for Sri Lanka related questions regardless of extraction
-    const sriLankaResponse = generateSriLankaFallbackResponse(userMessage);
-    if (sriLankaResponse) {
-        return sriLankaResponse;
-    }
-    
-    // If content has been extracted, use it for more specific answers
-    if (hasExtractedContent) {
-        return generateAnswerFromExtractedContent(userMessage);
     } else {
-        // For questions that would benefit from extraction but don't require it
-        return 'I understand you\'re asking about "' + userMessage + '". I can provide a better answer if you extract the content from this page first by clicking the extract button, but I\'ll do my best to help anyway.\n\nBased on general knowledge, I can tell you that this topic might relate to ' + document.title + '. For more specific information, please try extracting the content.';
+        return 'I understand you\'re asking about "' + userMessage + '". To provide the most accurate information, I\'d recommend extracting the content from this page first by clicking the extract button at the bottom of the chat.';
     }
 }
 
-function extractContent(callback) {
+function extractContent() {
     console.log('[DocuAid] Extracting content...');
     addSystemMessage('Extracting content from the current page...');
 
-    try {
     // Get the page content
     const pageTitle = document.title;
     const url = window.location.href;
@@ -1650,12 +854,6 @@ function extractContent(callback) {
         contentElement.textContent.trim() :
         document.body.textContent.trim();
 
-        // Fallback if content is too short
-        if (pageContent.length < 100) {
-            console.log('[DocuAid] Content too short, using full body content');
-            pageContent = document.body.textContent.trim();
-        }
-
     // Limit content size to avoid API issues (max 50K characters)
     if (pageContent.length > 50000) {
         console.log('[DocuAid] Content too large, truncating');
@@ -1668,7 +866,6 @@ function extractContent(callback) {
 
     // Simulate content extraction for demo
     setTimeout(() => {
-            try {
         // Remove typing indicator
         removeTypingIndicator(typingIndicator);
         
@@ -1691,60 +888,18 @@ function extractContent(callback) {
         };
         
         console.log('[DocuAid] Content extracted and stored locally:', window.docuaidExtractedContent);
-                
-                // Call the callback if provided
-                if (typeof callback === 'function') {
-                    callback(false); // No error
-                }
-            } catch (innerError) {
-                console.error('[DocuAid] Error in extraction callback:', innerError);
-                removeTypingIndicator(typingIndicator);
-                addSystemMessage('Sorry, I encountered an error processing the extracted content.');
-            }
     }, 2000);
-    } catch (error) {
-        console.error('[DocuAid] Error during content extraction:', error);
-        addSystemMessage('Sorry, I encountered an error while extracting content from this page. Please try again or try with a different page.');
-        
-        // Call the callback with error flag if provided
-        if (typeof callback === 'function') {
-            callback(true); // Indicate error occurred
-        }
-    }
 }
 
 function clearChat() {
-    let messagesContainer = document.getElementById('messages');
-    if (!messagesContainer) {
-        console.error('[DocuAid] Messages container not found in clearChat');
-        
-        // Try to find container with alternative selectors as fallback
-        const altContainer = document.querySelector('#docuaid-extension .chatbot-messages') || 
-                           document.querySelector('.chatbot-messages');
-        
-        if (!altContainer) {
-            console.error('[DocuAid] Could not find messages container with alternative selectors');
-            return;
-        }
-        
-        console.log('[DocuAid] Using alternative messages container');
-        messagesContainer = altContainer;
+    const messagesContainer = document.querySelector('#docuaid-extension .chatbot-messages');
+
+    // Remove all messages except the welcome message
+    while (messagesContainer.childNodes.length > 1) {
+        messagesContainer.removeChild(messagesContainer.lastChild);
     }
-    
-    // Clear all messages
-    messagesContainer.innerHTML = '';
-    
-    // Add welcome message
-    const welcomeMessage = document.createElement('div');
-    welcomeMessage.className = 'message bot-message';
-    welcomeMessage.innerHTML = '<div class="message-content">Chat cleared. How can I help you today?</div>';
-    messagesContainer.appendChild(welcomeMessage);
-    
-    // Reset current session ID
-    const newSessionId = 'session_' + new Date().toISOString().replace(/[:.]/g, '_');
-    localStorage.setItem('docuaid-current-session-id', newSessionId);
-    
-    console.log('[DocuAid] Chat cleared, new session created:', newSessionId);
+
+    addSystemMessage('Chat cleared.');
 }
 
 function checkHealth() {
@@ -1834,23 +989,6 @@ if (document.readyState === 'loading') {
     initChatbot();
 }
 
-// Add a window load event for redundancy
-window.addEventListener('load', function() {
-    // Check if chatbot has already been initialized
-    if (!document.getElementById('docuaid-extension')) {
-        console.log('[DocuAid] Initializing via window load event');
-        initChatbot();
-    }
-});
-
-// Add a safety timeout to ensure initialization
-setTimeout(function() {
-    if (!document.getElementById('docuaid-extension')) {
-        console.log('[DocuAid] Delayed initialization');
-        initChatbot();
-    }
-}, 1000);
-
 // Load saved settings function
 function loadSavedSettings() {
     console.log('[DocuAid] Loading saved settings');
@@ -1870,7 +1008,6 @@ function loadSavedSettings() {
     // Load font size setting
     const savedFontSize = localStorage.getItem('docuaid-font-size') || 'medium';
     const fontSizeSelect = document.getElementById('font-size-select');
-    
     
     if (fontSizeSelect) {
         fontSizeSelect.value = savedFontSize;
@@ -2373,254 +1510,4 @@ function formatDate(date, includeTime = false) {
 function formatTime(timestamp) {
     const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
     return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
-}
-
-// Function to generate answers from extracted content
-function generateAnswerFromExtractedContent(userMessage) {
-    console.log('[DocuAid] Generating answer from extracted content');
-    
-    const content = window.docuaidExtractedContent.content;
-    const title = window.docuaidExtractedContent.title;
-    const lowerCaseMessage = userMessage.toLowerCase();
-    
-    // Simple keyword matching to find relevant information
-    // In a real implementation, this would use a more sophisticated approach like embeddings
-    
-    // Define some common question patterns and related keywords
-    const patterns = [
-        {
-            // Capital/location questions
-            patterns: ['capital', 'where is', 'located', 'location', 'where', 'city'],
-            keywords: ['capital', 'located in', 'situated', 'lies', 'found in', 'city', 'province', 'region', 'state'],
-            defaultResponse: `Based on the extracted content, I found information about locations and geography. The document discusses ${title}, which likely contains details about its capital, major cities, or geographical features.`
-        },
-        {
-            // Historical/timeline questions
-            patterns: ['when', 'history', 'founded', 'established', 'year', 'century', 'ancient', 'timeline'],
-            keywords: ['founded', 'established', 'century', 'year', 'history', 'historical', 'ancient', 'era', 'period', 'dynasty', 'date'],
-            defaultResponse: `The document contains historical information about ${title}. It appears to cover various historical periods and developments.`
-        },
-        {
-            // People/person questions
-            patterns: ['who', 'person', 'people', 'president', 'leader', 'king', 'queen', 'minister'],
-            keywords: ['president', 'minister', 'leader', 'king', 'queen', 'ruled', 'govern', 'politician', 'notable', 'famous'],
-            defaultResponse: `I found information about key people related to ${title}, including leaders, notable figures, and important individuals in its history and development.`
-        },
-        {
-            // What/definition questions
-            patterns: ['what is', 'what are', 'definition', 'define', 'meaning', 'explain'],
-            keywords: ['refers to', 'defined as', 'known as', 'called', 'term for', 'concept of'],
-            defaultResponse: `Based on the content, ${title} is a topic with multiple aspects and characteristics. The document provides extensive information about its definition, features, and significance.`
-        },
-        {
-            // Why questions
-            patterns: ['why', 'reason', 'cause', 'because', 'due to'],
-            keywords: ['because', 'due to', 'result of', 'reason', 'cause', 'led to', 'contributed to'],
-            defaultResponse: `The document discusses various causes, reasons, and factors related to ${title}. These include historical developments, social factors, and key events.`
-        }
-    ];
-    
-    // Try to match the user question to one of our patterns
-    for (const patternGroup of patterns) {
-        const matchesQuestion = patternGroup.patterns.some(pattern => lowerCaseMessage.includes(pattern));
-        
-        if (matchesQuestion) {
-            // Look for relevant information in the content using keywords
-            for (const keyword of patternGroup.keywords) {
-                // Find paragraphs containing the keyword
-                const contentLower = content.toLowerCase();
-                const keywordIndex = contentLower.indexOf(keyword);
-                
-                if (keywordIndex !== -1) {
-                    // Find the surrounding paragraph or sentence
-                    const startOfParagraph = content.lastIndexOf('\n', keywordIndex) + 1;
-                    const endOfParagraph = content.indexOf('\n', keywordIndex);
-                    const paragraph = content.substring(
-                        startOfParagraph, 
-                        endOfParagraph === -1 ? content.length : endOfParagraph
-                    ).trim();
-                    
-                    if (paragraph.length > 20) {  // Make sure it's substantial enough
-                        return `Based on the extracted content: "${paragraph}"`;
-                    }
-                }
-            }
-            
-            // If we couldn't find specific relevant content, return the default response
-            return patternGroup.defaultResponse;
-        }
-    }
-    
-    // Special handling for specific question types
-    if (lowerCaseMessage.includes('capital') && lowerCaseMessage.includes('sri lanka')) {
-        return "Sri Jayawardenepura Kotte is the administrative capital of Sri Lanka, while Colombo is the commercial capital and largest city.";
-    }
-    
-    if (lowerCaseMessage.includes('population') && lowerCaseMessage.includes('sri lanka')) {
-        return "As of recent estimates, Sri Lanka has a population of approximately 22 million people.";
-    }
-    
-    if (lowerCaseMessage.includes('language') && lowerCaseMessage.includes('sri lanka')) {
-        return "The official languages of Sri Lanka are Sinhala and Tamil. English is also commonly used, especially in government and education.";
-    }
-    
-    if (lowerCaseMessage.includes('religion') && lowerCaseMessage.includes('sri lanka')) {
-        return "Buddhism is the majority religion in Sri Lanka, practiced by about 70% of the population. Other religions include Hinduism, Islam, and Christianity.";
-    }
-    
-    if (lowerCaseMessage.includes('currency') && lowerCaseMessage.includes('sri lanka')) {
-        return "The currency of Sri Lanka is the Sri Lankan Rupee (LKR).";
-    }
-    
-    if (lowerCaseMessage.includes('independence') && lowerCaseMessage.includes('sri lanka')) {
-        return "Sri Lanka gained independence from British rule on February 4, 1948.";
-    }
-    
-    // If we couldn't match the question to any of our patterns
-    return `I've analyzed the document about ${title}. While I found extensive information, I couldn't pinpoint the exact answer to your specific question. You might find it helpful to ask a more specific question or rephrase your query.`;
-}
-
-// Function to auto-resize textarea based on content
-function autoResizeTextarea(textarea) {
-    // Reset height to calculate correct scrollHeight
-    textarea.style.height = 'auto';
-    
-    // Calculate new height based on scrollHeight (with max height limit)
-    const maxHeight = 150; // Maximum height in pixels
-    const newHeight = Math.min(textarea.scrollHeight, maxHeight);
-    
-    // Apply new height
-    textarea.style.height = newHeight + 'px';
-    
-    // Add/remove scrollbar if needed
-    if (textarea.scrollHeight > maxHeight) {
-        textarea.style.overflowY = 'auto';
-    } else {
-        textarea.style.overflowY = 'hidden';
-    }
-}
-
-// Additional initialization methods to ensure chatbot appears
-// Initialize immediately if document is already loaded
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    console.log('[DocuAid] Initializing immediately - document already loaded');
-    setTimeout(function() {
-        if (!document.getElementById('docuaid-extension')) {
-            initChatbot();
-        }
-    }, 100);
-}
-
-// Add window load event as additional safety measure
-window.addEventListener('load', function() {
-    console.log('[DocuAid] Window load event triggered');
-    if (!document.getElementById('docuaid-extension')) {
-        console.log('[DocuAid] Initializing via window load event');
-        initChatbot();
-    }
-});
-
-// Add a safety timeout to ensure initialization happens
-setTimeout(function() {
-    console.log('[DocuAid] Delayed initialization check');
-    if (!document.getElementById('docuaid-extension')) {
-        console.log('[DocuAid] Performing delayed initialization');
-        initChatbot();
-    }
-}, 1000);
-
-// Function to generate responses based on general knowledge
-function generateGeneralKnowledgeResponse(userMessage) {
-    console.log('[DocuAid] Generating general knowledge response');
-    
-    const lowerCaseMessage = userMessage.toLowerCase();
-    const currentPageTitle = document.title || 'this page';
-    
-    // Basic greeting responses with variety
-    if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi') || lowerCaseMessage.includes('hey')) {
-        const greetings = [
-            'Hello! I\'m DocuAid Assistant. How can I help you today?',
-            'Hi there! I\'m here to assist you. What can I help you with?',
-            'Greetings! I\'m your DocuAid Assistant. How may I assist you today?',
-            'Hello! How can I make your browsing experience better today?'
-        ];
-        return greetings[Math.floor(Math.random() * greetings.length)];
-    }
-    
-    // Help responses
-    if (lowerCaseMessage.includes('help') || lowerCaseMessage.includes('what can you do')) {
-        return 'I can help you in several ways:\n\n' +
-               '1. Answer questions about general topics\n' +
-               '2. Extract and analyze content from this page\n' +
-               '3. Provide information about Sri Lanka\n' +
-               '4. Assist with document understanding\n\n' +
-               'Feel free to ask me anything! For the best results with page-specific questions, click the "Extract" button first.';
-    }
-    
-    // Thank you responses with variety
-    if (lowerCaseMessage.includes('thank') || lowerCaseMessage.includes('thanks')) {
-        const thanks = [
-            'You\'re welcome! Is there anything else I can help you with?',
-            'Happy to help! Let me know if you need anything else.',
-            'Glad I could assist. Feel free to ask if you have more questions.',
-            'My pleasure! I\'m here if you need more information.'
-        ];
-        return thanks[Math.floor(Math.random() * thanks.length)];
-    }
-    
-    // About the chatbot
-    if ((lowerCaseMessage.includes('who are you') || lowerCaseMessage.includes('what are you')) || 
-        (lowerCaseMessage.includes('about') && lowerCaseMessage.includes('yourself'))) {
-        return 'I\'m DocuAid Assistant, an AI-powered chatbot designed to help you understand documents and answer your questions. I can extract content from web pages and provide relevant information based on the content. I\'m particularly knowledgeable about Sri Lanka and can analyze web page content to answer specific questions about it.';
-    }
-    
-    // Extraction explanation
-    if (lowerCaseMessage.includes('extract') || 
-        (lowerCaseMessage.includes('how') && lowerCaseMessage.includes('content'))) {
-        return 'To extract content from this page, click the "Extract" button at the bottom of the chat. This helps me understand the page content better and provide more accurate answers to your questions. After extraction, I can analyze the text and answer specific questions about it.';
-    }
-    
-    // Settings related queries
-    if (lowerCaseMessage.includes('settings') || lowerCaseMessage.includes('preferences')) {
-        return 'You can access settings by clicking the gear icon in the top right corner of the chat. There, you can adjust:\n\n' +
-               '• Theme (light/dark mode)\n' +
-               '• Font size\n' +
-               '• Auto-extract preferences\n' +
-               '• Message sending options\n' +
-               '• History storage settings\n\n' +
-               'Feel free to customize the chatbot to your liking!';
-    }
-    
-    // Check for Sri Lanka related questions
-    const sriLankaResponse = generateSriLankaFallbackResponse(userMessage);
-    if (sriLankaResponse !== null) {
-        return sriLankaResponse;
-    }
-    
-    // Check for current page context
-    if (lowerCaseMessage.includes('this page') || lowerCaseMessage.includes('this document') || 
-        lowerCaseMessage.includes('current page')) {
-        return 'I notice you\'re asking about ' + currentPageTitle + '. To provide the most accurate information about this page, I recommend clicking the "Extract" button first. ' +
-               'This will help me analyze the content and generate detailed answers based on the actual text rather than general knowledge. ' +
-               'Currently, I\'m responding based on my general capabilities without page-specific context.';
-    }
-    
-    // Check for common question patterns
-    if (lowerCaseMessage.startsWith('what is') || lowerCaseMessage.startsWith('what are')) {
-        return `To answer your question about "${userMessage.substring(8)}" accurately, I'd need to extract the content from this page first. This would help me provide information based on the document context rather than general knowledge.`;
-    }
-    
-    if (lowerCaseMessage.startsWith('how to') || lowerCaseMessage.startsWith('how do') || lowerCaseMessage.startsWith('how can')) {
-        return `For instructions on "${userMessage.substring(7)}", I recommend extracting the page content first. This would allow me to find specific steps or methods mentioned in the document.`;
-    }
-    
-    if (lowerCaseMessage.startsWith('why')) {
-        return `To explain "${userMessage}" properly, I'd need context from the page content. Try clicking the Extract button so I can analyze the explanations in the document.`;
-    }
-    
-    // Default response for unknown questions
-    return 'I understand your question about "' + userMessage + '". ' +
-           'For the most accurate answer, I recommend extracting the content from this page using the Extract button. ' +
-           'This will allow me to analyze the specific information in the document and provide a targeted response. ' +
-           'Without extraction, I can only provide general information or knowledge about topics like Sri Lanka.';
 }

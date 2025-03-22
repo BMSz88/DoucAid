@@ -25,12 +25,11 @@
                 "<all_urls>"
             ],
             "js": [
-                "simple-chatbot.js"
+                "script.js"
             ],
             "css": [
                 "styles.css"
-            ],
-            "run_at": "document_start"
+            ]
         }
     ],
     "icons": {
@@ -41,7 +40,7 @@
     "web_accessible_resources": [
         {
             "resources": [
-                "simple-chatbot.js",
+                "script.js",
                 "styles.css"
             ],
             "matches": [
