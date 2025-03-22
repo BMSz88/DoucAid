@@ -1521,7 +1521,7 @@ function generateSriLankaFallbackResponse(userMessage) {
     const lowerCaseMessage = userMessage.toLowerCase();
     
     // If the message doesn't mention Sri Lanka, return null
-    if (!lowerCaseMessage.includes('sri lanka')) {
+    if (!lowerCaseMessage.includes('sri lanka') && !lowerCaseMessage.includes('ceylon')) {
         return null;
     }
     
@@ -1541,7 +1541,10 @@ function generateSriLankaFallbackResponse(userMessage) {
         "weather": "Sri Lanka has a tropical climate with distinct wet and dry seasons. The weather varies by region, with the central highlands being cooler than the coastal areas.",
         "economy": "Sri Lanka's economy is based on agriculture, tourism, and exports like tea, spices, textiles, and rubber. Tea exports, particularly Ceylon tea, are a significant source of revenue.",
         "geography": "Sri Lanka is an island nation in South Asia, located in the Indian Ocean. It features diverse landscapes including mountains, rainforests, beaches, and plains.",
-        "wildlife": "Sri Lanka has diverse wildlife including elephants, leopards, sloth bears, and various species of birds. It's known for having one of the highest densities of leopards in the world."
+        "wildlife": "Sri Lanka has diverse wildlife including elephants, leopards, sloth bears, and various species of birds. It's known for having one of the highest densities of leopards in the world.",
+        "tea": "Ceylon tea from Sri Lanka is renowned worldwide for its quality. Sri Lanka is one of the world's largest tea exporters, with tea plantations covering many of the island's highlands.",
+        "beaches": "Sri Lanka boasts beautiful beaches along its coastline. Popular beach destinations include Mirissa, Unawatuna, Bentota, Arugam Bay (for surfing), and Trincomalee.",
+        "size": "Sri Lanka is an island nation with a total area of approximately 65,610 square kilometers (25,332 square miles), making it slightly larger than West Virginia in the United States."
     };
     
     // Check each topic to see if it's mentioned in the user message
@@ -1554,6 +1557,11 @@ function generateSriLankaFallbackResponse(userMessage) {
     // Handle variations of 'Where is Sri Lanka'
     if (lowerCaseMessage.includes('where') || lowerCaseMessage.includes('located')) {
         return "Sri Lanka is an island nation located in South Asia, in the Indian Ocean. It sits southeast of India and is separated from the Indian subcontinent by the Gulf of Mannar and the Palk Strait.";
+    }
+    
+    // Handle variations of 'Tell me about Sri Lanka'
+    if (lowerCaseMessage.includes('tell me about') || lowerCaseMessage.includes('what is') || lowerCaseMessage.includes('information')) {
+        return "Sri Lanka is an island nation in South Asia known for its diverse landscapes, rich cultural heritage, and historical significance. It's famous for its ancient Buddhist ruins, beautiful beaches, tea plantations, and wildlife. The country has a tropical climate and a culture influenced by various civilizations. Is there a specific aspect of Sri Lanka you'd like to know more about?";
     }
     
     // Generic Sri Lanka query
