@@ -749,3 +749,52 @@ body.dark-mode .system-message .message-content {
 #docuaid-extension.dark-mode .about-info a {
     color: #6B90F0;
 }
+
+/* Font Size Styles */
+#docuaid-extension.font-size-small .message-content,
+#docuaid-extension.font-size-small #user-input,
+#docuaid-extension.font-size-small .settings-option,
+#docuaid-extension.font-size-small .settings-section-title {
+    font-size: 12px !important;
+}
+
+#docuaid-extension.font-size-medium .message-content,
+#docuaid-extension.font-size-medium #user-input,
+#docuaid-extension.font-size-medium .settings-option,
+#docuaid-extension.font-size-medium .settings-section-title {
+    font-size: 14px !important;
+}
+
+#docuaid-extension.font-size-large .message-content,
+#docuaid-extension.font-size-large #user-input,
+#docuaid-extension.font-size-large .settings-option,
+#docuaid-extension.font-size-large .settings-section-title {
+    font-size: 16px !important;
+}
+
+#docuaid-extension.font-size-small .settings-section-title {
+    font-size: 13px !important;
+}
+
+#docuaid-extension.font-size-medium .settings-section-title {
+    font-size: 15px !important;
+}
+
+#docuaid-extension.font-size-large .settings-section-title {
+    font-size: 17px !important;
+}
+
+#docuaid-extension.font-size-small .chatbot-title,
+#docuaid-extension.font-size-small .settings-header h2 {
+    font-size: 14px !important;
+}
+
+#docuaid-extension.font-size-medium .chatbot-title,
+#docuaid-extension.font-size-medium .settings-header h2 {
+    font-size: 16px !important;
+}
+
+#docuaid-extension.font-size-large .chatbot-title,
+#docuaid-extension.font-size-large .settings-header h2 {
+    font-size: 18px !important;
+}
