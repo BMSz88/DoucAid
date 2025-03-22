@@ -63,65 +63,20 @@ function saveMessageToHistory(type, content) {
     chatHistory = history;
 }
 
+// DocuAid Chatbot Main Script
+console.log('[DocuAid] Script.js being loaded');
+
 // Initialize UI when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('[DocuAid] Main init - DOM loaded, authentication check:', checkAuthenticationRequirement());
     setupExtension();
-    setupEventListeners();
-    loadSettings();
     
-    // Hide the chatbot UI until login if authentication is required
-    checkAuthenticationRequirement();
+    console.log('[DocuAid] Content script loaded');
+    initChatbot();
 });
 
-// Check if authentication is required
-function checkAuthenticationRequirement() {
-    // For demonstration purposes, we'll start with authentication required
-    // In a real app, this might be a setting or server configuration
-    const authRequired = true;
-    
-    if (authRequired) {
-        // We need to wait for login manager to initialize first
-        setTimeout(() => {
-            if (window.docuAidLoginManager && !window.docuAidLoginManager.isLoggedIn) {
-                // Hide chat UI sections if not logged in
-                document.querySelector('#docuaid-extension .content-section').style.display = 'none';
-                document.querySelector('#docuaid-extension .chat-section').style.display = 'none';
-                
-                // Show only the settings section with the login UI
-                openSettings();
-                
-                // Hide other settings sections except login
-                const settingsSections = document.querySelectorAll('#docuaid-extension .settings-section');
-                settingsSections.forEach(section => {
-                    const title = section.querySelector('.settings-section-title');
-                    if (title && title.textContent !== 'User Login') {
-                        section.style.display = 'none';
-                    }
-                });
-                
-                // Listen for login state changes
-                document.addEventListener('docuaid-login-state-changed', () => {
-                    if (window.docuAidLoginManager.isLoggedIn) {
-                        // Show chat UI when logged in
-                        document.querySelector('#docuaid-extension .content-section').style.display = 'block';
-                        document.querySelector('#docuaid-extension .chat-section').style.display = 'block';
-                        
-                        // Show all settings sections
-                        settingsSections.forEach(section => {
-                            section.style.display = 'block';
-                        });
-                        
-                        // Close settings and return to chat
-                        closeSettings();
-                    }
-                });
-            }
-        }, 600);
-    }
-}
-
-function setupExtension() {
-    console.log('[DocuAid] Setting up extension');
+function initChatbot() {
+    console.log('[DocuAid] Initializing chatbot...');
 
     // Create main container
     const docuaidExtension = document.createElement('div');
@@ -407,245 +362,131 @@ function setupExtension() {
     settingsContent.appendChild(privacySection);
     
     // User Login Section
-    const loginSection = document.createElement('div');
-    loginSection.className = 'settings-section';
+    const userLoginSection = document.createElement('div');
+    userLoginSection.className = 'settings-section';
     
-    const loginTitle = document.createElement('h3');
-    loginTitle.className = 'settings-section-title';
-    loginTitle.textContent = 'User Login';
-    loginSection.appendChild(loginTitle);
-    
-    // Container for all login UI components
-    const loginContainer = document.createElement('div');
-    loginContainer.className = 'login-container';
-    loginContainer.id = 'login-container';
+    const userLoginTitle = document.createElement('h3');
+    userLoginTitle.className = 'settings-section-title';
+    userLoginTitle.textContent = 'User Login';
+    userLoginSection.appendChild(userLoginTitle);
     
     // Login Form
-    const loginForm = document.createElement('div');
-    loginForm.className = 'login-form';
+    const loginForm = document.createElement('form');
     loginForm.id = 'login-form';
-    
-    // Username input
-    const usernameGroup = document.createElement('div');
-    usernameGroup.className = 'form-group';
+    loginForm.className = 'login-form';
     
     const usernameLabel = document.createElement('label');
-    usernameLabel.setAttribute('for', 'username');
+    usernameLabel.htmlFor = 'username';
     usernameLabel.textContent = 'Username';
+    loginForm.appendChild(usernameLabel);
     
     const usernameInput = document.createElement('input');
     usernameInput.type = 'text';
     usernameInput.id = 'username';
-    usernameInput.className = 'settings-input';
-    usernameInput.placeholder = 'Enter your username';
-    
-    usernameGroup.appendChild(usernameLabel);
-    usernameGroup.appendChild(usernameInput);
-    loginForm.appendChild(usernameGroup);
-    
-    // Password input
-    const passwordGroup = document.createElement('div');
-    passwordGroup.className = 'form-group';
+    usernameInput.name = 'username';
+    usernameInput.required = true;
+    loginForm.appendChild(usernameInput);
     
     const passwordLabel = document.createElement('label');
-    passwordLabel.setAttribute('for', 'password');
+    passwordLabel.htmlFor = 'password';
     passwordLabel.textContent = 'Password';
+    loginForm.appendChild(passwordLabel);
     
     const passwordInput = document.createElement('input');
     passwordInput.type = 'password';
     passwordInput.id = 'password';
-    passwordInput.className = 'settings-input';
-    passwordInput.placeholder = 'Enter your password';
-    
-    passwordGroup.appendChild(passwordLabel);
-    passwordGroup.appendChild(passwordInput);
-    loginForm.appendChild(passwordGroup);
-    
-    // Action buttons
-    const loginActions = document.createElement('div');
-    loginActions.className = 'form-actions';
+    passwordInput.name = 'password';
+    passwordInput.required = true;
+    loginForm.appendChild(passwordInput);
     
     const loginButton = document.createElement('button');
-    loginButton.id = 'login-button';
-    loginButton.className = 'settings-button primary-button';
+    loginButton.type = 'submit';
+    loginButton.className = 'primary-button';
     loginButton.textContent = 'Login';
+    loginForm.appendChild(loginButton);
     
-    const signupToggleButton = document.createElement('button');
-    signupToggleButton.id = 'signup-toggle';
-    signupToggleButton.className = 'settings-button secondary-button';
-    signupToggleButton.textContent = 'Sign Up';
+    userLoginSection.appendChild(loginForm);
     
-    loginActions.appendChild(loginButton);
-    loginActions.appendChild(signupToggleButton);
-    loginForm.appendChild(loginActions);
-    
-    // Forgot password
-    const formFooter = document.createElement('div');
-    formFooter.className = 'form-footer';
-    
-    const forgotPassword = document.createElement('a');
-    forgotPassword.href = '#';
-    forgotPassword.id = 'forgot-password';
-    forgotPassword.textContent = 'Forgot password?';
-    
-    formFooter.appendChild(forgotPassword);
-    loginForm.appendChild(formFooter);
-    
-    // Signup Form (initially hidden)
-    const signupForm = document.createElement('div');
-    signupForm.className = 'signup-form';
+    // Signup Form
+    const signupForm = document.createElement('form');
     signupForm.id = 'signup-form';
-    signupForm.style.display = 'none';
+    signupForm.className = 'signup-form';
     
-    // New Username
-    const newUsernameGroup = document.createElement('div');
-    newUsernameGroup.className = 'form-group';
+    const signupUsernameLabel = document.createElement('label');
+    signupUsernameLabel.htmlFor = 'signup-username';
+    signupUsernameLabel.textContent = 'Username';
+    signupForm.appendChild(signupUsernameLabel);
     
-    const newUsernameLabel = document.createElement('label');
-    newUsernameLabel.setAttribute('for', 'new-username');
-    newUsernameLabel.textContent = 'Username';
-    
-    const newUsernameInput = document.createElement('input');
-    newUsernameInput.type = 'text';
-    newUsernameInput.id = 'new-username';
-    newUsernameInput.className = 'settings-input';
-    newUsernameInput.placeholder = 'Choose a username';
-    
-    newUsernameGroup.appendChild(newUsernameLabel);
-    newUsernameGroup.appendChild(newUsernameInput);
-    signupForm.appendChild(newUsernameGroup);
-    
-    // Email
-    const emailGroup = document.createElement('div');
-    emailGroup.className = 'form-group';
+    const signupUsernameInput = document.createElement('input');
+    signupUsernameInput.type = 'text';
+    signupUsernameInput.id = 'signup-username';
+    signupUsernameInput.name = 'signup-username';
+    signupUsernameInput.required = true;
+    signupForm.appendChild(signupUsernameInput);
     
     const emailLabel = document.createElement('label');
-    emailLabel.setAttribute('for', 'email');
+    emailLabel.htmlFor = 'email';
     emailLabel.textContent = 'Email';
+    signupForm.appendChild(emailLabel);
     
     const emailInput = document.createElement('input');
     emailInput.type = 'email';
     emailInput.id = 'email';
-    emailInput.className = 'settings-input';
-    emailInput.placeholder = 'Enter your email';
+    emailInput.name = 'email';
+    emailInput.required = true;
+    signupForm.appendChild(emailInput);
     
-    emailGroup.appendChild(emailLabel);
-    emailGroup.appendChild(emailInput);
-    signupForm.appendChild(emailGroup);
+    const signupPasswordLabel = document.createElement('label');
+    signupPasswordLabel.htmlFor = 'signup-password';
+    signupPasswordLabel.textContent = 'Password';
+    signupForm.appendChild(signupPasswordLabel);
     
-    // New Password
-    const newPasswordGroup = document.createElement('div');
-    newPasswordGroup.className = 'form-group';
-    
-    const newPasswordLabel = document.createElement('label');
-    newPasswordLabel.setAttribute('for', 'new-password');
-    newPasswordLabel.textContent = 'Password';
-    
-    const newPasswordInput = document.createElement('input');
-    newPasswordInput.type = 'password';
-    newPasswordInput.id = 'new-password';
-    newPasswordInput.className = 'settings-input';
-    newPasswordInput.placeholder = 'Choose a password';
-    
-    newPasswordGroup.appendChild(newPasswordLabel);
-    newPasswordGroup.appendChild(newPasswordInput);
-    signupForm.appendChild(newPasswordGroup);
-    
-    // Confirm Password
-    const confirmPasswordGroup = document.createElement('div');
-    confirmPasswordGroup.className = 'form-group';
-    
-    const confirmPasswordLabel = document.createElement('label');
-    confirmPasswordLabel.setAttribute('for', 'confirm-password');
-    confirmPasswordLabel.textContent = 'Confirm Password';
-    
-    const confirmPasswordInput = document.createElement('input');
-    confirmPasswordInput.type = 'password';
-    confirmPasswordInput.id = 'confirm-password';
-    confirmPasswordInput.className = 'settings-input';
-    confirmPasswordInput.placeholder = 'Confirm your password';
-    
-    confirmPasswordGroup.appendChild(confirmPasswordLabel);
-    confirmPasswordGroup.appendChild(confirmPasswordInput);
-    signupForm.appendChild(confirmPasswordGroup);
-    
-    // Signup Actions
-    const signupActions = document.createElement('div');
-    signupActions.className = 'form-actions';
+    const signupPasswordInput = document.createElement('input');
+    signupPasswordInput.type = 'password';
+    signupPasswordInput.id = 'signup-password';
+    signupPasswordInput.name = 'signup-password';
+    signupPasswordInput.required = true;
+    signupForm.appendChild(signupPasswordInput);
     
     const signupButton = document.createElement('button');
-    signupButton.id = 'signup-button';
-    signupButton.className = 'settings-button primary-button';
+    signupButton.type = 'submit';
+    signupButton.className = 'primary-button';
     signupButton.textContent = 'Sign Up';
+    signupForm.appendChild(signupButton);
     
-    const loginToggleButton = document.createElement('button');
-    loginToggleButton.id = 'login-toggle';
-    loginToggleButton.className = 'settings-button secondary-button';
-    loginToggleButton.textContent = 'Back to Login';
+    userLoginSection.appendChild(signupForm);
     
-    signupActions.appendChild(signupButton);
-    signupActions.appendChild(loginToggleButton);
-    signupForm.appendChild(signupActions);
-    
-    // User Profile (initially hidden)
+    // User Profile
     const userProfile = document.createElement('div');
-    userProfile.className = 'user-profile';
     userProfile.id = 'user-profile';
-    userProfile.style.display = 'none';
+    userProfile.className = 'user-profile';
     
-    // Profile Header
-    const profileHeader = document.createElement('div');
-    profileHeader.className = 'profile-header';
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar';
+    userProfile.appendChild(avatar);
     
-    // Avatar
-    const profileAvatar = document.createElement('div');
-    profileAvatar.className = 'profile-avatar';
+    const userInfo = document.createElement('div');
+    userInfo.className = 'user-info';
+    userProfile.appendChild(userInfo);
     
-    const profileInitial = document.createElement('span');
-    profileInitial.id = 'profile-initial';
-    profileInitial.textContent = 'U';
+    const welcomeMessage = document.createElement('p');
+    welcomeMessage.id = 'welcome-message';
+    welcomeMessage.textContent = 'Welcome, ';
+    userInfo.appendChild(welcomeMessage);
     
-    profileAvatar.appendChild(profileInitial);
-    profileHeader.appendChild(profileAvatar);
-    
-    // Profile Info
-    const profileInfo = document.createElement('div');
-    profileInfo.className = 'profile-info';
-    
-    const profileName = document.createElement('h4');
-    profileName.id = 'profile-name';
-    profileName.textContent = 'Username';
-    
-    const profileEmail = document.createElement('p');
-    profileEmail.id = 'profile-email';
-    profileEmail.textContent = 'user@example.com';
-    
-    profileInfo.appendChild(profileName);
-    profileInfo.appendChild(profileEmail);
-    profileHeader.appendChild(profileInfo);
-    
-    userProfile.appendChild(profileHeader);
-    
-    // Profile Actions
-    const profileActions = document.createElement('div');
-    profileActions.className = 'profile-actions';
+    const usernameDisplay = document.createElement('span');
+    usernameDisplay.id = 'username-display';
+    welcomeMessage.appendChild(usernameDisplay);
     
     const logoutButton = document.createElement('button');
     logoutButton.id = 'logout-button';
-    logoutButton.className = 'settings-button danger-button';
+    logoutButton.className = 'danger-button';
     logoutButton.textContent = 'Logout';
+    userInfo.appendChild(logoutButton);
     
-    profileActions.appendChild(logoutButton);
-    userProfile.appendChild(profileActions);
+    userLoginSection.appendChild(userProfile);
     
-    // Add all components to the main container
-    loginContainer.appendChild(loginForm);
-    loginContainer.appendChild(signupForm);
-    loginContainer.appendChild(userProfile);
-    
-    loginSection.appendChild(loginContainer);
-    
-    settingsContent.appendChild(loginSection);
+    settingsContent.appendChild(userLoginSection);
     
     settingsPanel.appendChild(settingsContent);
     chatbotContainer.appendChild(settingsPanel);
@@ -768,9 +609,6 @@ function setupExtension() {
 
     // Setup event listeners
     setupEventListeners();
-
-    // Check if user is logged in
-    checkUserLoginStatus();
 
     console.log('[DocuAid] Chatbot initialized successfully');
 }
@@ -1486,226 +1324,6 @@ function setupSettingsEventListeners() {
             }
         });
     }
-
-    // Toggle between login and signup forms
-    const signupToggle = document.getElementById('signup-toggle');
-    const loginToggle = document.getElementById('login-toggle');
-    const loginForm = document.getElementById('login-form');
-    const signupForm = document.getElementById('signup-form');
-    const userProfile = document.getElementById('user-profile');
-    
-    if (signupToggle) {
-        signupToggle.addEventListener('click', () => {
-            loginForm.style.display = 'none';
-            signupForm.style.display = 'block';
-            userProfile.style.display = 'none';
-        });
-    }
-    
-    if (loginToggle) {
-        loginToggle.addEventListener('click', () => {
-            loginForm.style.display = 'block';
-            signupForm.style.display = 'none';
-            userProfile.style.display = 'none';
-        });
-    }
-    
-    // Handle login form submission
-    const loginButton = document.getElementById('login-button');
-    if (loginButton) {
-        loginButton.addEventListener('click', () => {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            if (!username || !password) {
-                addSystemMessage('Please enter both username and password.');
-                return;
-            }
-            
-            // Simulate login API call
-            loginUser(username, password);
-        });
-    }
-    
-    // Handle signup form submission
-    const signupButton = document.getElementById('signup-button');
-    if (signupButton) {
-        signupButton.addEventListener('click', () => {
-            const username = document.getElementById('new-username').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('new-password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-            
-            if (!username || !email || !password || !confirmPassword) {
-                addSystemMessage('Please fill out all fields.');
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                addSystemMessage('Passwords do not match.');
-                return;
-            }
-            
-            // Simulate signup API call
-            registerUser(username, email, password);
-        });
-    }
-    
-    // Handle logout
-    const logoutButton = document.getElementById('logout-button');
-    if (logoutButton) {
-        logoutButton.addEventListener('click', () => {
-            logoutUser();
-        });
-    }
-    
-    // Handle forgot password
-    const forgotPassword = document.getElementById('forgot-password');
-    if (forgotPassword) {
-        forgotPassword.addEventListener('click', (e) => {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            
-            if (!username) {
-                addSystemMessage('Please enter your username to reset password.');
-                return;
-            }
-            
-            // Simulate password reset
-            addSystemMessage(`Password reset link sent to the email associated with ${username}.`);
-        });
-    }
-}
-
-// Function to handle user login
-async function loginUser(username, password) {
-    try {
-        // In a real application, this would be an API call
-        // For now, we'll simulate a successful login
-        // Add loading indicator or disable buttons here
-        
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Store user info in localStorage
-        const userInfo = {
-            username: username,
-            email: `${username}@example.com`, // In a real app, this would come from the backend
-            loggedIn: true,
-            loginTime: new Date().toISOString()
-        };
-        
-        localStorage.setItem('docuaid-user', JSON.stringify(userInfo));
-        
-        // Update UI to show logged in state
-        updateUserProfileUI(userInfo);
-        
-        // Show success message
-        addSystemMessage(`Welcome back, ${username}!`);
-        
-    } catch (error) {
-        console.error('Login error:', error);
-        addSystemMessage('Login failed. Please try again.');
-    }
-}
-
-// Function to handle user registration
-async function registerUser(username, email, password) {
-    try {
-        // In a real application, this would be an API call
-        // For now, we'll simulate a successful registration
-        
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Store user info in localStorage
-        const userInfo = {
-            username: username,
-            email: email,
-            loggedIn: true,
-            loginTime: new Date().toISOString()
-        };
-        
-        localStorage.setItem('docuaid-user', JSON.stringify(userInfo));
-        
-        // Update UI to show logged in state
-        updateUserProfileUI(userInfo);
-        
-        // Show success message
-        addSystemMessage(`Account created successfully. Welcome, ${username}!`);
-        
-    } catch (error) {
-        console.error('Registration error:', error);
-        addSystemMessage('Registration failed. Please try again.');
-    }
-}
-
-// Function to handle user logout
-function logoutUser() {
-    // Remove user info from localStorage
-    localStorage.removeItem('docuaid-user');
-    
-    // Update UI to show logged out state
-    const loginForm = document.getElementById('login-form');
-    const signupForm = document.getElementById('signup-form');
-    const userProfile = document.getElementById('user-profile');
-    
-    if (loginForm && signupForm && userProfile) {
-        loginForm.style.display = 'block';
-        signupForm.style.display = 'none';
-        userProfile.style.display = 'none';
-        
-        // Clear form fields
-        document.getElementById('username').value = '';
-        document.getElementById('password').value = '';
-    }
-    
-    // Show logout message
-    addSystemMessage('You have been logged out successfully.');
-}
-
-// Function to update the user profile UI
-function updateUserProfileUI(userInfo) {
-    const loginForm = document.getElementById('login-form');
-    const signupForm = document.getElementById('signup-form');
-    const userProfile = document.getElementById('user-profile');
-    const profileName = document.getElementById('profile-name');
-    const profileEmail = document.getElementById('profile-email');
-    const profileInitial = document.getElementById('profile-initial');
-    
-    if (loginForm && signupForm && userProfile && profileName && profileEmail && profileInitial) {
-        // Hide login/signup forms and show profile
-        loginForm.style.display = 'none';
-        signupForm.style.display = 'none';
-        userProfile.style.display = 'block';
-        
-        // Update profile information
-        profileName.textContent = userInfo.username;
-        profileEmail.textContent = userInfo.email;
-        profileInitial.textContent = userInfo.username.charAt(0).toUpperCase();
-    }
-}
-
-// Function to check if user is logged in on page load
-function checkUserLoginStatus() {
-    const userInfoString = localStorage.getItem('docuaid-user');
-    
-    if (userInfoString) {
-        try {
-            const userInfo = JSON.parse(userInfoString);
-            
-            // Check if login is still valid (e.g., not expired)
-            // In a real app, you might check token expiration here
-            if (userInfo.loggedIn) {
-                // Update UI to show logged in state
-                updateUserProfileUI(userInfo);
-            }
-        } catch (error) {
-            console.error('Error parsing user info:', error);
-            // Handle corrupted data by logging out
-            logoutUser();
-        }
-    }
 }
 
 // Function to load chat history from localStorage
@@ -1986,4 +1604,13 @@ function formatDate(date, includeTime = false) {
 function formatTime(timestamp) {
     const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
     return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+}
+
+// Function to check if authentication is required
+function checkAuthenticationRequirement() {
+    // For development/testing, let's return false to allow the chatbot to show without login
+    return false;
+    
+    // In production, this would check configuration or server settings
+    // return true;
 }
