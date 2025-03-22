@@ -2534,10 +2534,17 @@ function generateGeneralKnowledgeResponse(userMessage) {
     console.log('[DocuAid] Generating general knowledge response');
     
     const lowerCaseMessage = userMessage.toLowerCase();
+    const currentPageTitle = document.title || 'this page';
     
-    // Basic greeting responses
+    // Basic greeting responses with variety
     if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi') || lowerCaseMessage.includes('hey')) {
-        return 'Hello! I\'m DocuAid Assistant. How can I help you today?';
+        const greetings = [
+            'Hello! I\'m DocuAid Assistant. How can I help you today?',
+            'Hi there! I\'m here to assist you. What can I help you with?',
+            'Greetings! I\'m your DocuAid Assistant. How may I assist you today?',
+            'Hello! How can I make your browsing experience better today?'
+        ];
+        return greetings[Math.floor(Math.random() * greetings.length)];
     }
     
     // Help responses
@@ -2547,29 +2554,41 @@ function generateGeneralKnowledgeResponse(userMessage) {
                '2. Extract and analyze content from this page\n' +
                '3. Provide information about Sri Lanka\n' +
                '4. Assist with document understanding\n\n' +
-               'Feel free to ask me anything!';
+               'Feel free to ask me anything! For the best results with page-specific questions, click the "Extract" button first.';
     }
     
-    // Thank you responses
+    // Thank you responses with variety
     if (lowerCaseMessage.includes('thank') || lowerCaseMessage.includes('thanks')) {
-        return 'You\'re welcome! Is there anything else I can help you with?';
+        const thanks = [
+            'You\'re welcome! Is there anything else I can help you with?',
+            'Happy to help! Let me know if you need anything else.',
+            'Glad I could assist. Feel free to ask if you have more questions.',
+            'My pleasure! I\'m here if you need more information.'
+        ];
+        return thanks[Math.floor(Math.random() * thanks.length)];
     }
     
     // About the chatbot
     if ((lowerCaseMessage.includes('who are you') || lowerCaseMessage.includes('what are you')) || 
         (lowerCaseMessage.includes('about') && lowerCaseMessage.includes('yourself'))) {
-        return 'I\'m DocuAid Assistant, an AI-powered chatbot designed to help you understand documents and answer your questions. I can extract content from web pages and provide relevant information based on the content.';
+        return 'I\'m DocuAid Assistant, an AI-powered chatbot designed to help you understand documents and answer your questions. I can extract content from web pages and provide relevant information based on the content. I\'m particularly knowledgeable about Sri Lanka and can analyze web page content to answer specific questions about it.';
     }
     
     // Extraction explanation
     if (lowerCaseMessage.includes('extract') || 
         (lowerCaseMessage.includes('how') && lowerCaseMessage.includes('content'))) {
-        return 'To extract content from this page, click the "Extract" button at the bottom of the chat. This will help me understand the page content better and provide more accurate answers to your questions.';
+        return 'To extract content from this page, click the "Extract" button at the bottom of the chat. This helps me understand the page content better and provide more accurate answers to your questions. After extraction, I can analyze the text and answer specific questions about it.';
     }
     
     // Settings related queries
     if (lowerCaseMessage.includes('settings') || lowerCaseMessage.includes('preferences')) {
-        return 'You can access settings by clicking the gear icon in the top right corner of the chat. There, you can adjust theme preferences, font size, and other options.';
+        return 'You can access settings by clicking the gear icon in the top right corner of the chat. There, you can adjust:\n\n' +
+               '• Theme (light/dark mode)\n' +
+               '• Font size\n' +
+               '• Auto-extract preferences\n' +
+               '• Message sending options\n' +
+               '• History storage settings\n\n' +
+               'Feel free to customize the chatbot to your liking!';
     }
     
     // Check for Sri Lanka related questions
@@ -2581,13 +2600,27 @@ function generateGeneralKnowledgeResponse(userMessage) {
     // Check for current page context
     if (lowerCaseMessage.includes('this page') || lowerCaseMessage.includes('this document') || 
         lowerCaseMessage.includes('current page')) {
-        return 'To answer questions about this specific page, I recommend clicking the "Extract" button first. ' +
-               'This will help me analyze the content and provide more accurate answers. ' +
-               'Currently, I\'m responding based on my general knowledge.';
+        return 'I notice you\'re asking about ' + currentPageTitle + '. To provide the most accurate information about this page, I recommend clicking the "Extract" button first. ' +
+               'This will help me analyze the content and generate detailed answers based on the actual text rather than general knowledge. ' +
+               'Currently, I\'m responding based on my general capabilities without page-specific context.';
+    }
+    
+    // Check for common question patterns
+    if (lowerCaseMessage.startsWith('what is') || lowerCaseMessage.startsWith('what are')) {
+        return `To answer your question about "${userMessage.substring(8)}" accurately, I'd need to extract the content from this page first. This would help me provide information based on the document context rather than general knowledge.`;
+    }
+    
+    if (lowerCaseMessage.startsWith('how to') || lowerCaseMessage.startsWith('how do') || lowerCaseMessage.startsWith('how can')) {
+        return `For instructions on "${userMessage.substring(7)}", I recommend extracting the page content first. This would allow me to find specific steps or methods mentioned in the document.`;
+    }
+    
+    if (lowerCaseMessage.startsWith('why')) {
+        return `To explain "${userMessage}" properly, I'd need context from the page content. Try clicking the Extract button so I can analyze the explanations in the document.`;
     }
     
     // Default response for unknown questions
     return 'I understand your question about "' + userMessage + '". ' +
-           'I can provide better assistance if you extract the content from this page first using the Extract button, ' +
-           'or if you ask me about general topics or about Sri Lanka, which I have specific information about.';
+           'For the most accurate answer, I recommend extracting the content from this page using the Extract button. ' +
+           'This will allow me to analyze the specific information in the document and provide a targeted response. ' +
+           'Without extraction, I can only provide general information or knowledge about topics like Sri Lanka.';
 }
