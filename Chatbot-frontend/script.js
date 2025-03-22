@@ -684,7 +684,10 @@ function addMessage(type, content) {
 
     const messageContent = document.createElement('div');
     messageContent.className = 'message-content';
-    messageContent.innerHTML = content;
+    
+    // Process the content to make URLs clickable
+    const processedContent = makeLinksClickable(content);
+    messageContent.innerHTML = processedContent;
     
     // Add copy button for bot messages
     if (type === 'bot') {
@@ -706,6 +709,51 @@ function addMessage(type, content) {
 
     // Scroll to bottom with a smooth animation
     scrollToBottom(messagesContainer);
+}
+
+// Function to convert URLs in text to clickable links
+function makeLinksClickable(text) {
+    // Regular expression to match URLs
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    
+    // Replace URLs with clickable links
+    return text.replace(urlRegex, (url) => {
+        // Check if URL is already in an HTML tag
+        const isInHtmlTag = isUrlInHtmlTag(text, url);
+        if (isInHtmlTag) {
+            return url;
+        }
+        
+        // Clean the URL to remove any trailing punctuation
+        let cleanUrl = url;
+        const lastChar = cleanUrl.slice(-1);
+        if (['.', ',', ')', ']', ';', ':', '!', '?'].includes(lastChar)) {
+            cleanUrl = cleanUrl.slice(0, -1);
+        }
+        
+        // Create a safe display URL (truncate if too long)
+        let displayUrl = cleanUrl;
+        if (displayUrl.length > 50) {
+            displayUrl = displayUrl.substring(0, 47) + '...';
+        }
+        
+        // Create a target="_blank" link with security attributes
+        return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="external-link">${displayUrl}</a>${lastChar === url.slice(-1) ? lastChar : ''}`;
+    });
+}
+
+// Helper function to check if URL is already in an HTML tag
+function isUrlInHtmlTag(text, url) {
+    const urlIndex = text.indexOf(url);
+    const beforeUrl = text.substring(0, urlIndex);
+    
+    // Count number of opening and closing tags before the URL
+    const openingTags = (beforeUrl.match(/<a/g) || []).length;
+    const closingTags = (beforeUrl.match(/<\/a>/g) || []).length;
+    
+    // If there are more opening tags than closing tags, 
+    // the URL is likely already in an HTML tag
+    return openingTags > closingTags;
 }
 
 // Function to copy message content to clipboard

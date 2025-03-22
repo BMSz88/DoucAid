@@ -1252,3 +1252,48 @@ body.dark-mode .system-message .message-content {
     transform: translateX(-50%) translateY(0) !important;
     opacity: 1 !important;
 }
+
+/* External links in messages */
+#docuaid-extension .external-link {
+    color: #6c63ff !important;
+    text-decoration: none !important;
+    border-bottom: 1px dotted #6c63ff !important;
+    transition: color 0.2s, border-bottom 0.2s !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    vertical-align: bottom !important;
+}
+
+#docuaid-extension .external-link:hover {
+    color: #8a7cff !important;
+    border-bottom: 1px solid #8a7cff !important;
+}
+
+#docuaid-extension.dark-mode .external-link {
+    color: #8a7cff !important;
+    border-bottom: 1px dotted #8a7cff !important;
+}
+
+#docuaid-extension.dark-mode .external-link:hover {
+    color: #b3a8ff !important;
+    border-bottom: 1px solid #b3a8ff !important;
+}
+
+/* Add link icon after external links */
+#docuaid-extension .external-link::after {
+    content: "" !important;
+    display: inline-block !important;
+    width: 12px !important;
+    height: 12px !important;
+    margin-left: 4px !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='12' height='12' fill='%236c63ff'%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+}
+
+#docuaid-extension.dark-mode .external-link::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='12' height='12' fill='%238a7cff'%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3'/%3E%3C/svg%3E") !important;
+}
