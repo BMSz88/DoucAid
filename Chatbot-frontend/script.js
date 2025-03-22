@@ -27,6 +27,7 @@ function initChatbot() {
     // Create chatbot container
     const chatbotContainer = document.createElement('div');
     chatbotContainer.className = 'chatbot-container';
+    chatbotContainer.id = 'chatbot-container';
     docuaidExtension.appendChild(chatbotContainer);
 
     // Create chatbot header
@@ -45,30 +46,339 @@ function initChatbot() {
     chatbotControls.className = 'chatbot-controls';
     chatbotHeader.appendChild(chatbotControls);
 
-    // Create theme toggle button based on current mode
-    const themeToggleBtn = document.createElement('button');
-    themeToggleBtn.id = 'theme-toggle';
-    themeToggleBtn.title = 'Toggle Dark/Light Mode';
-
-    // Set the icon based on the current mode
-    const isDarkMode = docuaidExtension.classList.contains('dark-mode');
-    if (isDarkMode) {
-        themeToggleBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    } else {
-        themeToggleBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8V5M12 19v-3M5 12H2M22 12h-3M19.07 5L17 7.07M7.07 7.07 5 5M7.07 17 5 19.07M19.07 19.07 17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    }
-
-    chatbotControls.appendChild(themeToggleBtn);
+    // Create settings button
+    const settingsButton = document.createElement('button');
+    settingsButton.className = 'settings-button';
+    settingsButton.id = 'settings-button';
+    settingsButton.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" /></svg>';
+    chatbotControls.appendChild(settingsButton);
 
     // Create close button
     const closeBtn = document.createElement('button');
     closeBtn.id = 'close-btn';
+    closeBtn.className = 'close-button';
     closeBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     chatbotControls.appendChild(closeBtn);
+
+    // Create Settings Panel
+    const settingsPanel = document.createElement('div');
+    settingsPanel.className = 'settings-panel';
+    settingsPanel.id = 'settings-panel';
+    
+    // Create settings header
+    const settingsHeader = document.createElement('div');
+    settingsHeader.className = 'settings-header';
+    
+    const settingsTitle = document.createElement('h2');
+    settingsTitle.textContent = 'Settings';
+    settingsHeader.appendChild(settingsTitle);
+    
+    const closeSettingsButton = document.createElement('button');
+    closeSettingsButton.className = 'close-settings-button';
+    closeSettingsButton.id = 'close-settings-button';
+    closeSettingsButton.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg>';
+    settingsHeader.appendChild(closeSettingsButton);
+    
+    settingsPanel.appendChild(settingsHeader);
+    
+    // Create settings content
+    const settingsContent = document.createElement('div');
+    settingsContent.className = 'settings-content';
+    
+    // Appearance Section
+    const appearanceSection = document.createElement('div');
+    appearanceSection.className = 'settings-section';
+    
+    const appearanceTitle = document.createElement('h3');
+    appearanceTitle.className = 'settings-section-title';
+    appearanceTitle.textContent = 'Appearance';
+    appearanceSection.appendChild(appearanceTitle);
+    
+    // Theme Option
+    const themeOption = document.createElement('div');
+    themeOption.className = 'settings-option';
+    
+    const themeLabel = document.createElement('span');
+    themeLabel.textContent = 'Theme';
+    themeOption.appendChild(themeLabel);
+    
+    const themeToggleContainer = document.createElement('div');
+    themeToggleContainer.className = 'toggle-switch';
+    
+    const themeToggleSwitch = document.createElement('input');
+    themeToggleSwitch.type = 'checkbox';
+    themeToggleSwitch.id = 'theme-toggle-switch';
+    themeToggleSwitch.className = 'toggle-switch-checkbox';
+    themeToggleContainer.appendChild(themeToggleSwitch);
+    
+    const themeToggleSwitchLabel = document.createElement('label');
+    themeToggleSwitchLabel.htmlFor = 'theme-toggle-switch';
+    themeToggleSwitchLabel.className = 'toggle-switch-label';
+    themeToggleSwitchLabel.innerHTML = '<span class="toggle-switch-inner"></span><span class="toggle-switch-switch"></span>';
+    themeToggleContainer.appendChild(themeToggleSwitchLabel);
+    
+    const themeLabelText = document.createElement('span');
+    themeLabelText.className = 'toggle-label';
+    themeLabelText.id = 'theme-label';
+    themeLabelText.textContent = 'Light';
+    themeToggleContainer.appendChild(themeLabelText);
+    
+    themeOption.appendChild(themeToggleContainer);
+    appearanceSection.appendChild(themeOption);
+    
+    // Font Size Option
+    const fontSizeOption = document.createElement('div');
+    fontSizeOption.className = 'settings-option';
+    
+    const fontSizeLabel = document.createElement('span');
+    fontSizeLabel.textContent = 'Font Size';
+    fontSizeOption.appendChild(fontSizeLabel);
+    
+    const fontSizeContainer = document.createElement('div');
+    fontSizeContainer.className = 'select-container';
+    
+    const fontSizeSelect = document.createElement('select');
+    fontSizeSelect.id = 'font-size-select';
+    fontSizeSelect.className = 'settings-select';
+    
+    const smallOption = document.createElement('option');
+    smallOption.value = 'small';
+    smallOption.textContent = 'Small';
+    fontSizeSelect.appendChild(smallOption);
+    
+    const mediumOption = document.createElement('option');
+    mediumOption.value = 'medium';
+    mediumOption.textContent = 'Medium';
+    mediumOption.selected = true;
+    fontSizeSelect.appendChild(mediumOption);
+    
+    const largeOption = document.createElement('option');
+    largeOption.value = 'large';
+    largeOption.textContent = 'Large';
+    fontSizeSelect.appendChild(largeOption);
+    
+    fontSizeContainer.appendChild(fontSizeSelect);
+    fontSizeOption.appendChild(fontSizeContainer);
+    appearanceSection.appendChild(fontSizeOption);
+    
+    settingsContent.appendChild(appearanceSection);
+    
+    // Behavior Section
+    const behaviorSection = document.createElement('div');
+    behaviorSection.className = 'settings-section';
+    
+    const behaviorTitle = document.createElement('h3');
+    behaviorTitle.className = 'settings-section-title';
+    behaviorTitle.textContent = 'Behavior';
+    behaviorSection.appendChild(behaviorTitle);
+    
+    // Auto-extract Option
+    const autoExtractOption = document.createElement('div');
+    autoExtractOption.className = 'settings-option';
+    
+    const autoExtractLabel = document.createElement('span');
+    autoExtractLabel.textContent = 'Auto-extract Content';
+    autoExtractOption.appendChild(autoExtractLabel);
+    
+    const autoExtractToggleContainer = document.createElement('div');
+    autoExtractToggleContainer.className = 'toggle-switch';
+    
+    const autoExtractSwitch = document.createElement('input');
+    autoExtractSwitch.type = 'checkbox';
+    autoExtractSwitch.id = 'auto-extract-switch';
+    autoExtractSwitch.className = 'toggle-switch-checkbox';
+    autoExtractToggleContainer.appendChild(autoExtractSwitch);
+    
+    const autoExtractSwitchLabel = document.createElement('label');
+    autoExtractSwitchLabel.htmlFor = 'auto-extract-switch';
+    autoExtractSwitchLabel.className = 'toggle-switch-label';
+    autoExtractSwitchLabel.innerHTML = '<span class="toggle-switch-inner"></span><span class="toggle-switch-switch"></span>';
+    autoExtractToggleContainer.appendChild(autoExtractSwitchLabel);
+    
+    autoExtractOption.appendChild(autoExtractToggleContainer);
+    behaviorSection.appendChild(autoExtractOption);
+    
+    // Send on Enter Option
+    const sendOnEnterOption = document.createElement('div');
+    sendOnEnterOption.className = 'settings-option';
+    
+    const sendOnEnterLabel = document.createElement('span');
+    sendOnEnterLabel.textContent = 'Send on Enter';
+    sendOnEnterOption.appendChild(sendOnEnterLabel);
+    
+    const sendOnEnterToggleContainer = document.createElement('div');
+    sendOnEnterToggleContainer.className = 'toggle-switch';
+    
+    const sendOnEnterSwitch = document.createElement('input');
+    sendOnEnterSwitch.type = 'checkbox';
+    sendOnEnterSwitch.id = 'send-on-enter-switch';
+    sendOnEnterSwitch.className = 'toggle-switch-checkbox';
+    sendOnEnterSwitch.checked = true;
+    sendOnEnterToggleContainer.appendChild(sendOnEnterSwitch);
+    
+    const sendOnEnterSwitchLabel = document.createElement('label');
+    sendOnEnterSwitchLabel.htmlFor = 'send-on-enter-switch';
+    sendOnEnterSwitchLabel.className = 'toggle-switch-label';
+    sendOnEnterSwitchLabel.innerHTML = '<span class="toggle-switch-inner"></span><span class="toggle-switch-switch"></span>';
+    sendOnEnterToggleContainer.appendChild(sendOnEnterSwitchLabel);
+    
+    sendOnEnterOption.appendChild(sendOnEnterToggleContainer);
+    behaviorSection.appendChild(sendOnEnterOption);
+    
+    settingsContent.appendChild(behaviorSection);
+    
+    // Advanced Section
+    const advancedSection = document.createElement('div');
+    advancedSection.className = 'settings-section';
+    
+    const advancedTitle = document.createElement('h3');
+    advancedTitle.className = 'settings-section-title';
+    advancedTitle.textContent = 'Advanced';
+    advancedSection.appendChild(advancedTitle);
+    
+    // API Endpoint Option
+    const apiEndpointOption = document.createElement('div');
+    apiEndpointOption.className = 'settings-option';
+    
+    const apiEndpointLabel = document.createElement('span');
+    apiEndpointLabel.textContent = 'API Endpoint';
+    apiEndpointOption.appendChild(apiEndpointLabel);
+    
+    const apiEndpointInput = document.createElement('input');
+    apiEndpointInput.type = 'text';
+    apiEndpointInput.id = 'api-endpoint-input';
+    apiEndpointInput.className = 'settings-input';
+    apiEndpointInput.value = 'https://api.docuaid.online';
+    apiEndpointOption.appendChild(apiEndpointInput);
+    
+    advancedSection.appendChild(apiEndpointOption);
+    
+    // API Key Option
+    const apiKeyOption = document.createElement('div');
+    apiKeyOption.className = 'settings-option';
+    
+    const apiKeyLabel = document.createElement('span');
+    apiKeyLabel.textContent = 'API Key';
+    apiKeyOption.appendChild(apiKeyLabel);
+    
+    const apiKeyContainer = document.createElement('div');
+    apiKeyContainer.className = 'api-key-container';
+    
+    const apiKeyInput = document.createElement('input');
+    apiKeyInput.type = 'password';
+    apiKeyInput.id = 'api-key-input';
+    apiKeyInput.className = 'settings-input';
+    apiKeyInput.placeholder = 'Enter your API key...';
+    apiKeyContainer.appendChild(apiKeyInput);
+    
+    const toggleApiVisibilityButton = document.createElement('button');
+    toggleApiVisibilityButton.id = 'toggle-api-visibility';
+    toggleApiVisibilityButton.className = 'toggle-visibility-button';
+    toggleApiVisibilityButton.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" /></svg>';
+    apiKeyContainer.appendChild(toggleApiVisibilityButton);
+    
+    apiKeyOption.appendChild(apiKeyContainer);
+    advancedSection.appendChild(apiKeyOption);
+    
+    settingsContent.appendChild(advancedSection);
+    
+    // Privacy Section
+    const privacySection = document.createElement('div');
+    privacySection.className = 'settings-section';
+    
+    const privacyTitle = document.createElement('h3');
+    privacyTitle.className = 'settings-section-title';
+    privacyTitle.textContent = 'Privacy';
+    privacySection.appendChild(privacyTitle);
+    
+    // Store Chat History Option
+    const storeChatHistoryOption = document.createElement('div');
+    storeChatHistoryOption.className = 'settings-option';
+    
+    const storeChatHistoryLabel = document.createElement('span');
+    storeChatHistoryLabel.textContent = 'Store Chat History';
+    storeChatHistoryOption.appendChild(storeChatHistoryLabel);
+    
+    const storeChatHistoryToggleContainer = document.createElement('div');
+    storeChatHistoryToggleContainer.className = 'toggle-switch';
+    
+    const storeHistorySwitch = document.createElement('input');
+    storeHistorySwitch.type = 'checkbox';
+    storeHistorySwitch.id = 'store-history-switch';
+    storeHistorySwitch.className = 'toggle-switch-checkbox';
+    storeHistorySwitch.checked = true;
+    storeChatHistoryToggleContainer.appendChild(storeHistorySwitch);
+    
+    const storeHistorySwitchLabel = document.createElement('label');
+    storeHistorySwitchLabel.htmlFor = 'store-history-switch';
+    storeHistorySwitchLabel.className = 'toggle-switch-label';
+    storeHistorySwitchLabel.innerHTML = '<span class="toggle-switch-inner"></span><span class="toggle-switch-switch"></span>';
+    storeChatHistoryToggleContainer.appendChild(storeHistorySwitchLabel);
+    
+    storeChatHistoryOption.appendChild(storeChatHistoryToggleContainer);
+    privacySection.appendChild(storeChatHistoryOption);
+    
+    // Clear History Button Option
+    const clearHistoryOption = document.createElement('div');
+    clearHistoryOption.className = 'settings-option';
+    
+    const clearHistoryButton = document.createElement('button');
+    clearHistoryButton.id = 'clear-history-button';
+    clearHistoryButton.className = 'settings-button';
+    clearHistoryButton.textContent = 'Clear Chat History';
+    clearHistoryOption.appendChild(clearHistoryButton);
+    
+    privacySection.appendChild(clearHistoryOption);
+    
+    settingsContent.appendChild(privacySection);
+    
+    // About Section
+    const aboutSection = document.createElement('div');
+    aboutSection.className = 'settings-section';
+    
+    const aboutTitle = document.createElement('h3');
+    aboutTitle.className = 'settings-section-title';
+    aboutTitle.textContent = 'About';
+    aboutSection.appendChild(aboutTitle);
+    
+    const aboutInfo = document.createElement('div');
+    aboutInfo.className = 'about-info';
+    
+    const versionInfo = document.createElement('p');
+    versionInfo.textContent = 'Version: 1.0.0';
+    aboutInfo.appendChild(versionInfo);
+    
+    const copyrightInfo = document.createElement('p');
+    copyrightInfo.textContent = '© 2025 DocuAid. All rights reserved.';
+    aboutInfo.appendChild(copyrightInfo);
+    
+    const privacyLink = document.createElement('p');
+    const privacyAnchor = document.createElement('a');
+    privacyAnchor.href = 'https://www.docuaid.online/privacy';
+    privacyAnchor.target = '_blank';
+    privacyAnchor.textContent = 'Privacy Policy';
+    privacyLink.appendChild(privacyAnchor);
+    aboutInfo.appendChild(privacyLink);
+    
+    const termsLink = document.createElement('p');
+    const termsAnchor = document.createElement('a');
+    termsAnchor.href = 'https://www.docuaid.online/terms';
+    termsAnchor.target = '_blank';
+    termsAnchor.textContent = 'Terms of Service';
+    termsLink.appendChild(termsAnchor);
+    aboutInfo.appendChild(termsLink);
+    
+    aboutSection.appendChild(aboutInfo);
+    
+    settingsContent.appendChild(aboutSection);
+    
+    settingsPanel.appendChild(settingsContent);
+    chatbotContainer.appendChild(settingsPanel);
 
     // Create messages container
     const messagesContainer = document.createElement('div');
     messagesContainer.className = 'chatbot-messages';
+    messagesContainer.id = 'chatbot-messages';
     chatbotContainer.appendChild(messagesContainer);
 
     // Create user input container
@@ -86,6 +396,7 @@ function initChatbot() {
     // Create send button
     const sendButton = document.createElement('button');
     sendButton.className = 'send-button';
+    sendButton.id = 'send-button';
     sendButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     userInputContainer.appendChild(sendButton);
 
@@ -132,9 +443,11 @@ function setupEventListeners() {
     const closeBtn = document.querySelector('#docuaid-extension #close-btn');
     const userInput = document.querySelector('#docuaid-extension #user-input');
     const sendButton = document.querySelector('#docuaid-extension .send-button');
-    const themeToggleBtn = document.querySelector('#docuaid-extension #theme-toggle');
     const extractButton = document.querySelector('#docuaid-extension #extract-btn');
     const clearButton = document.querySelector('#docuaid-extension #clear-btn');
+    const settingsButton = document.querySelector('#docuaid-extension #settings-button');
+    const closeSettingsButton = document.querySelector('#docuaid-extension #close-settings-button');
+    const settingsPanel = document.querySelector('#docuaid-extension #settings-panel');
 
     // Set up event listeners
     chatbotIcon.addEventListener('click', function () {
@@ -170,68 +483,68 @@ function setupEventListeners() {
         chatbotContainer.style.pointerEvents = 'none';
     });
 
+    // Settings button click handler
+    if (settingsButton) {
+        settingsButton.addEventListener('click', function() {
+            console.log('[DocuAid] Settings button clicked');
+            if (settingsPanel) {
+                settingsPanel.classList.add('active');
+            }
+        });
+    }
+
+    // Close settings button click handler
+    if (closeSettingsButton) {
+        closeSettingsButton.addEventListener('click', function() {
+            console.log('[DocuAid] Close settings button clicked');
+            if (settingsPanel) {
+                settingsPanel.classList.remove('active');
+            }
+        });
+    }
+
     // Send message when send button is clicked
     sendButton.addEventListener('click', sendMessage);
 
     // Send message when Enter key is pressed (not when Shift+Enter)
     userInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
+        // Check if we should send on enter
+        const sendOnEnter = localStorage.getItem('docuaid-send-on-enter') !== 'false'; // Default to true
+        
+        if (e.key === 'Enter' && !e.shiftKey && sendOnEnter) {
             e.preventDefault();
             sendMessage();
         }
     });
 
-    // Toggle dark mode
-    themeToggleBtn.addEventListener('click', () => {
-        console.log('[DocuAid] Theme toggle clicked');
-        const docuaidExtension = document.querySelector('#docuaid-extension');
-        docuaidExtension.classList.toggle('dark-mode');
-
-        // Store preference in localStorage
-        const isDarkMode = docuaidExtension.classList.contains('dark-mode');
-        localStorage.setItem('docuaid-dark-mode', isDarkMode);
-
-        // Update icon
-        if (isDarkMode) {
-            themeToggleBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-        } else {
-            themeToggleBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8V5M12 19v-3M5 12H2M22 12h-3M19.07 5L17 7.07M7.07 7.07 5 5M7.07 17 5 19.07M19.07 19.07 17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-        }
-    });
-
-    // Extract content from the page
-    extractButton.addEventListener('click', () => {
-        extractContent();
-    });
-
-    // Clear chat
-    clearButton.addEventListener('click', () => {
-        clearChat();
-    });
-
-    // Toggle settings panel
-    const settingsButton = document.getElementById('settings-button');
-    const settingsPanel = document.getElementById('settings-panel');
-    const closeSettingsButton = document.getElementById('close-settings-button');
-    
-    if (settingsButton && settingsPanel && closeSettingsButton) {
-        settingsButton.addEventListener('click', () => {
-            console.log('[DocuAid] Settings button clicked');
-            settingsPanel.classList.add('active');
-            // Prevent scrolling of messages when settings panel is open
-            document.querySelector('.chatbot-messages').style.overflow = 'hidden';
-        });
-        
-        closeSettingsButton.addEventListener('click', () => {
-            console.log('[DocuAid] Close settings button clicked');
-            settingsPanel.classList.remove('active');
-            // Re-enable scrolling of messages when settings panel is closed
-            document.querySelector('.chatbot-messages').style.overflow = 'auto';
-        });
-    } else {
-        console.error('[DocuAid] Cannot find settings elements');
+    // Extract content when extract button is clicked
+    if (extractButton) {
+        extractButton.addEventListener('click', extractContent);
     }
 
+    // Clear chat when clear button is clicked
+    if (clearButton) {
+        clearButton.addEventListener('click', clearChat);
+    }
+    
+    // Theme toggling
+    const docuaidExtension = document.getElementById('docuaid-extension');
+    const themeToggleBtn = document.querySelector('#docuaid-extension #theme-toggle');
+    
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', function() {
+            // Toggle dark mode class
+            docuaidExtension.classList.toggle('dark-mode');
+            
+            // Save the preference to localStorage
+            const isDarkMode = docuaidExtension.classList.contains('dark-mode');
+            localStorage.setItem('docuaid-dark-mode', isDarkMode);
+            
+            // Update the button icon
+            updateThemeButtonIcon(isDarkMode);
+        });
+    }
+    
     // Setup settings specific event listeners
     setupSettingsEventListeners();
     
@@ -643,6 +956,22 @@ function applyFontSize(size) {
     
     // Store in localStorage
     localStorage.setItem('docuaid-font-size', size);
+
+    // Update theme button icon
+    updateThemeButtonIcon(container.classList.contains('dark-mode'));
+}
+
+// Update theme button icon function
+function updateThemeButtonIcon(isDarkMode) {
+    const themeToggleBtn = document.querySelector('#docuaid-extension #theme-toggle');
+    
+    if (!themeToggleBtn) return;
+    
+    if (isDarkMode) {
+        themeToggleBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    } else {
+        themeToggleBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8V5M12 19v-3M5 12H2M22 12h-3M19.07 5L17 7.07M7.07 7.07 5 5M7.07 17 5 19.07M19.07 19.07 17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    }
 }
 
 // Setup settings event listeners
