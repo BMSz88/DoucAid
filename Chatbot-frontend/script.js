@@ -1080,7 +1080,7 @@ function updateThemeButtonIcon(isDarkMode) {
     }
 }
 
-// Setup settings event listeners
+// Function to setup settings event listeners
 function setupSettingsEventListeners() {
     console.log('[DocuAid] Setting up settings event listeners');
     
@@ -1188,6 +1188,38 @@ function setupSettingsEventListeners() {
             const settingsPanel = document.getElementById('settings-panel');
             if (settingsPanel) {
                 settingsPanel.classList.remove('active');
+            }
+        });
+    }
+    
+    // View chat history button
+    const viewHistoryButton = document.getElementById('view-history-button');
+    
+    if (viewHistoryButton) {
+        viewHistoryButton.addEventListener('click', () => {
+            // Show chat history
+            showChatHistory();
+            
+            // Close settings panel
+            const settingsPanel = document.getElementById('settings-panel');
+            if (settingsPanel) {
+                settingsPanel.classList.remove('active');
+            }
+        });
+    }
+    
+    // Close history modal button
+    const closeHistoryButton = document.getElementById('close-history-button');
+    
+    if (closeHistoryButton) {
+        closeHistoryButton.addEventListener('click', () => {
+            const historyModal = document.getElementById('history-modal');
+            if (historyModal) {
+                historyModal.classList.remove('active');
+                historyModal.style.transform = 'translateX(100%)';
+                historyModal.style.opacity = '0';
+                historyModal.style.visibility = 'hidden';
+                historyModal.style.pointerEvents = 'none';
             }
         });
     }
