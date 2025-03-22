@@ -730,6 +730,8 @@ body.dark-mode .system-message .message-content {
     padding: 15px;
     background-color: #f5f5f5;
     border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
 }
 
 #docuaid-extension .form-group {
@@ -741,6 +743,12 @@ body.dark-mode .system-message .message-content {
     margin-bottom: 5px;
     font-weight: 500;
     color: #444;
+    transition: color 0.2s ease;
+}
+
+#docuaid-extension .form-group input:focus {
+    border-color: #7b68ee;
+    box-shadow: 0 0 0 3px rgba(123, 104, 238, 0.15);
 }
 
 #docuaid-extension .form-actions {
@@ -750,33 +758,58 @@ body.dark-mode .system-message .message-content {
 }
 
 #docuaid-extension .primary-button {
-    background-color: #7b68ee;
+    background: linear-gradient(135deg, #7b68ee, #9370db);
     color: white;
     border: none;
-    padding: 8px 16px;
+    padding: 10px 16px;
     border-radius: 4px;
     cursor: pointer;
     font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(123, 104, 238, 0.3);
+}
+
+#docuaid-extension .primary-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(123, 104, 238, 0.4);
+}
+
+#docuaid-extension .primary-button:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(123, 104, 238, 0.2);
 }
 
 #docuaid-extension .secondary-button {
     background-color: #e0e0e0;
     color: #444;
     border: none;
-    padding: 8px 16px;
+    padding: 10px 16px;
     border-radius: 4px;
     cursor: pointer;
     font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+#docuaid-extension .secondary-button:hover {
+    background-color: #d0d0d0;
+    transform: translateY(-1px);
 }
 
 #docuaid-extension .danger-button {
-    background-color: #e74c3c;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
     color: white;
     border: none;
-    padding: 8px 16px;
+    padding: 10px 16px;
     border-radius: 4px;
     cursor: pointer;
     font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(231, 76, 60, 0.3);
+}
+
+#docuaid-extension .danger-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.4);
 }
 
 #docuaid-extension .form-footer {
@@ -788,12 +821,15 @@ body.dark-mode .system-message .message-content {
     color: #7b68ee;
     text-decoration: none;
     font-size: 0.9em;
+    transition: color 0.2s ease;
 }
 
 #docuaid-extension .form-footer a:hover {
+    color: #6a5acd;
     text-decoration: underline;
 }
 
+/* User Profile Styles */
 #docuaid-extension .user-profile {
     padding: 15px;
 }
@@ -805,19 +841,26 @@ body.dark-mode .system-message .message-content {
 }
 
 #docuaid-extension .profile-avatar {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    background-color: #7b68ee;
+    background: linear-gradient(135deg, #7b68ee, #9370db);
     display: flex;
     align-items: center;
     justify-content: center;
     margin-right: 15px;
+    box-shadow: 0 3px 8px rgba(123, 104, 238, 0.3);
+    transition: all 0.3s ease;
+}
+
+#docuaid-extension .profile-avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 12px rgba(123, 104, 238, 0.4);
 }
 
 #docuaid-extension .profile-avatar span {
     color: white;
-    font-size: 1.5em;
+    font-size: 1.8em;
     font-weight: bold;
 }
 
@@ -827,7 +870,8 @@ body.dark-mode .system-message .message-content {
 
 #docuaid-extension .profile-info h4 {
     margin: 0 0 5px 0;
-    font-size: 1.1em;
+    font-size: 1.2em;
+    color: #333;
 }
 
 #docuaid-extension .profile-info p {
@@ -837,12 +881,13 @@ body.dark-mode .system-message .message-content {
 }
 
 #docuaid-extension .profile-actions {
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
-/* Dark mode styles for login UI */
+/* Dark mode enhancements for login UI */
 #docuaid-extension.dark-mode .login-container {
     background-color: #2a2a2a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 #docuaid-extension.dark-mode .form-group label {
@@ -854,8 +899,16 @@ body.dark-mode .system-message .message-content {
     color: #e0e0e0;
 }
 
+#docuaid-extension.dark-mode .secondary-button:hover {
+    background-color: #555;
+}
+
 #docuaid-extension.dark-mode .form-footer a {
     color: #b39dff;
+}
+
+#docuaid-extension.dark-mode .form-footer a:hover {
+    color: #c4b5ff;
 }
 
 #docuaid-extension.dark-mode .profile-info h4 {
@@ -864,6 +917,23 @@ body.dark-mode .system-message .message-content {
 
 #docuaid-extension.dark-mode .profile-info p {
     color: #aaa;
+}
+
+/* Responsive improvements for login UI */
+@media (max-width: 480px) {
+    #docuaid-extension .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    #docuaid-extension .form-actions button {
+        width: 100%;
+    }
+    
+    #docuaid-extension .profile-avatar {
+        width: 50px;
+        height: 50px;
+    }
 }
 
 /* Font Size Styles */
@@ -1287,15 +1357,4 @@ body.dark-mode .system-message .message-content {
 
 #docuaid-extension.dark-mode .toggle-visibility-button {
     color: #b0b0b0;
-}
-
-/* Login UI Components */
-#docuaid-extension .login-container {
-    padding: 15px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-}
-
-#docuaid-extension .form-group {
-    margin-bottom: 15px;
 }
