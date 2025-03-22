@@ -5,13 +5,32 @@ const { PineconeClient } = require('@pinecone-database/pinecone');
 const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
 const { OpenAIEmbeddings } = require('langchain/embeddings/openai');
 const { PromptTemplate } = require('langchain/prompts');
+const fetch = require('node-fetch');
 
-// Initialize OpenAI
-const model = new OpenAI({
-    openAIApiKey: process.env.OPENAI_API_KEY,
-    temperature: 0.7,
-    modelName: 'gpt-3.5-turbo'
-});
+// Initialize OpenAI model with fallback mechanism
+function initializeOpenAI() {
+    try {
+        const apiKey = process.env.OPENAI_API_KEY;
+        console.log('OpenAI API Key loaded from env:', apiKey ? 'Yes' : 'No');
+        
+        // Check if the API key is missing or is a placeholder
+        if (!apiKey || apiKey.startsWith('sk-placeholder')) {
+            console.warn('WARNING: Using demo mode - OpenAI API key is missing or is a placeholder');
+            return null; // Return null to indicate demo mode
+        }
+        
+        return new OpenAI({
+            openAIApiKey: apiKey,
+            modelName: process.env.OPENAI_MODEL || 'gpt-4',
+            temperature: 0.1,
+        });
+    } catch (error) {
+        console.error('Error initializing OpenAI:', error.message);
+        return null; // Return null on error
+    }
+}
+
+const llm = initializeOpenAI();
 
 // Initialize OpenAI Embeddings
 const embeddings = new OpenAIEmbeddings({
@@ -73,12 +92,18 @@ async function getVectorStore() {
  */
 async function createContentIndex(content) {
     try {
+        // If no valid OpenAI connection, use demo mode
+        if (!llm) {
+            console.log('[DEMO MODE] Would index content:', content.content ? content.content.substring(0, 100) + '...' : '');
+            return { success: true, demo: true };
+        }
+        
         const store = await getVectorStore();
 
         // Skip if vector store is not available
         if (!store) {
             console.log('Vector store not available, skipping content indexing');
-            return;
+            return { success: true };
         }
 
         // Split content into chunks
@@ -100,9 +125,10 @@ async function createContentIndex(content) {
         // Store documents in vector store
         await store.addDocuments(documentsWithMetadata);
         console.log('Content indexed successfully');
+        return { success: true };
     } catch (error) {
         console.error('Error creating content index:', error);
-        // Don't throw the error, just log it
+        return { success: false, error: error.message };
     }
 }
 
@@ -131,7 +157,7 @@ async function decideResponseStrategy(question) {
         `);
 
         const formattedPrompt = await prompt.format({ question });
-        let response = await model.call(formattedPrompt);
+        let response = await llm.call(formattedPrompt);
 
         // Try to clean up the response for JSON parsing
         response = response.trim();
@@ -220,6 +246,16 @@ async function retrieveRelevantContent(question) {
  */
 async function generateAgenticResponse(question, context = null) {
     try {
+        // If no valid OpenAI connection, use demo mode
+        if (!llm) {
+            console.log('[DEMO MODE] Would generate response for question:', question);
+            return { 
+                success: true, 
+                demo: true,
+                answer: "This is a demo response as the OpenAI API key is not configured. In a real setup, I would analyze your document and provide a specific answer to your question." 
+            };
+        }
+        
         let strategy = {
             strategy: 'general_knowledge',
             reasoning: 'No context provided, using general knowledge',
@@ -276,7 +312,7 @@ async function generateAgenticResponse(question, context = null) {
                 `;
 
                 try {
-                    responseText = await model.call(`
+                    responseText = await llm.call(`
                         Based on the following web page content, answer the question.
                         If the answer cannot be found in the content, say so clearly.
                         
@@ -309,7 +345,7 @@ async function generateAgenticResponse(question, context = null) {
                         .join('\n\n');
 
                     try {
-                        responseText = await model.call(`
+                        responseText = await llm.call(`
                             Based on the following content, answer the question.
                             If the answer cannot be found in the content, say so clearly.
                             
@@ -332,7 +368,7 @@ async function generateAgenticResponse(question, context = null) {
 
         // General knowledge as fallback
         if (strategy.strategy === 'general_knowledge') {
-            responseText = await model.call(`
+            responseText = await llm.call(`
                 Answer the following question based on your general knowledge.
                 Question: ${question}
                 
@@ -341,6 +377,7 @@ async function generateAgenticResponse(question, context = null) {
         }
 
         return {
+            success: true,
             answer: responseText, // Changed from 'response' to 'answer' to match frontend expectations
             metadata: {
                 strategy: strategy.strategy,
@@ -357,11 +394,8 @@ async function generateAgenticResponse(question, context = null) {
     } catch (error) {
         console.error('Error generating response:', error);
         return {
-            answer: "I'm sorry, I couldn't generate a response due to a technical issue. Please try again.",
-            metadata: {
-                error: error.message,
-                strategy: 'error'
-            }
+            success: false,
+            error: error.message
         };
     }
 }
