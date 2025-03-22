@@ -142,6 +142,14 @@ function initChatbot() {
     settingsButton.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" /></svg>';
     chatbotControls.appendChild(settingsButton);
 
+    // Create help button for keyboard shortcuts
+    const helpButton = document.createElement('button');
+    helpButton.className = 'help-button';
+    helpButton.id = 'help-button';
+    helpButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
+    helpButton.setAttribute('title', 'Keyboard shortcuts');
+    chatbotControls.appendChild(helpButton);
+
     // Create close button
     const closeBtn = document.createElement('button');
     closeBtn.id = 'close-btn';
@@ -544,6 +552,64 @@ function initChatbot() {
     // Add welcome message
     addMessage('bot', 'Hello! I\'m DocuAid Assistant. How can I help you understand this document?');
 
+    // Create shortcuts help modal
+    const shortcutsModal = document.createElement('div');
+    shortcutsModal.className = 'shortcuts-modal';
+    shortcutsModal.id = 'shortcuts-modal';
+    
+    const shortcutsContent = document.createElement('div');
+    shortcutsContent.className = 'shortcuts-content';
+    
+    const shortcutsHeader = document.createElement('div');
+    shortcutsHeader.className = 'shortcuts-header';
+    
+    const shortcutsTitle = document.createElement('h3');
+    shortcutsTitle.textContent = 'Keyboard Shortcuts';
+    shortcutsHeader.appendChild(shortcutsTitle);
+    
+    const closeShortcutsButton = document.createElement('button');
+    closeShortcutsButton.className = 'close-shortcuts-button';
+    closeShortcutsButton.id = 'close-shortcuts-button';
+    closeShortcutsButton.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg>';
+    shortcutsHeader.appendChild(closeShortcutsButton);
+    
+    shortcutsContent.appendChild(shortcutsHeader);
+    
+    const shortcutsList = document.createElement('div');
+    shortcutsList.className = 'shortcuts-list';
+    
+    // Add shortcuts
+    const shortcuts = [
+        { key: 'Ctrl + Enter', desc: 'Send message' },
+        { key: 'Esc', desc: 'Close chatbot' },
+        { key: 'Ctrl + L', desc: 'Clear chat' },
+        { key: 'Ctrl + K', desc: 'Focus input' },
+        { key: 'Ctrl + E', desc: 'Extract content' },
+        { key: 'Ctrl + D', desc: 'Toggle dark mode' },
+        { key: 'Ctrl + ?', desc: 'Show this help' }
+    ];
+    
+    shortcuts.forEach(shortcut => {
+        const shortcutItem = document.createElement('div');
+        shortcutItem.className = 'shortcut-item';
+        
+        const shortcutKey = document.createElement('div');
+        shortcutKey.className = 'shortcut-key';
+        shortcutKey.innerHTML = `<kbd>${shortcut.key}</kbd>`;
+        
+        const shortcutDesc = document.createElement('div');
+        shortcutDesc.className = 'shortcut-desc';
+        shortcutDesc.textContent = shortcut.desc;
+        
+        shortcutItem.appendChild(shortcutKey);
+        shortcutItem.appendChild(shortcutDesc);
+        shortcutsList.appendChild(shortcutItem);
+    });
+    
+    shortcutsContent.appendChild(shortcutsList);
+    shortcutsModal.appendChild(shortcutsContent);
+    docuaidExtension.appendChild(shortcutsModal);
+
     // Setup event listeners
     setupEventListeners();
 
@@ -744,6 +810,73 @@ function setupEventListeners() {
         // Initial sizing
         autoResizeTextarea(userInput);
     }
+
+    // Help button for keyboard shortcuts
+    const helpButton = document.querySelector('#docuaid-extension #help-button');
+    const shortcutsModal = document.querySelector('#docuaid-extension #shortcuts-modal');
+    const closeShortcutsButton = document.querySelector('#docuaid-extension #close-shortcuts-button');
+    
+    if (helpButton && shortcutsModal) {
+        helpButton.addEventListener('click', function() {
+            shortcutsModal.classList.add('active');
+        });
+    }
+    
+    if (closeShortcutsButton && shortcutsModal) {
+        closeShortcutsButton.addEventListener('click', function() {
+            shortcutsModal.classList.remove('active');
+        });
+    }
+    
+    // Setup global keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        const chatbotContainer = document.querySelector('#docuaid-extension .chatbot-container');
+        const isChatbotActive = chatbotContainer && chatbotContainer.classList.contains('active');
+        const userInput = document.querySelector('#docuaid-extension #user-input');
+        const isInputFocused = document.activeElement === userInput;
+        
+        // ESC key to close chatbot
+        if (e.key === 'Escape' && isChatbotActive) {
+            document.querySelector('#docuaid-extension #close-btn').click();
+        }
+        
+        // Ctrl + Enter to send message (when input is focused)
+        if (e.ctrlKey && e.key === 'Enter' && isInputFocused) {
+            document.querySelector('#docuaid-extension #send-button').click();
+        }
+        
+        // Ctrl + L to clear chat
+        if (e.ctrlKey && e.key === 'l' && isChatbotActive) {
+            e.preventDefault(); // Prevent browser address bar focus
+            clearChat();
+        }
+        
+        // Ctrl + K to focus input
+        if (e.ctrlKey && e.key === 'k' && isChatbotActive) {
+            e.preventDefault();
+            userInput.focus();
+        }
+        
+        // Ctrl + E to extract content
+        if (e.ctrlKey && e.key === 'e' && isChatbotActive) {
+            e.preventDefault();
+            const extractButton = document.querySelector('#docuaid-extension #extract-btn');
+            if (extractButton) extractButton.click();
+        }
+        
+        // Ctrl + D to toggle dark mode
+        if (e.ctrlKey && e.key === 'd' && isChatbotActive) {
+            e.preventDefault();
+            const themeToggleBtn = document.querySelector('#docuaid-extension #theme-toggle');
+            if (themeToggleBtn) themeToggleBtn.click();
+        }
+        
+        // Ctrl + ? to show shortcuts help
+        if (e.ctrlKey && e.key === '/' && isChatbotActive) {
+            e.preventDefault();
+            shortcutsModal.classList.add('active');
+        }
+    });
 }
 
 function addMessage(type, content) {
