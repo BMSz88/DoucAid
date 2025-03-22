@@ -354,45 +354,246 @@ function initChatbot() {
     
     settingsContent.appendChild(privacySection);
     
-    // About Section
-    const aboutSection = document.createElement('div');
-    aboutSection.className = 'settings-section';
+    // User Login Section
+    const loginSection = document.createElement('div');
+    loginSection.className = 'settings-section';
     
-    const aboutTitle = document.createElement('h3');
-    aboutTitle.className = 'settings-section-title';
-    aboutTitle.textContent = 'About';
-    aboutSection.appendChild(aboutTitle);
+    const loginTitle = document.createElement('h3');
+    loginTitle.className = 'settings-section-title';
+    loginTitle.textContent = 'User Login';
+    loginSection.appendChild(loginTitle);
     
-    const aboutInfo = document.createElement('div');
-    aboutInfo.className = 'about-info';
+    // Container for all login UI components
+    const loginContainer = document.createElement('div');
+    loginContainer.className = 'login-container';
+    loginContainer.id = 'login-container';
     
-    const versionInfo = document.createElement('p');
-    versionInfo.textContent = 'Version: 1.0.0';
-    aboutInfo.appendChild(versionInfo);
+    // Login Form
+    const loginForm = document.createElement('div');
+    loginForm.className = 'login-form';
+    loginForm.id = 'login-form';
     
-    const copyrightInfo = document.createElement('p');
-    copyrightInfo.textContent = '© 2025 DocuAid. All rights reserved.';
-    aboutInfo.appendChild(copyrightInfo);
+    // Username input
+    const usernameGroup = document.createElement('div');
+    usernameGroup.className = 'form-group';
     
-    const privacyLink = document.createElement('p');
-    const privacyAnchor = document.createElement('a');
-    privacyAnchor.href = 'https://www.docuaid.online/privacy';
-    privacyAnchor.target = '_blank';
-    privacyAnchor.textContent = 'Privacy Policy';
-    privacyLink.appendChild(privacyAnchor);
-    aboutInfo.appendChild(privacyLink);
+    const usernameLabel = document.createElement('label');
+    usernameLabel.setAttribute('for', 'username');
+    usernameLabel.textContent = 'Username';
     
-    const termsLink = document.createElement('p');
-    const termsAnchor = document.createElement('a');
-    termsAnchor.href = 'https://www.docuaid.online/terms';
-    termsAnchor.target = '_blank';
-    termsAnchor.textContent = 'Terms of Service';
-    termsLink.appendChild(termsAnchor);
-    aboutInfo.appendChild(termsLink);
+    const usernameInput = document.createElement('input');
+    usernameInput.type = 'text';
+    usernameInput.id = 'username';
+    usernameInput.className = 'settings-input';
+    usernameInput.placeholder = 'Enter your username';
     
-    aboutSection.appendChild(aboutInfo);
+    usernameGroup.appendChild(usernameLabel);
+    usernameGroup.appendChild(usernameInput);
+    loginForm.appendChild(usernameGroup);
     
-    settingsContent.appendChild(aboutSection);
+    // Password input
+    const passwordGroup = document.createElement('div');
+    passwordGroup.className = 'form-group';
+    
+    const passwordLabel = document.createElement('label');
+    passwordLabel.setAttribute('for', 'password');
+    passwordLabel.textContent = 'Password';
+    
+    const passwordInput = document.createElement('input');
+    passwordInput.type = 'password';
+    passwordInput.id = 'password';
+    passwordInput.className = 'settings-input';
+    passwordInput.placeholder = 'Enter your password';
+    
+    passwordGroup.appendChild(passwordLabel);
+    passwordGroup.appendChild(passwordInput);
+    loginForm.appendChild(passwordGroup);
+    
+    // Action buttons
+    const loginActions = document.createElement('div');
+    loginActions.className = 'form-actions';
+    
+    const loginButton = document.createElement('button');
+    loginButton.id = 'login-button';
+    loginButton.className = 'settings-button primary-button';
+    loginButton.textContent = 'Login';
+    
+    const signupToggleButton = document.createElement('button');
+    signupToggleButton.id = 'signup-toggle';
+    signupToggleButton.className = 'settings-button secondary-button';
+    signupToggleButton.textContent = 'Sign Up';
+    
+    loginActions.appendChild(loginButton);
+    loginActions.appendChild(signupToggleButton);
+    loginForm.appendChild(loginActions);
+    
+    // Forgot password
+    const formFooter = document.createElement('div');
+    formFooter.className = 'form-footer';
+    
+    const forgotPassword = document.createElement('a');
+    forgotPassword.href = '#';
+    forgotPassword.id = 'forgot-password';
+    forgotPassword.textContent = 'Forgot password?';
+    
+    formFooter.appendChild(forgotPassword);
+    loginForm.appendChild(formFooter);
+    
+    // Signup Form (initially hidden)
+    const signupForm = document.createElement('div');
+    signupForm.className = 'signup-form';
+    signupForm.id = 'signup-form';
+    signupForm.style.display = 'none';
+    
+    // New Username
+    const newUsernameGroup = document.createElement('div');
+    newUsernameGroup.className = 'form-group';
+    
+    const newUsernameLabel = document.createElement('label');
+    newUsernameLabel.setAttribute('for', 'new-username');
+    newUsernameLabel.textContent = 'Username';
+    
+    const newUsernameInput = document.createElement('input');
+    newUsernameInput.type = 'text';
+    newUsernameInput.id = 'new-username';
+    newUsernameInput.className = 'settings-input';
+    newUsernameInput.placeholder = 'Choose a username';
+    
+    newUsernameGroup.appendChild(newUsernameLabel);
+    newUsernameGroup.appendChild(newUsernameInput);
+    signupForm.appendChild(newUsernameGroup);
+    
+    // Email
+    const emailGroup = document.createElement('div');
+    emailGroup.className = 'form-group';
+    
+    const emailLabel = document.createElement('label');
+    emailLabel.setAttribute('for', 'email');
+    emailLabel.textContent = 'Email';
+    
+    const emailInput = document.createElement('input');
+    emailInput.type = 'email';
+    emailInput.id = 'email';
+    emailInput.className = 'settings-input';
+    emailInput.placeholder = 'Enter your email';
+    
+    emailGroup.appendChild(emailLabel);
+    emailGroup.appendChild(emailInput);
+    signupForm.appendChild(emailGroup);
+    
+    // New Password
+    const newPasswordGroup = document.createElement('div');
+    newPasswordGroup.className = 'form-group';
+    
+    const newPasswordLabel = document.createElement('label');
+    newPasswordLabel.setAttribute('for', 'new-password');
+    newPasswordLabel.textContent = 'Password';
+    
+    const newPasswordInput = document.createElement('input');
+    newPasswordInput.type = 'password';
+    newPasswordInput.id = 'new-password';
+    newPasswordInput.className = 'settings-input';
+    newPasswordInput.placeholder = 'Choose a password';
+    
+    newPasswordGroup.appendChild(newPasswordLabel);
+    newPasswordGroup.appendChild(newPasswordInput);
+    signupForm.appendChild(newPasswordGroup);
+    
+    // Confirm Password
+    const confirmPasswordGroup = document.createElement('div');
+    confirmPasswordGroup.className = 'form-group';
+    
+    const confirmPasswordLabel = document.createElement('label');
+    confirmPasswordLabel.setAttribute('for', 'confirm-password');
+    confirmPasswordLabel.textContent = 'Confirm Password';
+    
+    const confirmPasswordInput = document.createElement('input');
+    confirmPasswordInput.type = 'password';
+    confirmPasswordInput.id = 'confirm-password';
+    confirmPasswordInput.className = 'settings-input';
+    confirmPasswordInput.placeholder = 'Confirm your password';
+    
+    confirmPasswordGroup.appendChild(confirmPasswordLabel);
+    confirmPasswordGroup.appendChild(confirmPasswordInput);
+    signupForm.appendChild(confirmPasswordGroup);
+    
+    // Signup Actions
+    const signupActions = document.createElement('div');
+    signupActions.className = 'form-actions';
+    
+    const signupButton = document.createElement('button');
+    signupButton.id = 'signup-button';
+    signupButton.className = 'settings-button primary-button';
+    signupButton.textContent = 'Sign Up';
+    
+    const loginToggleButton = document.createElement('button');
+    loginToggleButton.id = 'login-toggle';
+    loginToggleButton.className = 'settings-button secondary-button';
+    loginToggleButton.textContent = 'Back to Login';
+    
+    signupActions.appendChild(signupButton);
+    signupActions.appendChild(loginToggleButton);
+    signupForm.appendChild(signupActions);
+    
+    // User Profile (initially hidden)
+    const userProfile = document.createElement('div');
+    userProfile.className = 'user-profile';
+    userProfile.id = 'user-profile';
+    userProfile.style.display = 'none';
+    
+    // Profile Header
+    const profileHeader = document.createElement('div');
+    profileHeader.className = 'profile-header';
+    
+    // Avatar
+    const profileAvatar = document.createElement('div');
+    profileAvatar.className = 'profile-avatar';
+    
+    const profileInitial = document.createElement('span');
+    profileInitial.id = 'profile-initial';
+    profileInitial.textContent = 'U';
+    
+    profileAvatar.appendChild(profileInitial);
+    profileHeader.appendChild(profileAvatar);
+    
+    // Profile Info
+    const profileInfo = document.createElement('div');
+    profileInfo.className = 'profile-info';
+    
+    const profileName = document.createElement('h4');
+    profileName.id = 'profile-name';
+    profileName.textContent = 'Username';
+    
+    const profileEmail = document.createElement('p');
+    profileEmail.id = 'profile-email';
+    profileEmail.textContent = 'user@example.com';
+    
+    profileInfo.appendChild(profileName);
+    profileInfo.appendChild(profileEmail);
+    profileHeader.appendChild(profileInfo);
+    
+    userProfile.appendChild(profileHeader);
+    
+    // Profile Actions
+    const profileActions = document.createElement('div');
+    profileActions.className = 'profile-actions';
+    
+    const logoutButton = document.createElement('button');
+    logoutButton.id = 'logout-button';
+    logoutButton.className = 'settings-button danger-button';
+    logoutButton.textContent = 'Logout';
+    
+    profileActions.appendChild(logoutButton);
+    userProfile.appendChild(profileActions);
+    
+    // Add all components to the main container
+    loginContainer.appendChild(loginForm);
+    loginContainer.appendChild(signupForm);
+    loginContainer.appendChild(userProfile);
+    
+    loginSection.appendChild(loginContainer);
+    
+    settingsContent.appendChild(loginSection);
     
     settingsPanel.appendChild(settingsContent);
     chatbotContainer.appendChild(settingsPanel);
