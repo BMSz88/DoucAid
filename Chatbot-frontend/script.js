@@ -208,6 +208,29 @@ function setupEventListeners() {
     clearButton.addEventListener('click', () => {
         clearChat();
     });
+
+    // Toggle settings panel
+    const settingsButton = document.getElementById('settings-button');
+    const settingsPanel = document.getElementById('settings-panel');
+    const closeSettingsButton = document.getElementById('close-settings-button');
+    
+    if (settingsButton && settingsPanel && closeSettingsButton) {
+        settingsButton.addEventListener('click', () => {
+            console.log('[DocuAid] Settings button clicked');
+            settingsPanel.classList.add('active');
+            // Prevent scrolling of messages when settings panel is open
+            document.querySelector('.chatbot-messages').style.overflow = 'hidden';
+        });
+        
+        closeSettingsButton.addEventListener('click', () => {
+            console.log('[DocuAid] Close settings button clicked');
+            settingsPanel.classList.remove('active');
+            // Re-enable scrolling of messages when settings panel is closed
+            document.querySelector('.chatbot-messages').style.overflow = 'auto';
+        });
+    } else {
+        console.error('[DocuAid] Cannot find settings elements');
+    }
 }
 
 function addMessage(type, content) {
