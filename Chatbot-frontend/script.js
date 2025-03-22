@@ -692,8 +692,54 @@ function addMessage(type, content) {
     // Save message to history
     saveMessageToHistory(type, content);
 
-    // Scroll to bottom
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    // Scroll to bottom with a smooth animation
+    scrollToBottom(messagesContainer);
+}
+
+// Smart scroll to bottom with animation
+function scrollToBottom(container) {
+    // Check if user is already at the bottom before the new message
+    const isAtBottom = container.scrollHeight - container.clientHeight <= container.scrollTop + 50;
+    
+    if (isAtBottom) {
+        // User was already at the bottom, scroll smoothly
+        container.scrollTo({
+            top: container.scrollHeight,
+            behavior: 'smooth'
+        });
+    } else {
+        // User was reading previous messages, don't auto-scroll
+        // Instead, show a "new message" indicator
+        showNewMessageIndicator(container);
+    }
+}
+
+// Show new message indicator when user isn't at the bottom
+function showNewMessageIndicator(container) {
+    // Check if indicator already exists
+    let indicator = document.querySelector('#docuaid-new-message-indicator');
+    
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.id = 'docuaid-new-message-indicator';
+        indicator.className = 'new-message-indicator';
+        indicator.innerHTML = '<span>New message ↓</span>';
+        indicator.addEventListener('click', () => {
+            // Scroll to bottom when clicked
+            container.scrollTo({
+                top: container.scrollHeight,
+                behavior: 'smooth'
+            });
+            // Hide the indicator
+            indicator.style.display = 'none';
+        });
+        
+        // Add to container
+        document.querySelector('#docuaid-extension .chatbot-container').appendChild(indicator);
+    } else {
+        // Show existing indicator
+        indicator.style.display = 'flex';
+    }
 }
 
 function addSystemMessage(content) {

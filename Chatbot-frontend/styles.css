@@ -1155,3 +1155,43 @@ body.dark-mode .system-message .message-content {
 #docuaid-extension.dark-mode .session-empty-state svg {
     color: #666;
 }
+
+/* New message indicator */
+#docuaid-extension .new-message-indicator {
+    position: absolute !important;
+    bottom: 70px !important;
+    right: 20px !important;
+    background-color: #6c63ff !important;
+    color: white !important;
+    padding: 5px 10px !important;
+    border-radius: 15px !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+    cursor: pointer !important;
+    animation: pulse 1.5s infinite !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 12px !important;
+    z-index: 100001 !important;
+}
+
+#docuaid-extension .new-message-indicator span {
+    margin-right: 5px !important;
+}
+
+#docuaid-extension.dark-mode .new-message-indicator {
+    background-color: #8a7cff !important;
+    color: white !important;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1) !important;
+    }
+    50% {
+        transform: scale(1.05) !important;
+    }
+    100% {
+        transform: scale(1) !important;
+    }
+}
