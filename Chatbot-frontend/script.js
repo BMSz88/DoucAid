@@ -231,6 +231,12 @@ function setupEventListeners() {
     } else {
         console.error('[DocuAid] Cannot find settings elements');
     }
+
+    // Setup settings specific event listeners
+    setupSettingsEventListeners();
+    
+    // Load saved settings
+    loadSavedSettings();
 }
 
 function addMessage(type, content) {
@@ -555,4 +561,199 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initChatbot);
 } else {
     initChatbot();
+}
+
+// Load saved settings function
+function loadSavedSettings() {
+    console.log('[DocuAid] Loading saved settings');
+    
+    // Load theme setting
+    const savedDarkMode = localStorage.getItem('docuaid-dark-mode') === 'true';
+    const themeToggleSwitch = document.getElementById('theme-toggle-switch');
+    const themeLabel = document.getElementById('theme-label');
+    
+    if (themeToggleSwitch) {
+        themeToggleSwitch.checked = savedDarkMode;
+        if (themeLabel) {
+            themeLabel.textContent = savedDarkMode ? 'Dark' : 'Light';
+        }
+    }
+    
+    // Load font size setting
+    const savedFontSize = localStorage.getItem('docuaid-font-size') || 'medium';
+    const fontSizeSelect = document.getElementById('font-size-select');
+    
+    if (fontSizeSelect) {
+        fontSizeSelect.value = savedFontSize;
+        applyFontSize(savedFontSize);
+    }
+    
+    // Load auto-extract setting
+    const savedAutoExtract = localStorage.getItem('docuaid-auto-extract') === 'true';
+    const autoExtractSwitch = document.getElementById('auto-extract-switch');
+    
+    if (autoExtractSwitch) {
+        autoExtractSwitch.checked = savedAutoExtract;
+    }
+    
+    // Load send on enter setting
+    const savedSendOnEnter = localStorage.getItem('docuaid-send-on-enter') !== 'false'; // Default true
+    const sendOnEnterSwitch = document.getElementById('send-on-enter-switch');
+    
+    if (sendOnEnterSwitch) {
+        sendOnEnterSwitch.checked = savedSendOnEnter;
+    }
+    
+    // Load API endpoint
+    const savedApiEndpoint = localStorage.getItem('docuaid-api-endpoint') || 'https://api.docuaid.online';
+    const apiEndpointInput = document.getElementById('api-endpoint-input');
+    
+    if (apiEndpointInput) {
+        apiEndpointInput.value = savedApiEndpoint;
+    }
+    
+    // Load API key (if stored)
+    const savedApiKey = localStorage.getItem('docuaid-api-key') || '';
+    const apiKeyInput = document.getElementById('api-key-input');
+    
+    if (apiKeyInput && savedApiKey) {
+        apiKeyInput.value = savedApiKey;
+    }
+    
+    // Load store history setting
+    const savedStoreHistory = localStorage.getItem('docuaid-store-history') !== 'false'; // Default true
+    const storeHistorySwitch = document.getElementById('store-history-switch');
+    
+    if (storeHistorySwitch) {
+        storeHistorySwitch.checked = savedStoreHistory;
+    }
+}
+
+// Apply font size function
+function applyFontSize(size) {
+    const container = document.getElementById('docuaid-extension');
+    
+    if (!container) return;
+    
+    // Remove existing font size classes
+    container.classList.remove('font-size-small', 'font-size-medium', 'font-size-large');
+    
+    // Add selected font size class
+    container.classList.add(`font-size-${size}`);
+    
+    // Store in localStorage
+    localStorage.setItem('docuaid-font-size', size);
+}
+
+// Setup settings event listeners
+function setupSettingsEventListeners() {
+    console.log('[DocuAid] Setting up settings event listeners');
+    
+    // Theme toggle
+    const themeToggleSwitch = document.getElementById('theme-toggle-switch');
+    const themeLabel = document.getElementById('theme-label');
+    
+    if (themeToggleSwitch) {
+        themeToggleSwitch.addEventListener('change', () => {
+            const isDarkMode = themeToggleSwitch.checked;
+            const docuaidExtension = document.getElementById('docuaid-extension');
+            
+            if (isDarkMode) {
+                docuaidExtension.classList.add('dark-mode');
+                if (themeLabel) themeLabel.textContent = 'Dark';
+            } else {
+                docuaidExtension.classList.remove('dark-mode');
+                if (themeLabel) themeLabel.textContent = 'Light';
+            }
+            
+            // Store preference in localStorage
+            localStorage.setItem('docuaid-dark-mode', isDarkMode);
+        });
+    }
+    
+    // Font size select
+    const fontSizeSelect = document.getElementById('font-size-select');
+    
+    if (fontSizeSelect) {
+        fontSizeSelect.addEventListener('change', () => {
+            applyFontSize(fontSizeSelect.value);
+        });
+    }
+    
+    // Auto-extract toggle
+    const autoExtractSwitch = document.getElementById('auto-extract-switch');
+    
+    if (autoExtractSwitch) {
+        autoExtractSwitch.addEventListener('change', () => {
+            localStorage.setItem('docuaid-auto-extract', autoExtractSwitch.checked);
+        });
+    }
+    
+    // Send on enter toggle
+    const sendOnEnterSwitch = document.getElementById('send-on-enter-switch');
+    
+    if (sendOnEnterSwitch) {
+        sendOnEnterSwitch.addEventListener('change', () => {
+            localStorage.setItem('docuaid-send-on-enter', sendOnEnterSwitch.checked);
+        });
+    }
+    
+    // API endpoint input
+    const apiEndpointInput = document.getElementById('api-endpoint-input');
+    
+    if (apiEndpointInput) {
+        apiEndpointInput.addEventListener('change', () => {
+            localStorage.setItem('docuaid-api-endpoint', apiEndpointInput.value);
+        });
+    }
+    
+    // API key input
+    const apiKeyInput = document.getElementById('api-key-input');
+    
+    if (apiKeyInput) {
+        apiKeyInput.addEventListener('change', () => {
+            localStorage.setItem('docuaid-api-key', apiKeyInput.value);
+        });
+    }
+    
+    // Toggle API key visibility
+    const toggleApiVisibilityBtn = document.getElementById('toggle-api-visibility');
+    
+    if (toggleApiVisibilityBtn && apiKeyInput) {
+        toggleApiVisibilityBtn.addEventListener('click', () => {
+            const type = apiKeyInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            apiKeyInput.setAttribute('type', type);
+        });
+    }
+    
+    // Store history toggle
+    const storeHistorySwitch = document.getElementById('store-history-switch');
+    
+    if (storeHistorySwitch) {
+        storeHistorySwitch.addEventListener('change', () => {
+            localStorage.setItem('docuaid-store-history', storeHistorySwitch.checked);
+        });
+    }
+    
+    // Clear chat history button
+    const clearHistoryButton = document.getElementById('clear-history-button');
+    
+    if (clearHistoryButton) {
+        clearHistoryButton.addEventListener('click', () => {
+            // Clear chat history from localStorage
+            localStorage.removeItem('docuaid-chat-history');
+            
+            // Also clear current chat
+            clearChat();
+            
+            // Show confirmation message
+            addSystemMessage('Chat history has been cleared.');
+            
+            // Close settings panel
+            const settingsPanel = document.getElementById('settings-panel');
+            if (settingsPanel) {
+                settingsPanel.classList.remove('active');
+            }
+        });
+    }
 }
