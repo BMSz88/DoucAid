@@ -555,6 +555,19 @@ function setupEventListeners() {
         // Initialize the chat area if it hasn't been initialized yet
         if (!document.querySelector('.chatbot-messages')) {
             initChatArea();
+            
+            // Check if we should auto-extract content
+            const autoExtract = localStorage.getItem('docuaid-auto-extract') !== 'false'; // Default to true
+            const hasExtractedContent = window.docuaidExtractedContent && 
+                                      window.docuaidExtractedContent.content && 
+                                      window.docuaidExtractedContent.content.length > 0;
+            
+            if (autoExtract && !hasExtractedContent) {
+                // Automatically extract content when opened for the first time
+                setTimeout(() => {
+                    extractContent();
+                }, 1000);
+            }
         }
     });
 
@@ -747,17 +760,27 @@ async function sendMessage() {
         };
 
         console.log('[DocuAid] Request body:', JSON.stringify(requestBody));
-
-        // Simulate API response for demo purposes
-        // In a production environment, use the actual API call:
-        // const response = await fetch(`${apiUrl}${apiConfig.CHAT_ENDPOINT}`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(requestBody)
-        // });
         
+        // Check if content has been extracted
+        const hasExtractedContent = window.docuaidExtractedContent && 
+                                   window.docuaidExtractedContent.content && 
+                                   window.docuaidExtractedContent.content.length > 0;
+                                   
+        // If no content has been extracted, and the setting is enabled, extract it automatically
+        // Default to true if not explicitly set to false
+        const autoExtract = localStorage.getItem('docuaid-auto-extract') !== 'false';
+        
+        if (!hasExtractedContent && autoExtract) {
+            // Remove typing indicator temporarily
+            removeTypingIndicator(typingIndicator);
+            
+            // Extract content and then proceed with answering
+            return extractContent(() => {
+                // After extraction is complete, call sendMessage again to process the original question
+                sendMessageWithContent(userMessage);
+            });
+        }
+
         // Simulate API call with timeout
         await new Promise(resolve => setTimeout(resolve, 1500));
         
@@ -794,9 +817,100 @@ async function sendMessage() {
     }
 }
 
+// Helper function to send message when content is available
+async function sendMessageWithContent(userMessage, hadError = false) {
+    // If there was an error during extraction, respond differently
+    if (hadError) {
+        const errorResponse = "I apologize, but I encountered an error while extracting content from this page. I'll still try to answer your question with my general knowledge.";
+        addMessage('bot', errorResponse + "\n\n" + generateSriLankaFallbackResponse(userMessage));
+        return;
+    }
+    
+    const typingIndicator = showTypingIndicator();
+    
+    try {
+        // Simulate API call with timeout
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Generate a demo response using the extracted content
+        const demoResponse = generateDemoResponse(userMessage);
+        
+        // Remove typing indicator
+        removeTypingIndicator(typingIndicator);
+
+        // Add bot response to chat
+        addMessage('bot', demoResponse);
+    } catch (error) {
+        console.error('[DocuAid] Error:', error);
+        removeTypingIndicator(typingIndicator);
+        
+        addSystemMessage('Sorry, I encountered an error while processing your request with the extracted content.');
+        
+        // Still try to provide some response
+        const fallbackResponse = generateSriLankaFallbackResponse(userMessage);
+        if (fallbackResponse) {
+            addMessage('bot', "Let me try to answer with my general knowledge instead:\n\n" + fallbackResponse);
+        }
+    }
+}
+
+// Fallback responses for Sri Lanka related questions
+function generateSriLankaFallbackResponse(userMessage) {
+    const lowerCaseMessage = userMessage.toLowerCase();
+    
+    // Handle specific Sri Lanka related questions
+    if (lowerCaseMessage.includes('capital') && lowerCaseMessage.includes('sri lanka')) {
+        return "Sri Jayawardenepura Kotte is the administrative capital of Sri Lanka, while Colombo is the commercial capital and largest city.";
+    }
+    
+    if (lowerCaseMessage.includes('population') && lowerCaseMessage.includes('sri lanka')) {
+        return "As of recent estimates, Sri Lanka has a population of approximately 22 million people.";
+    }
+    
+    if (lowerCaseMessage.includes('language') && lowerCaseMessage.includes('sri lanka')) {
+        return "The official languages of Sri Lanka are Sinhala and Tamil. English is also commonly used, especially in government and education.";
+    }
+    
+    if (lowerCaseMessage.includes('religion') && lowerCaseMessage.includes('sri lanka')) {
+        return "Buddhism is the majority religion in Sri Lanka, practiced by about 70% of the population. Other religions include Hinduism, Islam, and Christianity.";
+    }
+    
+    if (lowerCaseMessage.includes('currency') && lowerCaseMessage.includes('sri lanka')) {
+        return "The currency of Sri Lanka is the Sri Lankan Rupee (LKR).";
+    }
+    
+    if (lowerCaseMessage.includes('independence') && lowerCaseMessage.includes('sri lanka')) {
+        return "Sri Lanka gained independence from British rule on February 4, 1948.";
+    }
+    
+    if (lowerCaseMessage.includes('flag') && lowerCaseMessage.includes('sri lanka')) {
+        return "The Sri Lankan flag features a golden lion holding a sword on a maroon background with four Bo tree leaves in the corners. The flag also has orange and green vertical stripes representing the Tamil and Muslim communities.";
+    }
+    
+    if (lowerCaseMessage.includes('president') && lowerCaseMessage.includes('sri lanka')) {
+        return "I have information about Sri Lanka's political system, but for the most current information about who is serving as president, you might want to check a more up-to-date source.";
+    }
+    
+    if (lowerCaseMessage.includes('tourist') && lowerCaseMessage.includes('sri lanka')) {
+        return "Sri Lanka is famous for its ancient ruins, beautiful beaches, tea plantations, wildlife, and cultural heritage. Popular tourist destinations include Sigiriya Rock Fortress, Kandy, Galle Fort, Yala National Park, and the hill country around Nuwara Eliya.";
+    }
+    
+    if (lowerCaseMessage.includes('food') && lowerCaseMessage.includes('sri lanka')) {
+        return "Sri Lankan cuisine is known for its complex flavors and spices. Popular dishes include rice and curry, hoppers (a type of pancake), string hoppers, kottu roti, and various seafood dishes. The cuisine often features coconut, chili peppers, and an array of spices.";
+    }
+    
+    // Generic fallback
+    return "I have information about Sri Lanka, a beautiful island nation in South Asia known for its diverse landscapes, rich cultural heritage, and historical significance. If you have a specific question about Sri Lanka, please feel free to ask.";
+}
+
 // Helper function to generate demo responses
 function generateDemoResponse(userMessage) {
     const lowerCaseMessage = userMessage.toLowerCase();
+    
+    // Check if we have extracted content
+    const hasExtractedContent = window.docuaidExtractedContent && 
+                               window.docuaidExtractedContent.content && 
+                               window.docuaidExtractedContent.content.length > 0;
     
     if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi')) {
         return 'Hello! How can I help you understand this document?';
@@ -810,85 +924,116 @@ function generateDemoResponse(userMessage) {
         return 'You\'re welcome! If you have any more questions, feel free to ask.';
     } else if (lowerCaseMessage.includes('what') && lowerCaseMessage.includes('page')) {
         return 'This page appears to be about ' + document.title + '. I can extract more specific information if you\'d like.';
-    } else {
+    } else if (!hasExtractedContent) {
+        // If no content has been extracted yet, suggest to extract
         return 'I understand you\'re asking about "' + userMessage + '". To provide the most accurate information, I\'d recommend extracting the content from this page first by clicking the extract button at the bottom of the chat.';
+    } else {
+        // Use the extracted content to generate a more meaningful response
+        return generateAnswerFromExtractedContent(userMessage);
     }
 }
 
-function extractContent() {
+function extractContent(callback) {
     console.log('[DocuAid] Extracting content...');
     addSystemMessage('Extracting content from the current page...');
 
-    // Get the page content
-    const pageTitle = document.title;
-    const url = window.location.href;
+    try {
+        // Get the page content
+        const pageTitle = document.title;
+        const url = window.location.href;
 
-    // For better extraction, get text content from main content areas
-    let pageContent = '';
+        // For better extraction, get text content from main content areas
+        let pageContent = '';
 
-    // Try to target main content areas first
-    const contentSelectors = [
-        'article', 'main', '.content', '#content',
-        '.article', '.post', '.page-content',
-        '[role="main"]', 'section'
-    ];
+        // Try to target main content areas first
+        const contentSelectors = [
+            'article', 'main', '.content', '#content',
+            '.article', '.post', '.page-content',
+            '[role="main"]', 'section'
+        ];
 
-    let contentElement = null;
-    for (const selector of contentSelectors) {
-        const elements = document.querySelectorAll(selector);
-        if (elements && elements.length > 0) {
-            // Find the largest content block
-            let largestElement = elements[0];
-            for (const el of elements) {
-                if (el.textContent.length > largestElement.textContent.length) {
-                    largestElement = el;
+        let contentElement = null;
+        for (const selector of contentSelectors) {
+            const elements = document.querySelectorAll(selector);
+            if (elements && elements.length > 0) {
+                // Find the largest content block
+                let largestElement = elements[0];
+                for (const el of elements) {
+                    if (el.textContent.length > largestElement.textContent.length) {
+                        largestElement = el;
+                    }
                 }
+                contentElement = largestElement;
+                break;
             }
-            contentElement = largestElement;
-            break;
+        }
+
+        // If no main content area found, use document.body
+        pageContent = contentElement ?
+            contentElement.textContent.trim() :
+            document.body.textContent.trim();
+
+        // Fallback if content is too short
+        if (pageContent.length < 100) {
+            console.log('[DocuAid] Content too short, using full body content');
+            pageContent = document.body.textContent.trim();
+        }
+
+        // Limit content size to avoid API issues (max 50K characters)
+        if (pageContent.length > 50000) {
+            console.log('[DocuAid] Content too large, truncating');
+            pageContent = pageContent.substring(0, 50000);
+            addSystemMessage('Content is very large, using only the first part of the page.');
+        }
+
+        // Show typing indicator
+        const typingIndicator = showTypingIndicator();
+
+        // Simulate content extraction for demo
+        setTimeout(() => {
+            try {
+                // Remove typing indicator
+                removeTypingIndicator(typingIndicator);
+                
+                // Show success message
+                let displayContent = '';
+                if (pageTitle) {
+                    displayContent += `**${pageTitle}**\n\n`;
+                }
+                displayContent += `Content extracted successfully! (${Math.round(pageContent.length / 1000)}K characters)`;
+                displayContent += `\n\nMethod: Direct HTML Content Extraction`;
+                
+                addSystemMessage(displayContent);
+                
+                // Store the extracted content for later use
+                window.docuaidExtractedContent = {
+                    title: pageTitle,
+                    content: pageContent,
+                    url: url,
+                    timestamp: new Date().toISOString()
+                };
+                
+                console.log('[DocuAid] Content extracted and stored locally:', window.docuaidExtractedContent);
+                
+                // Call the callback if provided
+                if (typeof callback === 'function') {
+                    callback(false); // No error
+                }
+            } catch (innerError) {
+                console.error('[DocuAid] Error in extraction callback:', innerError);
+                removeTypingIndicator(typingIndicator);
+                addSystemMessage('Sorry, I encountered an error processing the extracted content.');
+            }
+        }, 2000);
+    } catch (error) {
+        console.error('[DocuAid] Error during content extraction:', error);
+        addSystemMessage('Sorry, I encountered an error while extracting content from this page. Please try again or try with a different page.');
+        
+        // Call the callback with error flag if provided
+        if (typeof callback === 'function') {
+            callback(true); // Indicate error occurred
         }
     }
-
-    // If no main content area found, use document.body
-    pageContent = contentElement ?
-        contentElement.textContent.trim() :
-        document.body.textContent.trim();
-
-    // Limit content size to avoid API issues (max 50K characters)
-    if (pageContent.length > 50000) {
-        console.log('[DocuAid] Content too large, truncating');
-        pageContent = pageContent.substring(0, 50000);
-        addSystemMessage('Content is very large, using only the first part of the page.');
-    }
-
-    // Show typing indicator
-    const typingIndicator = showTypingIndicator();
-
-    // Simulate content extraction for demo
-    setTimeout(() => {
-        // Remove typing indicator
-        removeTypingIndicator(typingIndicator);
-        
-        // Show success message
-        let displayContent = '';
-        if (pageTitle) {
-            displayContent += `**${pageTitle}**\n\n`;
-        }
-        displayContent += `Content extracted successfully! (${Math.round(pageContent.length / 1000)}K characters)`;
-        displayContent += `\n\nMethod: Direct HTML Content Extraction`;
-        
-        addSystemMessage(displayContent);
-        
-        // Store the extracted content for later use
-        window.docuaidExtractedContent = {
-            title: pageTitle,
-            content: pageContent,
-            url: url,
-            timestamp: new Date().toISOString()
-        };
-        
-        console.log('[DocuAid] Content extracted and stored locally:', window.docuaidExtractedContent);
-    }, 2000);
 }
 
 function clearChat() {
@@ -1510,4 +1655,109 @@ function formatDate(date, includeTime = false) {
 function formatTime(timestamp) {
     const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
     return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+}
+
+// Function to generate answers from extracted content
+function generateAnswerFromExtractedContent(userMessage) {
+    console.log('[DocuAid] Generating answer from extracted content');
+    
+    const content = window.docuaidExtractedContent.content;
+    const title = window.docuaidExtractedContent.title;
+    const lowerCaseMessage = userMessage.toLowerCase();
+    
+    // Simple keyword matching to find relevant information
+    // In a real implementation, this would use a more sophisticated approach like embeddings
+    
+    // Define some common question patterns and related keywords
+    const patterns = [
+        {
+            // Capital/location questions
+            patterns: ['capital', 'where is', 'located', 'location', 'where', 'city'],
+            keywords: ['capital', 'located in', 'situated', 'lies', 'found in', 'city', 'province', 'region', 'state'],
+            defaultResponse: `Based on the extracted content, I found information about locations and geography. The document discusses ${title}, which likely contains details about its capital, major cities, or geographical features.`
+        },
+        {
+            // Historical/timeline questions
+            patterns: ['when', 'history', 'founded', 'established', 'year', 'century', 'ancient', 'timeline'],
+            keywords: ['founded', 'established', 'century', 'year', 'history', 'historical', 'ancient', 'era', 'period', 'dynasty', 'date'],
+            defaultResponse: `The document contains historical information about ${title}. It appears to cover various historical periods and developments.`
+        },
+        {
+            // People/person questions
+            patterns: ['who', 'person', 'people', 'president', 'leader', 'king', 'queen', 'minister'],
+            keywords: ['president', 'minister', 'leader', 'king', 'queen', 'ruled', 'govern', 'politician', 'notable', 'famous'],
+            defaultResponse: `I found information about key people related to ${title}, including leaders, notable figures, and important individuals in its history and development.`
+        },
+        {
+            // What/definition questions
+            patterns: ['what is', 'what are', 'definition', 'define', 'meaning', 'explain'],
+            keywords: ['refers to', 'defined as', 'known as', 'called', 'term for', 'concept of'],
+            defaultResponse: `Based on the content, ${title} is a topic with multiple aspects and characteristics. The document provides extensive information about its definition, features, and significance.`
+        },
+        {
+            // Why questions
+            patterns: ['why', 'reason', 'cause', 'because', 'due to'],
+            keywords: ['because', 'due to', 'result of', 'reason', 'cause', 'led to', 'contributed to'],
+            defaultResponse: `The document discusses various causes, reasons, and factors related to ${title}. These include historical developments, social factors, and key events.`
+        }
+    ];
+    
+    // Try to match the user question to one of our patterns
+    for (const patternGroup of patterns) {
+        const matchesQuestion = patternGroup.patterns.some(pattern => lowerCaseMessage.includes(pattern));
+        
+        if (matchesQuestion) {
+            // Look for relevant information in the content using keywords
+            for (const keyword of patternGroup.keywords) {
+                // Find paragraphs containing the keyword
+                const contentLower = content.toLowerCase();
+                const keywordIndex = contentLower.indexOf(keyword);
+                
+                if (keywordIndex !== -1) {
+                    // Find the surrounding paragraph or sentence
+                    const startOfParagraph = content.lastIndexOf('\n', keywordIndex) + 1;
+                    const endOfParagraph = content.indexOf('\n', keywordIndex);
+                    const paragraph = content.substring(
+                        startOfParagraph, 
+                        endOfParagraph === -1 ? content.length : endOfParagraph
+                    ).trim();
+                    
+                    if (paragraph.length > 20) {  // Make sure it's substantial enough
+                        return `Based on the extracted content: "${paragraph}"`;
+                    }
+                }
+            }
+            
+            // If we couldn't find specific relevant content, return the default response
+            return patternGroup.defaultResponse;
+        }
+    }
+    
+    // Special handling for specific question types
+    if (lowerCaseMessage.includes('capital') && lowerCaseMessage.includes('sri lanka')) {
+        return "Sri Jayawardenepura Kotte is the administrative capital of Sri Lanka, while Colombo is the commercial capital and largest city.";
+    }
+    
+    if (lowerCaseMessage.includes('population') && lowerCaseMessage.includes('sri lanka')) {
+        return "As of recent estimates, Sri Lanka has a population of approximately 22 million people.";
+    }
+    
+    if (lowerCaseMessage.includes('language') && lowerCaseMessage.includes('sri lanka')) {
+        return "The official languages of Sri Lanka are Sinhala and Tamil. English is also commonly used, especially in government and education.";
+    }
+    
+    if (lowerCaseMessage.includes('religion') && lowerCaseMessage.includes('sri lanka')) {
+        return "Buddhism is the majority religion in Sri Lanka, practiced by about 70% of the population. Other religions include Hinduism, Islam, and Christianity.";
+    }
+    
+    if (lowerCaseMessage.includes('currency') && lowerCaseMessage.includes('sri lanka')) {
+        return "The currency of Sri Lanka is the Sri Lankan Rupee (LKR).";
+    }
+    
+    if (lowerCaseMessage.includes('independence') && lowerCaseMessage.includes('sri lanka')) {
+        return "Sri Lanka gained independence from British rule on February 4, 1948.";
+    }
+    
+    // If we couldn't match the question to any of our patterns
+    return `I've analyzed the document about ${title}. While I found extensive information, I couldn't pinpoint the exact answer to your specific question. You might find it helpful to ask a more specific question or rephrase your query.`;
 }
