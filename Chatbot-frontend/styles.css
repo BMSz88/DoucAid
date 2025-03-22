@@ -814,3 +814,62 @@ body.dark-mode .system-message .message-content {
 #docuaid-extension.font-size-large .settings-header h2 {
     font-size: 18px !important;
 }
+
+/* Responsive Design Improvements for Settings Panel */
+@media (max-width: 480px) {
+    #docuaid-extension .settings-option {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 16px;
+    }
+    
+    #docuaid-extension .toggle-switch,
+    #docuaid-extension .select-container,
+    #docuaid-extension .settings-input,
+    #docuaid-extension .api-key-container {
+        margin-top: 8px;
+        width: 100%;
+    }
+    
+    #docuaid-extension .settings-input {
+        width: 100%;
+    }
+    
+    #docuaid-extension .api-key-container {
+        display: flex;
+        width: 100%;
+    }
+    
+    #docuaid-extension .api-key-container .settings-input {
+        flex: 1;
+    }
+    
+    #docuaid-extension .settings-section-title {
+        font-size: 15px !important;
+    }
+    
+    #docuaid-extension .settings-panel {
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        border-radius: 0;
+    }
+    
+    #docuaid-extension .settings-header {
+        border-radius: 0;
+    }
+}
+
+/* Tablet responsiveness */
+@media (min-width: 481px) and (max-width: 768px) {
+    #docuaid-extension .settings-input,
+    #docuaid-extension .api-key-container {
+        width: 170px;
+    }
+    
+    #docuaid-extension .settings-section-title {
+        font-size: 14px !important;
+    }
+}
