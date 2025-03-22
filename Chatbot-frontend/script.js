@@ -243,61 +243,6 @@ function initChatbot() {
     
     settingsContent.appendChild(behaviorSection);
     
-    // Advanced Section
-    const advancedSection = document.createElement('div');
-    advancedSection.className = 'settings-section';
-    
-    const advancedTitle = document.createElement('h3');
-    advancedTitle.className = 'settings-section-title';
-    advancedTitle.textContent = 'Advanced';
-    advancedSection.appendChild(advancedTitle);
-    
-    // API Endpoint Option
-    const apiEndpointOption = document.createElement('div');
-    apiEndpointOption.className = 'settings-option';
-    
-    const apiEndpointLabel = document.createElement('span');
-    apiEndpointLabel.textContent = 'API Endpoint';
-    apiEndpointOption.appendChild(apiEndpointLabel);
-    
-    const apiEndpointInput = document.createElement('input');
-    apiEndpointInput.type = 'text';
-    apiEndpointInput.id = 'api-endpoint-input';
-    apiEndpointInput.className = 'settings-input';
-    apiEndpointInput.value = 'https://api.docuaid.online';
-    apiEndpointOption.appendChild(apiEndpointInput);
-    
-    advancedSection.appendChild(apiEndpointOption);
-    
-    // API Key Option
-    const apiKeyOption = document.createElement('div');
-    apiKeyOption.className = 'settings-option';
-    
-    const apiKeyLabel = document.createElement('span');
-    apiKeyLabel.textContent = 'API Key';
-    apiKeyOption.appendChild(apiKeyLabel);
-    
-    const apiKeyContainer = document.createElement('div');
-    apiKeyContainer.className = 'api-key-container';
-    
-    const apiKeyInput = document.createElement('input');
-    apiKeyInput.type = 'password';
-    apiKeyInput.id = 'api-key-input';
-    apiKeyInput.className = 'settings-input';
-    apiKeyInput.placeholder = 'Enter your API key...';
-    apiKeyContainer.appendChild(apiKeyInput);
-    
-    const toggleApiVisibilityButton = document.createElement('button');
-    toggleApiVisibilityButton.id = 'toggle-api-visibility';
-    toggleApiVisibilityButton.className = 'toggle-visibility-button';
-    toggleApiVisibilityButton.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" /></svg>';
-    apiKeyContainer.appendChild(toggleApiVisibilityButton);
-    
-    apiKeyOption.appendChild(apiKeyContainer);
-    advancedSection.appendChild(apiKeyOption);
-    
-    settingsContent.appendChild(advancedSection);
-    
     // Privacy Section
     const privacySection = document.createElement('div');
     privacySection.className = 'settings-section';
@@ -333,6 +278,18 @@ function initChatbot() {
     
     storeChatHistoryOption.appendChild(storeChatHistoryToggleContainer);
     privacySection.appendChild(storeChatHistoryOption);
+
+    // View History Button Option
+    const viewHistoryOption = document.createElement('div');
+    viewHistoryOption.className = 'settings-option';
+    
+    const viewHistoryButton = document.createElement('button');
+    viewHistoryButton.id = 'view-history-button';
+    viewHistoryButton.className = 'settings-button';
+    viewHistoryButton.textContent = 'View Chat History';
+    viewHistoryOption.appendChild(viewHistoryButton);
+    
+    privacySection.appendChild(viewHistoryOption);
     
     // Clear History Button Option
     const clearHistoryOption = document.createElement('div');
