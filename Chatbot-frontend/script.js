@@ -397,6 +397,60 @@ function initChatbot() {
     settingsPanel.appendChild(settingsContent);
     chatbotContainer.appendChild(settingsPanel);
 
+    // Create History Modal
+    const historyModal = document.createElement('div');
+    historyModal.className = 'history-modal';
+    historyModal.id = 'history-modal';
+    
+    // Create history header
+    const historyHeader = document.createElement('div');
+    historyHeader.className = 'history-header';
+    
+    const historyTitle = document.createElement('h2');
+    historyTitle.textContent = 'Chat History';
+    historyHeader.appendChild(historyTitle);
+    
+    const closeHistoryButton = document.createElement('button');
+    closeHistoryButton.className = 'close-history-button';
+    closeHistoryButton.id = 'close-history-button';
+    closeHistoryButton.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></svg>';
+    historyHeader.appendChild(closeHistoryButton);
+    
+    historyModal.appendChild(historyHeader);
+    
+    // Create history content
+    const historyContent = document.createElement('div');
+    historyContent.className = 'history-content';
+    
+    // Session list container
+    const sessionList = document.createElement('div');
+    sessionList.className = 'session-list';
+    sessionList.id = 'session-list';
+    historyContent.appendChild(sessionList);
+    
+    // Session messages container
+    const sessionMessages = document.createElement('div');
+    sessionMessages.className = 'session-messages';
+    sessionMessages.id = 'session-messages';
+    
+    // Empty state for session messages
+    const emptyState = document.createElement('div');
+    emptyState.className = 'session-empty-state';
+    emptyState.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        <p>Select a chat session from the list to view its messages</p>
+    `;
+    sessionMessages.appendChild(emptyState);
+    
+    historyContent.appendChild(sessionMessages);
+    historyModal.appendChild(historyContent);
+    
+    chatbotContainer.appendChild(historyModal);
+
     // Create messages container
     const messagesContainer = document.createElement('div');
     messagesContainer.className = 'chatbot-messages';
