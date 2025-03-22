@@ -488,9 +488,24 @@ function setupEventListeners() {
         settingsButton.addEventListener('click', function() {
             console.log('[DocuAid] Settings button clicked');
             if (settingsPanel) {
+                console.log('[DocuAid] Settings panel found, adding active class');
+                // Add active class
                 settingsPanel.classList.add('active');
+                
+                // Apply explicit styles to ensure visibility
+                settingsPanel.style.transform = 'translateX(0)';
+                settingsPanel.style.opacity = '1';
+                settingsPanel.style.visibility = 'visible';
+                settingsPanel.style.pointerEvents = 'auto';
+                
+                console.log('[DocuAid] Settings panel active state:', settingsPanel.classList.contains('active'));
+                console.log('[DocuAid] Settings panel computed style:', window.getComputedStyle(settingsPanel).transform);
+            } else {
+                console.error('[DocuAid] Settings panel not found!');
             }
         });
+    } else {
+        console.error('[DocuAid] Settings button not found!');
     }
 
     // Close settings button click handler
@@ -498,9 +513,21 @@ function setupEventListeners() {
         closeSettingsButton.addEventListener('click', function() {
             console.log('[DocuAid] Close settings button clicked');
             if (settingsPanel) {
+                console.log('[DocuAid] Settings panel found, removing active class');
+                // Remove active class
                 settingsPanel.classList.remove('active');
+                
+                // Apply explicit styles to hide
+                settingsPanel.style.transform = 'translateX(100%)';
+                settingsPanel.style.opacity = '0';
+                settingsPanel.style.visibility = 'hidden';
+                settingsPanel.style.pointerEvents = 'none';
+            } else {
+                console.error('[DocuAid] Settings panel not found!');
             }
         });
+    } else {
+        console.error('[DocuAid] Close settings button not found!');
     }
 
     // Send message when send button is clicked
