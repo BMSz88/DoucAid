@@ -873,3 +873,71 @@ body.dark-mode .system-message .message-content {
         font-size: 14px !important;
     }
 }
+
+/* Browser-specific fixes for settings panel */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    /* Chrome-specific fixes */
+    #docuaid-extension .settings-panel {
+        -webkit-transform: translateX(100%);
+        -webkit-transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+    
+    #docuaid-extension .settings-panel.active {
+        -webkit-transform: translateX(0);
+    }
+    
+    #docuaid-extension .toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-switch {
+        -webkit-transform: translateX(-100%);
+    }
+    
+    #docuaid-extension .settings-section {
+        -webkit-transform: translateZ(0);
+    }
+}
+
+/* Safari-specific fixes */
+@media not all and (min-resolution:.001dpcm) {
+    @supports (-webkit-appearance:none) {
+        #docuaid-extension .settings-panel {
+            -webkit-transform: translateX(100%);
+            will-change: transform;
+        }
+        
+        #docuaid-extension .settings-panel.active {
+            -webkit-transform: translateX(0);
+        }
+        
+        #docuaid-extension .toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-switch {
+            -webkit-transform: translateX(-100%);
+        }
+    }
+}
+
+/* Firefox-specific fixes */
+@-moz-document url-prefix() {
+    #docuaid-extension .settings-panel {
+        transform: translateX(100%);
+    }
+    
+    #docuaid-extension .settings-panel.active {
+        transform: translateX(0);
+    }
+    
+    #docuaid-extension .toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-switch {
+        left: calc(100% - 2px);
+        transform: translateX(-100%);
+    }
+}
+
+/* Edge and IE fixes */
+@supports (-ms-ime-align:auto) {
+    #docuaid-extension .settings-panel {
+        transition: all 0.3s ease-in-out;
+    }
+    
+    #docuaid-extension .toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-switch {
+        left: calc(100% - 2px);
+    }
+}
