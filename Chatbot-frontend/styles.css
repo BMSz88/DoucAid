@@ -477,16 +477,17 @@ body.dark-mode .system-message .message-content {
     height: 100%;
     background-color: #fff;
     z-index: 10002;
-    display: none;
+    display: flex;
     flex-direction: column;
     overflow: hidden;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
     transform: translateX(100%);
+    opacity: 0;
 }
 
 #docuaid-extension .settings-panel.active {
-    display: flex;
     transform: translateX(0);
+    opacity: 1;
 }
 
 #docuaid-extension .settings-header {
@@ -618,6 +619,11 @@ body.dark-mode .system-message .message-content {
 #docuaid-extension .toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-switch {
     left: calc(100% - 2px);
     transform: translateX(-100%);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#docuaid-extension .toggle-switch-checkbox + .toggle-switch-label .toggle-switch-switch {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 #docuaid-extension .toggle-label {
@@ -639,6 +645,8 @@ body.dark-mode .system-message .message-content {
 
 #docuaid-extension .settings-select:focus {
     border-color: #467DF6;
+    box-shadow: 0 0 0 2px rgba(70, 125, 246, 0.1);
+    transition: all 0.2s ease-in-out;
 }
 
 #docuaid-extension .settings-input {
@@ -655,6 +663,7 @@ body.dark-mode .system-message .message-content {
 #docuaid-extension .settings-input:focus {
     border-color: #467DF6;
     box-shadow: 0 0 0 2px rgba(70, 125, 246, 0.1);
+    transition: all 0.2s ease-in-out;
 }
 
 #docuaid-extension .api-key-container {
@@ -679,11 +688,18 @@ body.dark-mode .system-message .message-content {
     color: white;
     font-size: 14px;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: all 0.2s ease-in-out;
 }
 
 #docuaid-extension .settings-button:hover {
     opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+#docuaid-extension .settings-button:active {
+    transform: translateY(0px);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 #docuaid-extension .about-info {
