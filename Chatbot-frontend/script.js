@@ -63,13 +63,65 @@ function saveMessageToHistory(type, content) {
     chatHistory = history;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('[DocuAid] Content script loaded');
-    initChatbot();
+// Initialize UI when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    setupExtension();
+    setupEventListeners();
+    loadSettings();
+    
+    // Hide the chatbot UI until login if authentication is required
+    checkAuthenticationRequirement();
 });
 
-function initChatbot() {
-    console.log('[DocuAid] Initializing chatbot...');
+// Check if authentication is required
+function checkAuthenticationRequirement() {
+    // For demonstration purposes, we'll start with authentication required
+    // In a real app, this might be a setting or server configuration
+    const authRequired = true;
+    
+    if (authRequired) {
+        // We need to wait for login manager to initialize first
+        setTimeout(() => {
+            if (window.docuAidLoginManager && !window.docuAidLoginManager.isLoggedIn) {
+                // Hide chat UI sections if not logged in
+                document.querySelector('#docuaid-extension .content-section').style.display = 'none';
+                document.querySelector('#docuaid-extension .chat-section').style.display = 'none';
+                
+                // Show only the settings section with the login UI
+                openSettings();
+                
+                // Hide other settings sections except login
+                const settingsSections = document.querySelectorAll('#docuaid-extension .settings-section');
+                settingsSections.forEach(section => {
+                    const title = section.querySelector('.settings-section-title');
+                    if (title && title.textContent !== 'User Login') {
+                        section.style.display = 'none';
+                    }
+                });
+                
+                // Listen for login state changes
+                document.addEventListener('docuaid-login-state-changed', () => {
+                    if (window.docuAidLoginManager.isLoggedIn) {
+                        // Show chat UI when logged in
+                        document.querySelector('#docuaid-extension .content-section').style.display = 'block';
+                        document.querySelector('#docuaid-extension .chat-section').style.display = 'block';
+                        
+                        // Show all settings sections
+                        settingsSections.forEach(section => {
+                            section.style.display = 'block';
+                        });
+                        
+                        // Close settings and return to chat
+                        closeSettings();
+                    }
+                });
+            }
+        }, 600);
+    }
+}
+
+function setupExtension() {
+    console.log('[DocuAid] Setting up extension');
 
     // Create main container
     const docuaidExtension = document.createElement('div');

@@ -236,6 +236,10 @@ class DocuAidLoginManager {
             this.signupForm.style.display = 'none';
             this.userProfile.style.display = 'none';
         }
+        
+        // Dispatch login state change event
+        const loginStateEvent = new Event('docuaid-login-state-changed');
+        document.dispatchEvent(loginStateEvent);
     }
     
     // Show a message to the user
