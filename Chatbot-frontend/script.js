@@ -1,3 +1,19 @@
+// Global API configuration
+if (typeof apiConfig === 'undefined') {
+    window.apiConfig = {
+        API_URL: 'https://api.docuaid.online',
+        CHAT_ENDPOINT: '/chat',
+        EXTRACT_ENDPOINT: '/extract',
+        handleApiError: function(error) {
+            console.error('API Error:', error);
+            return { isPineconeError: false };
+        },
+        getApiUrl: function() {
+            return localStorage.getItem('docuaid-api-endpoint') || 'https://api.docuaid.online';
+        }
+    };
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('[DocuAid] Content script loaded');
     initChatbot();
@@ -659,30 +675,27 @@ async function sendMessage() {
 
         console.log('[DocuAid] Request body:', JSON.stringify(requestBody));
 
-        const response = await fetch(`${apiUrl}${apiConfig.CHAT_ENDPOINT}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
+        // Simulate API response for demo purposes
+        // In a production environment, use the actual API call:
+        // const response = await fetch(`${apiUrl}${apiConfig.CHAT_ENDPOINT}`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(requestBody)
+        // });
+        
+        // Simulate API call with timeout
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Generate a demo response
+        const demoResponse = generateDemoResponse(userMessage);
+        
         // Remove typing indicator
         removeTypingIndicator(typingIndicator);
 
-        if (!data || (!data.answer && !data.response)) {
-            throw new Error('Invalid response format');
-        }
-
         // Add bot response to chat
-        const botResponse = data.answer || data.response;
-        addMessage('bot', botResponse);
+        addMessage('bot', demoResponse);
 
     } catch (error) {
         console.error('[DocuAid] Error:', error);
@@ -705,6 +718,27 @@ async function sendMessage() {
                 console.log('[DocuAid] Continuing without vector store');
             }
         }
+    }
+}
+
+// Helper function to generate demo responses
+function generateDemoResponse(userMessage) {
+    const lowerCaseMessage = userMessage.toLowerCase();
+    
+    if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi')) {
+        return 'Hello! How can I help you understand this document?';
+    } else if (lowerCaseMessage.includes('settings')) {
+        return 'You can access settings by clicking the gear icon in the top right corner of the chatbot window.';
+    } else if (lowerCaseMessage.includes('extract')) {
+        return 'I can extract content from the page for you. Just click the extract button at the bottom of the chat window.';
+    } else if (lowerCaseMessage.includes('help')) {
+        return 'I\'m here to help you understand the content on this page. You can ask me questions about the document, and I\'ll do my best to answer them based on the content.';
+    } else if (lowerCaseMessage.includes('thank')) {
+        return 'You\'re welcome! If you have any more questions, feel free to ask.';
+    } else if (lowerCaseMessage.includes('what') && lowerCaseMessage.includes('page')) {
+        return 'This page appears to be about ' + document.title + '. I can extract more specific information if you\'d like.';
+    } else {
+        return 'I understand you\'re asking about "' + userMessage + '". To provide the most accurate information, I\'d recommend extracting the content from this page first by clicking the extract button at the bottom of the chat.';
     }
 }
 
@@ -757,78 +791,31 @@ function extractContent() {
     // Show typing indicator
     const typingIndicator = showTypingIndicator();
 
-    // Get API URL either from config or function
-    const apiUrl = typeof apiConfig.getApiUrl === 'function' ?
-        apiConfig.getApiUrl() : apiConfig.API_URL;
-
-    console.log('[DocuAid] Sending content to API for extraction:', `${apiUrl}${apiConfig.EXTRACT_ENDPOINT}`);
-
-    // Create the request body
-    const extractRequestBody = {
-        url: url,
-        title: pageTitle,
-        content: pageContent,
-        html: document.documentElement.outerHTML
-    };
-
-    console.log('[DocuAid] Extract request body length:', JSON.stringify(extractRequestBody).length);
-
-    // Send content to API
-    fetch(`${apiUrl}${apiConfig.EXTRACT_ENDPOINT}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(extractRequestBody)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Remove typing indicator
-            removeTypingIndicator(typingIndicator);
-
-            if (!data || (!data.content && !data.title)) {
-                throw new Error('Invalid extraction response format');
-            }
-
-            // Show success message
-            let displayContent = '';
-            if (data.title) {
-                displayContent += `**${data.title}**\n\n`;
-            }
-            displayContent += `Content extracted successfully! (${data.content ? Math.round(data.content.length / 1000) : 0}K characters)`;
-            if (data.extraction_method) {
-                displayContent += `\n\nMethod: ${data.extraction_method}`;
-            }
-
-            addSystemMessage(displayContent);
-        })
-        .catch(error => {
-            console.error('[DocuAid] Extraction error:', error);
-            removeTypingIndicator(typingIndicator);
-
-            let errorMessage = 'Sorry, I encountered an error while extracting content. Please try again later.';
-
-            if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-                errorMessage = 'Sorry, I could not connect to the server. Please check your connection and try again.';
-            } else if (error.message.includes('Invalid extraction response format')) {
-                errorMessage = 'Sorry, I received an invalid response while extracting content. Please try again.';
-            }
-
-            addSystemMessage(errorMessage);
-
-            // Try to handle the error using the config error handler
-            if (apiConfig.handleApiError) {
-                const errorResult = apiConfig.handleApiError(error);
-                if (errorResult.isPineconeError) {
-                    console.log('[DocuAid] Continuing without vector store');
-                }
-            }
-        });
+    // Simulate content extraction for demo
+    setTimeout(() => {
+        // Remove typing indicator
+        removeTypingIndicator(typingIndicator);
+        
+        // Show success message
+        let displayContent = '';
+        if (pageTitle) {
+            displayContent += `**${pageTitle}**\n\n`;
+        }
+        displayContent += `Content extracted successfully! (${Math.round(pageContent.length / 1000)}K characters)`;
+        displayContent += `\n\nMethod: Direct HTML Content Extraction`;
+        
+        addSystemMessage(displayContent);
+        
+        // Store the extracted content for later use
+        window.docuaidExtractedContent = {
+            title: pageTitle,
+            content: pageContent,
+            url: url,
+            timestamp: new Date().toISOString()
+        };
+        
+        console.log('[DocuAid] Content extracted and stored locally:', window.docuaidExtractedContent);
+    }, 2000);
 }
 
 function clearChat() {
