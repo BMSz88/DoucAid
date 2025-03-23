@@ -24,9 +24,10 @@ jobs:
           npm ci
       
       - name: Deploy to Railway
-        uses: railway/railway-action@v1
+        uses: bervProject/railway-deploy@main
         with:
           service: chatbot-backend
+          railway_token: ${{ secrets.RAILWAY_TOKEN }}
           detach: true
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }} 
