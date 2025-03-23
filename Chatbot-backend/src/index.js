@@ -1,6 +1,3 @@
-// Set NODE_ENV to production by default if not set
-process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-
 // Load environment variables first - IMPORTANT
 require('dotenv').config();
 
