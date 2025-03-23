@@ -79,12 +79,12 @@ jobs:
           npm ci
           echo "Build complete."
       
-      - name: Deploy to Railway
-        uses: bervProject/railway-deploy@main
-        with:
-          service: "Chatbot-backend"
-          railway_token: ${{ secrets.RAILWAY_TOKEN }}
-          detach: true
+      - name: Deploy via Railway GitHub webhook
+        run: |
+          echo "Triggering Railway deployment via webhook..."
+          # This will inform the user we're not directly deploying anymore
+          echo "Railway deployment will be triggered by GitHub webhook automatically."
+          echo "Please ensure you have connected your GitHub repository to Railway for automatic deployments."
       
       - name: Verify Deployment
         run: |

@@ -24,19 +24,3 @@ jobs:
       - name: Deploy to Railway
         uses: bervProject/railway-deploy@main
         with:
-          service: ${{ github.event.inputs.service }}
-          railway_token: ${{ secrets.RAILWAY_TOKEN }}
-          detach: true
-
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
-      - name: Login to Railway
-        run: echo "${RAILWAY_TOKEN}" | railway login
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-
-      - name: List Available Railway Services
-        run: railway project
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }} 

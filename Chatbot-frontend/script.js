@@ -63,7 +63,14 @@ function saveMessageToHistory(type, content) {
     chatHistory = history;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+// DocuAid Chatbot Main Script
+console.log('[DocuAid] Script.js being loaded');
+
+// Initialize UI when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('[DocuAid] Main init - DOM loaded, authentication check:', checkAuthenticationRequirement());
+    setupExtension();
+    
     console.log('[DocuAid] Content script loaded');
     initChatbot();
 });
@@ -354,45 +361,132 @@ function initChatbot() {
     
     settingsContent.appendChild(privacySection);
     
-    // About Section
-    const aboutSection = document.createElement('div');
-    aboutSection.className = 'settings-section';
+    // User Login Section
+    const userLoginSection = document.createElement('div');
+    userLoginSection.className = 'settings-section';
     
-    const aboutTitle = document.createElement('h3');
-    aboutTitle.className = 'settings-section-title';
-    aboutTitle.textContent = 'About';
-    aboutSection.appendChild(aboutTitle);
+    const userLoginTitle = document.createElement('h3');
+    userLoginTitle.className = 'settings-section-title';
+    userLoginTitle.textContent = 'User Login';
+    userLoginSection.appendChild(userLoginTitle);
     
-    const aboutInfo = document.createElement('div');
-    aboutInfo.className = 'about-info';
+    // Login Form
+    const loginForm = document.createElement('form');
+    loginForm.id = 'login-form';
+    loginForm.className = 'login-form';
     
-    const versionInfo = document.createElement('p');
-    versionInfo.textContent = 'Version: 1.0.0';
-    aboutInfo.appendChild(versionInfo);
+    const usernameLabel = document.createElement('label');
+    usernameLabel.htmlFor = 'username';
+    usernameLabel.textContent = 'Username';
+    loginForm.appendChild(usernameLabel);
     
-    const copyrightInfo = document.createElement('p');
-    copyrightInfo.textContent = '© 2025 DocuAid. All rights reserved.';
-    aboutInfo.appendChild(copyrightInfo);
+    const usernameInput = document.createElement('input');
+    usernameInput.type = 'text';
+    usernameInput.id = 'username';
+    usernameInput.name = 'username';
+    usernameInput.required = true;
+    loginForm.appendChild(usernameInput);
     
-    const privacyLink = document.createElement('p');
-    const privacyAnchor = document.createElement('a');
-    privacyAnchor.href = 'https://www.docuaid.online/privacy';
-    privacyAnchor.target = '_blank';
-    privacyAnchor.textContent = 'Privacy Policy';
-    privacyLink.appendChild(privacyAnchor);
-    aboutInfo.appendChild(privacyLink);
+    const passwordLabel = document.createElement('label');
+    passwordLabel.htmlFor = 'password';
+    passwordLabel.textContent = 'Password';
+    loginForm.appendChild(passwordLabel);
     
-    const termsLink = document.createElement('p');
-    const termsAnchor = document.createElement('a');
-    termsAnchor.href = 'https://www.docuaid.online/terms';
-    termsAnchor.target = '_blank';
-    termsAnchor.textContent = 'Terms of Service';
-    termsLink.appendChild(termsAnchor);
-    aboutInfo.appendChild(termsLink);
+    const passwordInput = document.createElement('input');
+    passwordInput.type = 'password';
+    passwordInput.id = 'password';
+    passwordInput.name = 'password';
+    passwordInput.required = true;
+    loginForm.appendChild(passwordInput);
     
-    aboutSection.appendChild(aboutInfo);
+    const loginButton = document.createElement('button');
+    loginButton.type = 'submit';
+    loginButton.className = 'primary-button';
+    loginButton.textContent = 'Login';
+    loginForm.appendChild(loginButton);
     
-    settingsContent.appendChild(aboutSection);
+    userLoginSection.appendChild(loginForm);
+    
+    // Signup Form
+    const signupForm = document.createElement('form');
+    signupForm.id = 'signup-form';
+    signupForm.className = 'signup-form';
+    
+    const signupUsernameLabel = document.createElement('label');
+    signupUsernameLabel.htmlFor = 'signup-username';
+    signupUsernameLabel.textContent = 'Username';
+    signupForm.appendChild(signupUsernameLabel);
+    
+    const signupUsernameInput = document.createElement('input');
+    signupUsernameInput.type = 'text';
+    signupUsernameInput.id = 'signup-username';
+    signupUsernameInput.name = 'signup-username';
+    signupUsernameInput.required = true;
+    signupForm.appendChild(signupUsernameInput);
+    
+    const emailLabel = document.createElement('label');
+    emailLabel.htmlFor = 'email';
+    emailLabel.textContent = 'Email';
+    signupForm.appendChild(emailLabel);
+    
+    const emailInput = document.createElement('input');
+    emailInput.type = 'email';
+    emailInput.id = 'email';
+    emailInput.name = 'email';
+    emailInput.required = true;
+    signupForm.appendChild(emailInput);
+    
+    const signupPasswordLabel = document.createElement('label');
+    signupPasswordLabel.htmlFor = 'signup-password';
+    signupPasswordLabel.textContent = 'Password';
+    signupForm.appendChild(signupPasswordLabel);
+    
+    const signupPasswordInput = document.createElement('input');
+    signupPasswordInput.type = 'password';
+    signupPasswordInput.id = 'signup-password';
+    signupPasswordInput.name = 'signup-password';
+    signupPasswordInput.required = true;
+    signupForm.appendChild(signupPasswordInput);
+    
+    const signupButton = document.createElement('button');
+    signupButton.type = 'submit';
+    signupButton.className = 'primary-button';
+    signupButton.textContent = 'Sign Up';
+    signupForm.appendChild(signupButton);
+    
+    userLoginSection.appendChild(signupForm);
+    
+    // User Profile
+    const userProfile = document.createElement('div');
+    userProfile.id = 'user-profile';
+    userProfile.className = 'user-profile';
+    
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar';
+    userProfile.appendChild(avatar);
+    
+    const userInfo = document.createElement('div');
+    userInfo.className = 'user-info';
+    userProfile.appendChild(userInfo);
+    
+    const welcomeMessage = document.createElement('p');
+    welcomeMessage.id = 'welcome-message';
+    welcomeMessage.textContent = 'Welcome, ';
+    userInfo.appendChild(welcomeMessage);
+    
+    const usernameDisplay = document.createElement('span');
+    usernameDisplay.id = 'username-display';
+    welcomeMessage.appendChild(usernameDisplay);
+    
+    const logoutButton = document.createElement('button');
+    logoutButton.id = 'logout-button';
+    logoutButton.className = 'danger-button';
+    logoutButton.textContent = 'Logout';
+    userInfo.appendChild(logoutButton);
+    
+    userLoginSection.appendChild(userProfile);
+    
+    settingsContent.appendChild(userLoginSection);
     
     settingsPanel.appendChild(settingsContent);
     chatbotContainer.appendChild(settingsPanel);
@@ -1510,4 +1604,13 @@ function formatDate(date, includeTime = false) {
 function formatTime(timestamp) {
     const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
     return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+}
+
+// Function to check if authentication is required
+function checkAuthenticationRequirement() {
+    // For development/testing, let's return false to allow the chatbot to show without login
+    return false;
+    
+    // In production, this would check configuration or server settings
+    // return true;
 }
