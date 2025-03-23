@@ -58,52 +58,20 @@ jobs:
           [ -f "Chatbot-frontend/styles.css" ] && echo "✅ CSS file exists" || echo "❌ CSS file missing"
           [ -f "Chatbot-frontend/script.js" ] && echo "✅ JavaScript file exists" || echo "❌ JavaScript file missing"
 
-  deploy:
-    name: Deploy to Railway
-    runs-on: ubuntu-latest
-    needs: [test_backend, validate_frontend]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      
-      - name: Build project
-        run: |
-          echo "Preparing build..."
-          cd Chatbot-backend
-          npm ci
-          echo "Build complete."
-      
-      - name: Deploy via Railway GitHub webhook
-        run: |
-          echo "Triggering Railway deployment via webhook..."
-          # This will inform the user we're not directly deploying anymore
-          echo "Railway deployment will be triggered by GitHub webhook automatically."
-          echo "Please ensure you have connected your GitHub repository to Railway for automatic deployments."
-      
-      - name: Verify Deployment
-        run: |
-          echo "Deployment to Railway should complete automatically."
-          echo "Visit https://doucaid-production.up.railway.app to check your application."
-
   notify:
     name: Notification
     runs-on: ubuntu-latest
-    needs: deploy
+    needs: [test_backend, validate_frontend]
     if: always()
     
     steps:
-      - name: Deployment Status
+      - name: Pipeline Status
         run: |
-          if [ "${{ needs.deploy.result }}" == "success" ]; then
-            echo "✅ Deployment completed successfully!"
+          if [ "${{ needs.test_backend.result }}" == "success" ] && [ "${{ needs.validate_frontend.result }}" == "success" ]; then
+            echo "✅ CI pipeline completed successfully!"
           else
-            echo "❌ Deployment failed or was skipped."
+            echo "❌ One or more steps in the pipeline failed."
           fi
           
-          echo "See GitHub Actions logs for more details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" 
+          echo "See GitHub Actions logs for more details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          echo "Note: Deployment is handled separately through the deploy.yml workflow." 
