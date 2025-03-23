@@ -21,6 +21,14 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Deploy to Railway
+        uses: railway/railway-action@v1
+        with:
+          service: ${{ github.event.inputs.service }}
+          detach: true
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
@@ -31,10 +39,5 @@ jobs:
 
       - name: List Available Railway Services
         run: railway project
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-
-      - name: Deploy to Railway with Specified Service
-        run: railway up --service ${{ github.event.inputs.service }} --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }} 

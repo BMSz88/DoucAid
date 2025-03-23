@@ -17,26 +17,16 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
-      - name: Login to Railway
-        run: echo "${RAILWAY_TOKEN}" | railway login
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-
       - name: Install Dependencies
         run: |
           cd Chatbot-backend
           npm install --package-lock-only
           npm ci
       
-      - name: List Available Railway Services
-        run: railway project
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          
       - name: Deploy to Railway
-        run: railway up --service chatbot-backend --detach
+        uses: railway/railway-action@v1
+        with:
+          service: chatbot-backend
+          detach: true
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }} 
