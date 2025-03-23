@@ -24,12 +24,17 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
+      - name: Login to Railway
+        run: echo "${RAILWAY_TOKEN}" | railway login
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
       - name: List Available Railway Services
-        run: railway list
+        run: railway project
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Deploy to Railway with Specified Service
-        run: railway up --service ${{ github.event.inputs.service }}
+        run: railway up --service ${{ github.event.inputs.service }} --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }} 

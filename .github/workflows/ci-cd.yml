@@ -87,8 +87,11 @@ jobs:
           echo "Please ensure you have connected your GitHub repository to Railway for automatic deployments."
           # Add direct deployment via CLI as fallback
           if command -v railway &> /dev/null; then
-            railway up --service chatbot-backend || echo "Railway CLI deployment failed. Using webhook as fallback."
+            echo "${RAILWAY_TOKEN}" | railway login
+            railway up --service chatbot-backend --detach || echo "Railway CLI deployment failed. Using webhook as fallback."
           fi
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
       
       - name: Verify Deployment
         run: |
