@@ -8,10 +8,6 @@ const { extractContent } = require('./services/contentExtractor');
 const { parseQuestion, shouldProcessQuestion, getErrorMessage } = require('./services/questionParser');
 const { createContentIndex, generateAgenticResponse } = require('./services/agenticAI');
 
-// Import routes
-const authRoutes = require('./routes/authRoutes');
-const historyRoutes = require('./routes/historyRoutes');
-
 const app = express();
 // Use Railway's PORT environment variable with multiple fallbacks
 const PORT = process.env.PORT || process.env.RAILWAY_PORT || 3001;
@@ -38,10 +34,6 @@ app.use((req, res, next) => {
 
 // Pre-flight requests
 app.options('*', cors(corsOptions));
-
-// Register routes
-app.use('/api/auth', authRoutes);
-app.use('/api/history', historyRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

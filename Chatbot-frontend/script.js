@@ -61,51 +61,6 @@ function saveMessageToHistory(type, content) {
     
     // Update in-memory history
     chatHistory = history;
-    
-    // If user is logged in, save to backend
-    if (window.docuaidLoginManager && window.docuaidLoginManager.isUserLoggedIn()) {
-        saveChatMessageToBackend(message);
-    }
-}
-
-// Function to save chat message to backend
-async function saveChatMessageToBackend(message) {
-    try {
-        // Get JWT token
-        const token = localStorage.getItem('docuaid-auth-token');
-        if (!token) {
-            console.log('[DocuAid] No auth token found, skipping backend sync');
-            return;
-        }
-        
-        // Get API URL
-        const apiUrl = typeof apiConfig.getApiUrl === 'function' ?
-            apiConfig.getApiUrl() : apiConfig.API_URL;
-            
-        // Send message to backend
-        const response = await fetch(`${apiUrl}/api/history/${message.sessionId}/messages`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                type: message.type,
-                content: message.content,
-                pageUrl: message.url,
-                pageTitle: message.pageTitle
-            })
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Error saving message: ${response.statusText}`);
-        }
-        
-        console.log('[DocuAid] Message saved to backend successfully');
-    } catch (error) {
-        console.error('[DocuAid] Error saving message to backend:', error);
-        // We don't want to interrupt the user experience on sync failure
-    }
 }
 
 // DocuAid Chatbot Main Script

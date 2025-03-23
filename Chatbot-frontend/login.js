@@ -1,180 +1,92 @@
 // DocuAid Login Management
-
-// Add some improved styles for the login UI
-const loginStyles = `
-.login-form, .signup-form {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-}
-
-.login-form label, .signup-form label {
-    display: inline-block;
-    width: 80px;
-    margin-bottom: 5px;
-    font-weight: 500;
-}
-
-.login-form input, .signup-form input {
-    margin-bottom: 15px;
-    padding: 8px 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    width: 100%;
-}
-
-.primary-button, .danger-button {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    align-self: flex-start;
-    margin-top: 5px;
-}
-
-.primary-button {
-    background-color: #467DF6;
-    color: white;
-}
-
-.danger-button {
-    background-color: #e74c3c;
-    color: white;
-}
-
-.user-profile {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border-radius: 4px;
-    background-color: #f8f9fa;
-}
-
-.avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #467DF6;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    margin-right: 10px;
-}
-
-.user-info {
-    flex: 1;
-}
-
-.user-info p {
-    margin: 0 0 5px 0;
-}
-
-#welcome-message {
-    font-weight: 500;
-}
-
-#username-display {
-    font-weight: bold;
-}
-`;
-
 class DocuAidLoginManager {
     constructor() {
         this.isLoggedIn = false;
         this.currentUser = null;
+        this.loginContainer = null;
         this.loginForm = null;
         this.signupForm = null;
         this.userProfile = null;
         
-        // Add login styles to the document
-        const styleEl = document.createElement('style');
-        styleEl.textContent = loginStyles;
-        document.head.appendChild(styleEl);
-        
         // Try to load user data from localStorage
         this.loadUserData();
-        
-        // Initialize UI elements when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            this.initUI();
-            this.checkLoggedInStatus();
-        });
     }
     
     // Initialize login UI and event listeners
-    initUI() {
+    init() {
         // Get UI elements
-        this.loginForm = document.getElementById('login-form');
-        this.signupForm = document.getElementById('signup-form');
-        this.userProfile = document.getElementById('user-profile');
+        this.loginContainer = document.querySelector('#docuaid-extension .login-container');
+        this.loginForm = document.querySelector('#docuaid-extension .login-form');
+        this.signupForm = document.querySelector('#docuaid-extension .signup-form');
+        this.userProfile = document.querySelector('#docuaid-extension .user-profile');
         
-        if (!this.loginForm || !this.signupForm || !this.userProfile) {
-            console.error('[DocuAid] Login UI elements not found');
+        if (!this.loginContainer) {
+            console.error('Login container not found');
             return;
         }
         
-        // Add event listeners for the login form
-        if (this.loginForm) {
-            this.loginForm.addEventListener('submit', (e) => {
+        // Add event listeners
+        this.addLoginEventListeners();
+        
+        // Show the appropriate UI based on login state
+        this.updateUI();
+    }
+    
+    // Add all event listeners for login/signup forms
+    addLoginEventListeners() {
+        // Login form submission
+        const loginButton = document.querySelector('#docuaid-extension .login-button');
+        if (loginButton) {
+            loginButton.addEventListener('click', (e) => {
                 e.preventDefault();
                 this.handleLogin();
             });
         }
         
-        // Add event listeners for the signup form
-        if (this.signupForm) {
-            this.signupForm.addEventListener('submit', (e) => {
+        // Switch to signup form
+        const signupLink = document.querySelector('#docuaid-extension .signup-link');
+        if (signupLink) {
+            signupLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.showSignupForm();
+            });
+        }
+        
+        // Signup form submission
+        const createAccountButton = document.querySelector('#docuaid-extension .create-account-button');
+        if (createAccountButton) {
+            createAccountButton.addEventListener('click', (e) => {
                 e.preventDefault();
                 this.handleSignup();
             });
         }
         
-        // Add event listener for the logout button
-        const logoutButton = document.getElementById('logout-button');
+        // Switch back to login form
+        const loginLink = document.querySelector('#docuaid-extension .login-link');
+        if (loginLink) {
+            loginLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.showLoginForm();
+            });
+        }
+        
+        // Logout button
+        const logoutButton = document.querySelector('#docuaid-extension .logout-button');
         if (logoutButton) {
             logoutButton.addEventListener('click', (e) => {
                 e.preventDefault();
                 this.handleLogout();
             });
         }
-        
-        // Update UI based on login state
-        this.updateUI();
-    }
-    
-    // Check if user is logged in
-    checkLoggedInStatus() {
-        const savedUser = localStorage.getItem('docuaid_user');
-        if (savedUser) {
-            try {
-                const userData = JSON.parse(savedUser);
-                this.isLoggedIn = true;
-                this.currentUser = userData;
-                this.updateUI();
-            } catch (error) {
-                console.error('[DocuAid] Error parsing user data:', error);
-                this.isLoggedIn = false;
-                this.currentUser = null;
-            }
-        } else {
-            this.isLoggedIn = false;
-            this.currentUser = null;
-        }
-        
-        // Return login status
-        return this.isLoggedIn;
     }
     
     // Handle login form submission
     handleLogin() {
-        const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
+        const usernameInput = document.querySelector('#docuaid-extension .login-form input[name="username"]');
+        const passwordInput = document.querySelector('#docuaid-extension .login-form input[name="password"]');
         
         if (!usernameInput || !passwordInput) {
-            console.error('[DocuAid] Login form inputs not found');
+            console.error('Login form inputs not found');
             return;
         }
         
@@ -182,110 +94,83 @@ class DocuAidLoginManager {
         const password = passwordInput.value.trim();
         
         if (!username || !password) {
-            alert('Please enter both username and password');
+            this.showMessage('Please enter both username and password', 'error');
             return;
         }
         
-        // Show a loading indicator
-        this.toggleLoading(true);
-        
-        // Call the backend API for authentication
-        this.loginWithBackend(username, password)
-            .then(data => {
-                if (data && data.user && data.token) {
-                    // Login successful
-                    this.isLoggedIn = true;
-                    this.currentUser = data.user;
-                    
-                    // Store token in localStorage
-                    localStorage.setItem('docuaid-auth-token', data.token);
-                    
-                    // Save user data to localStorage
-                    this.saveUserData();
-                    
-                    // Update UI
-                    this.updateUI();
-                    
-                    // Dispatch login state change event
-                    this.dispatchLoginStateChange();
-                    
-                    console.log('[DocuAid] Login successful:', this.currentUser);
-                } else {
-                    console.error('[DocuAid] Invalid login response');
-                    alert('Login failed. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('[DocuAid] Login error:', error);
-                alert(error.message || 'Login failed. Please try again.');
-            })
-            .finally(() => {
-                this.toggleLoading(false);
-            });
+        // For demo purposes, we'll simulate authentication
+        // In a real app, this would be an API call
+        setTimeout(() => {
+            // Simulated successful login
+            this.isLoggedIn = true;
+            this.currentUser = {
+                username: username,
+                email: `${username.toLowerCase()}@example.com`,
+                avatarLetter: username.charAt(0).toUpperCase()
+            };
+            
+            // Save user data
+            this.saveUserData();
+            
+            // Update UI
+            this.updateUI();
+            this.showMessage('Login successful!', 'success');
+        }, 1000);
     }
     
     // Handle signup form submission
     handleSignup() {
-        const usernameInput = document.getElementById('signup-username');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('signup-password');
+        const usernameInput = document.querySelector('#docuaid-extension .signup-form input[name="username"]');
+        const emailInput = document.querySelector('#docuaid-extension .signup-form input[name="email"]');
+        const passwordInput = document.querySelector('#docuaid-extension .signup-form input[name="password"]');
+        const confirmPasswordInput = document.querySelector('#docuaid-extension .signup-form input[name="confirm-password"]');
         
-        if (!usernameInput || !emailInput || !passwordInput) {
-            console.error('[DocuAid] Signup form inputs not found');
+        if (!usernameInput || !emailInput || !passwordInput || !confirmPasswordInput) {
+            console.error('Signup form inputs not found');
             return;
         }
         
         const username = usernameInput.value.trim();
         const email = emailInput.value.trim();
         const password = passwordInput.value.trim();
+        const confirmPassword = confirmPasswordInput.value.trim();
         
-        if (!username || !email || !password) {
-            alert('Please fill in all fields');
+        // Validate inputs
+        if (!username || !email || !password || !confirmPassword) {
+            this.showMessage('Please fill in all fields', 'error');
             return;
         }
         
-        // Validate email format
-        if (!this.isValidEmail(email)) {
-            alert('Please enter a valid email address');
+        if (password !== confirmPassword) {
+            this.showMessage('Passwords do not match', 'error');
             return;
         }
         
-        // Show a loading indicator
-        this.toggleLoading(true);
+        // Email validation regex
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            this.showMessage('Please enter a valid email address', 'error');
+            return;
+        }
         
-        // Call the backend API for registration
-        this.registerWithBackend(username, email, password)
-            .then(data => {
-                if (data && data.user && data.token) {
-                    // Registration successful
-                    this.isLoggedIn = true;
-                    this.currentUser = data.user;
-                    
-                    // Store token in localStorage
-                    localStorage.setItem('docuaid-auth-token', data.token);
-                    
-                    // Save user data to localStorage
-                    this.saveUserData();
-                    
-                    // Update UI
-                    this.updateUI();
-                    
-                    // Dispatch login state change event
-                    this.dispatchLoginStateChange();
-                    
-                    console.log('[DocuAid] Signup successful:', this.currentUser);
-                } else {
-                    console.error('[DocuAid] Invalid registration response');
-                    alert('Registration failed. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('[DocuAid] Registration error:', error);
-                alert(error.message || 'Registration failed. Please try again.');
-            })
-            .finally(() => {
-                this.toggleLoading(false);
-            });
+        // For demo purposes, we'll simulate account creation
+        // In a real app, this would be an API call
+        setTimeout(() => {
+            // Simulated successful signup
+            this.isLoggedIn = true;
+            this.currentUser = {
+                username: username,
+                email: email,
+                avatarLetter: username.charAt(0).toUpperCase()
+            };
+            
+            // Save user data
+            this.saveUserData();
+            
+            // Update UI
+            this.updateUI();
+            this.showMessage('Account created successfully!', 'success');
+        }, 1000);
     }
     
     // Handle logout
@@ -295,164 +180,125 @@ class DocuAidLoginManager {
         
         // Clear stored user data
         localStorage.removeItem('docuaid_user');
-        // Clear auth token
-        localStorage.removeItem('docuaid-auth-token');
         
         // Update UI
         this.updateUI();
-        
-        // Dispatch login state change event
-        this.dispatchLoginStateChange();
-        
-        console.log('[DocuAid] User logged out');
+        this.showMessage('You have been logged out', 'info');
+    }
+    
+    // Show login form
+    showLoginForm() {
+        if (this.loginForm && this.signupForm) {
+            this.loginForm.style.display = 'block';
+            this.signupForm.style.display = 'none';
+        }
+    }
+    
+    // Show signup form
+    showSignupForm() {
+        if (this.loginForm && this.signupForm) {
+            this.loginForm.style.display = 'none';
+            this.signupForm.style.display = 'block';
+        }
     }
     
     // Update UI based on login state
     updateUI() {
-        if (!this.loginForm || !this.signupForm || !this.userProfile) {
-            console.error('[DocuAid] UI elements not initialized');
+        if (!this.loginContainer || !this.loginForm || !this.signupForm || !this.userProfile) {
             return;
         }
         
         if (this.isLoggedIn && this.currentUser) {
-            // User is logged in, show profile and hide forms
+            // User is logged in, show profile
             this.loginForm.style.display = 'none';
             this.signupForm.style.display = 'none';
-            this.userProfile.style.display = 'flex';
+            this.userProfile.style.display = 'block';
             
-            // Update welcome message
-            const usernameDisplay = document.getElementById('username-display');
-            if (usernameDisplay) {
-                usernameDisplay.textContent = this.currentUser.username;
+            // Update profile information
+            const avatarSpan = document.querySelector('#docuaid-extension .profile-avatar span');
+            const usernameElement = document.querySelector('#docuaid-extension .profile-info h4');
+            const emailElement = document.querySelector('#docuaid-extension .profile-info p');
+            
+            if (avatarSpan && this.currentUser.avatarLetter) {
+                avatarSpan.textContent = this.currentUser.avatarLetter;
+            }
+            
+            if (usernameElement && this.currentUser.username) {
+                usernameElement.textContent = this.currentUser.username;
+            }
+            
+            if (emailElement && this.currentUser.email) {
+                emailElement.textContent = this.currentUser.email;
             }
         } else {
             // User is not logged in, show login form
-            this.loginForm.style.display = 'flex';
+            this.loginForm.style.display = 'block';
             this.signupForm.style.display = 'none';
             this.userProfile.style.display = 'none';
         }
+        
+        // Dispatch login state change event
+        const loginStateEvent = new Event('docuaid-login-state-changed');
+        document.dispatchEvent(loginStateEvent);
     }
     
-    // Dispatch an event when login state changes
-    dispatchLoginStateChange() {
-        const event = new CustomEvent('docuaid-login-state-changed', {
-            detail: {
-                isLoggedIn: this.isLoggedIn,
-                user: this.isLoggedIn ? this.currentUser : null
-            }
-        });
-        document.dispatchEvent(event);
+    // Show a message to the user
+    showMessage(message, type = 'info') {
+        // Create message element if it doesn't exist
+        let messageElement = document.querySelector('#docuaid-extension .login-message');
+        
+        if (!messageElement) {
+            messageElement = document.createElement('div');
+            messageElement.className = 'login-message';
+            this.loginContainer.appendChild(messageElement);
+        }
+        
+        // Set message content and style
+        messageElement.textContent = message;
+        messageElement.className = `login-message ${type}`;
+        
+        // Show the message
+        messageElement.style.display = 'block';
+        
+        // Hide after 3 seconds
+        setTimeout(() => {
+            messageElement.style.display = 'none';
+        }, 3000);
     }
     
     // Save user data to localStorage
     saveUserData() {
         if (this.currentUser) {
-            localStorage.setItem('docuaid_user', JSON.stringify(this.currentUser));
+            localStorage.setItem('docuaid_user', JSON.stringify({
+                isLoggedIn: this.isLoggedIn,
+                currentUser: this.currentUser
+            }));
         }
     }
     
     // Load user data from localStorage
     loadUserData() {
-        const savedUser = localStorage.getItem('docuaid_user');
-        if (savedUser) {
+        const userData = localStorage.getItem('docuaid_user');
+        if (userData) {
             try {
-                this.currentUser = JSON.parse(savedUser);
-                this.isLoggedIn = true;
-            } catch (error) {
-                console.error('[DocuAid] Error parsing saved user data:', error);
-                this.currentUser = null;
+                const parsed = JSON.parse(userData);
+                this.isLoggedIn = parsed.isLoggedIn;
+                this.currentUser = parsed.currentUser;
+            } catch (e) {
+                console.error('Error parsing user data', e);
                 this.isLoggedIn = false;
+                this.currentUser = null;
             }
         }
-    }
-    
-    // Check if user is logged in
-    isUserLoggedIn() {
-        return this.isLoggedIn;
-    }
-    
-    // Get current user
-    getCurrentUser() {
-        return this.currentUser;
-    }
-    
-    // Function to login with backend API
-    async loginWithBackend(username, password) {
-        try {
-            // Get API URL
-            const apiUrl = typeof apiConfig.getApiUrl === 'function' ?
-                apiConfig.getApiUrl() : apiConfig.API_URL;
-                
-            // Make API request
-            const response = await fetch(`${apiUrl}/api/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username,
-                    password
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.message || 'Login failed');
-            }
-            
-            return data;
-        } catch (error) {
-            console.error('[DocuAid] Login API error:', error);
-            throw error;
-        }
-    }
-    
-    // Function to register with backend API
-    async registerWithBackend(username, email, password) {
-        try {
-            // Get API URL
-            const apiUrl = typeof apiConfig.getApiUrl === 'function' ?
-                apiConfig.getApiUrl() : apiConfig.API_URL;
-                
-            // Make API request
-            const response = await fetch(`${apiUrl}/api/auth/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username,
-                    email,
-                    password
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.message || 'Registration failed');
-            }
-            
-            return data;
-        } catch (error) {
-            console.error('[DocuAid] Registration API error:', error);
-            throw error;
-        }
-    }
-    
-    // Toggle loading state
-    toggleLoading(isLoading) {
-        // In a real implementation, this would show/hide a loading spinner
-        console.log('[DocuAid] Loading state:', isLoading);
-    }
-    
-    // Validate email format
-    isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
     }
 }
 
-// Create and export the login manager instance
-window.docuaidLoginManager = new DocuAidLoginManager(); 
+// Initialize login manager when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    window.docuAidLoginManager = new DocuAidLoginManager();
+    
+    // Wait a short time to ensure the UI elements are created
+    setTimeout(() => {
+        window.docuAidLoginManager.init();
+    }, 500);
+}); 
