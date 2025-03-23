@@ -23,9 +23,10 @@ jobs:
       - name: Install Dependencies
         run: |
           cd Chatbot-backend
-          npm install
+          npm install --package-lock-only
+          npm ci
       
       - name: Deploy to Railway
-        run: railway up --service=chatbot-backend
+        run: railway up
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }} 
