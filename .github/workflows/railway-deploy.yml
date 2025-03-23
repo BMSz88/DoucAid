@@ -1,9 +1,13 @@
-name: Deploy to Railway
+name: Railway Deployment
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
+    inputs:
+      service:
+        description: 'Railway service name to deploy'
+        required: true
+        default: 'chatbot-backend'
+        type: string
 
 jobs:
   deploy:
@@ -20,18 +24,12 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Install Dependencies
-        run: |
-          cd Chatbot-backend
-          npm install --package-lock-only
-          npm ci
-      
       - name: List Available Railway Services
         run: railway list
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          
-      - name: Deploy to Railway
-        run: railway up --service chatbot-backend
+
+      - name: Deploy to Railway with Specified Service
+        run: railway up --service ${{ github.event.inputs.service }}
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }} 
