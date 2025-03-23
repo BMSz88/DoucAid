@@ -26,7 +26,9 @@
         "@mozilla/readability": "0.4.4",
         "jsdom": "22.1.0",
         "langchain": "0.0.200",
-        "@pinecone-database/pinecone": "1.1.2"
+        "@pinecone-database/pinecone": "1.1.2",
+        "bcrypt": "5.1.1",
+        "jsonwebtoken": "9.0.2"
     },
     "devDependencies": {
         "cross-env": "7.0.3",
