@@ -6,7 +6,7 @@ on:
       service:
         description: 'Railway service name to deploy'
         required: true
-        default: 'chatbot-backend'
+        default: 'Chatbot-backend'
         type: string
 
 jobs:
