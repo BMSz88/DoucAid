@@ -11,7 +11,7 @@ const fetch = require('node-fetch');
 function initializeOpenAI() {
     try {
         const apiKey = process.env.OPENAI_API_KEY;
-        console.log('OpenAI API Key loaded from env:', apiKey ? 'Yes' : 'No');
+        console.log('OpenAI API Key loaded from env:', apiKey ? (apiKey.startsWith('sk-placeholder') ? 'Placeholder detected' : 'Yes') : 'No');
         
         // Check if the API key is missing or is a placeholder
         if (!apiKey || apiKey.startsWith('sk-placeholder')) {
@@ -395,7 +395,9 @@ async function generateAgenticResponse(question, context = null) {
         console.error('Error generating response:', error);
         return {
             success: false,
-            error: error.message
+            error: error.message,
+            // Add demo fallback response when errors occur
+            answer: "Sorry, I encountered an error processing your request. This could be due to API limits or configuration issues."
         };
     }
 }
