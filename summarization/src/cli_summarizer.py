@@ -1,4 +1,5 @@
 # src/cli_summarizer.py
+#this is the main file that will be executed when the summarization package is run as a script. It contains the main entry point for the summarization AI tool, which can be used interactively or via command-line arguments.
 import sys
 import os
 import argparse

@@ -1,4 +1,5 @@
 # src/__init__.py
+# Initialization module for the Documentation Summarization AI project.
 
 """
 Initialization module for the Documentation Summarization AI project.
