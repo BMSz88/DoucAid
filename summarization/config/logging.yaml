@@ -1,7 +1,6 @@
 # config/logging.yaml
 # Logging Configuration Version
-
-# Logging Configuration Version
+#this configuration file defines the logging settings for the Documentation Summarization AI, including log message formatting, output handlers, and logger configurations for different components of the project.
 version: 1
 
 # Formatters define the structure of log messages
