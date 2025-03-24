@@ -1,5 +1,5 @@
 # src/inference.py
-#this is the inference file
+#this is the inference file for the Documentation Summarization AI project. It contains the main inference class for generating summaries from trained models.
 import os
 import logging
 import yaml
