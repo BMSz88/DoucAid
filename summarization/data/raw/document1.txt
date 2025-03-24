@@ -1,5 +1,6 @@
 Machine Learning: Comprehensive Technical Overview
 #new addition : dummy line
+#text file containing training content
 Introduction:
 Machine learning represents a transformative approach in computational intelligence, enabling systems to learn and improve from experience without explicit programming. This document explores the fundamental principles, methodologies, and practical applications of machine learning technologies.
 

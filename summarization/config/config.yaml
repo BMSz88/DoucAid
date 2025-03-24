@@ -1,6 +1,8 @@
 # config/config.yaml
-
 # Configuration file for Documentation Summarization AI
+#This configuration file defines the settings for the Documentation Summarization AI, including model configuration, training hyperparameters, inference settings, logging configuration, data processing settings, and model saving and loading paths.
+
+
 # Model Configuration
 model:
   # Base model selection
