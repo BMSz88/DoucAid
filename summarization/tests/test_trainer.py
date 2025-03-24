@@ -1,5 +1,6 @@
 # tests/test_trainer.py
 #advised to keep this python file. #new
+#this file is used to test the model trainer class
 
 import os
 import sys
