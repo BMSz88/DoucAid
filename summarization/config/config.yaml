@@ -1,0 +1,41 @@
+# config/config.yaml
+# Configuration file for Documentation Summarization AI
+#This configuration file defines the settings for the Documentation Summarization AI, including model configuration, training hyperparameters, inference settings, logging configuration, data processing settings, and model saving and loading paths.
+
+# Model Configuration
+model:
+  # Base model selection
+  name: 't5-small'  # Lightweight T5 model for summarization
+  
+  # Input and output length constraints
+  max_input_length: 512  # Maximum number of tokens for input text
+  max_output_length: 150  # Maximum number of tokens for generated summary
+
+# Training Hyperparameters
+training:
+  # Optimization parameters
+  learning_rate: 5e-5  # Learning rate for model training
+  batch_size: 8        # Number of samples processed in each training iteration
+  epochs: 3            # Number of complete passes through the training dataset
+
+# Inference Configuration
+inference:
+  # Text generation parameters
+  temperature: 0.7  # Controls randomness in summary generation
+  top_k: 50         # Number of highest probability tokens to keep for filtering
+  top_p: 0.95       # Nucleus sampling threshold
+
+# Logging Configuration
+logging:
+  level: INFO        # Logging verbosity
+  file: 'summarization.log'  # Log file name
+
+# Data Processing Settings
+data:
+  raw_data_dir: '../data/raw'       # Directory for input documentation
+  processed_data_dir: '../data/processed'  # Directory for processed training data
+
+# Model Saving and Loading
+model_storage:
+  save_path: '../models/summarization_model'  # Path to save trained model
+  load_path: '../models/summarization_model'  # Path to load pre-trained model

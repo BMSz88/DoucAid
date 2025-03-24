@@ -1,0 +1,26 @@
+# Comment: Base image selection
+FROM python:3.9-slim
+
+# Comment: Set working directory in container
+WORKDIR /app
+
+# Comment: Copy project files
+COPY . /app
+
+# Comment: Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Comment: Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Comment: Install project
+RUN pip install -e .
+
+# Comment: Set environment variables
+ENV PYTHONUNBUFFERED=1
+
+# Comment: Default execution command
+CMD ["python", "-m", "src.inference"]
