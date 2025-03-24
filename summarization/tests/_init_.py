@@ -1,6 +1,7 @@
 # tests/__init__.py
 # Initialization module for the tests package.
-# Provides configuration and utility functions for testing the Documentation Summarization AI project accordingly.
+#this file contains the main model class for the Documentation Summarization AI project. It includes the core functionality for generating abstractive summaries of documentation text.
+# Optional: Import key testing utilities or configuration
 """
 Initialization module for the tests package.
 Provides configuration and utility functions for testing the Documentation Summarization AI project.
