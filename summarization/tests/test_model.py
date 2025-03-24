@@ -1,5 +1,5 @@
 # tests/test_model.py
-
+#this file is used to test the model class
 import os
 import sys
 import unittest
