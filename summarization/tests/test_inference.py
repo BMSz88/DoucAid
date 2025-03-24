@@ -1,5 +1,5 @@
 # tests/test_inference.py
-
+#this file is used to test the inference class
 import os
 import sys
 import unittest
