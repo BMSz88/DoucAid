@@ -1,5 +1,5 @@
 # src/data_processor.py
-#this is the main file
+#this is the main file that contains the data processor class for the Documentation Summarization AI project. It includes methods for loading, preprocessing, and preparing training data from raw documentation files.
 
 import os
 import json
