@@ -1,5 +1,5 @@
 # src/trainer.py
-#this file contains the main model training class for the Documentation Summarization AI project. It includes the core functionality for training the summarization model on custom documentation data.
+#this file contains the main model training class for the Documentation Summarization AI project. It includes the core functionality for training the abstractive summarization model.
 
 import os
 import logging
