@@ -1,5 +1,6 @@
 # src/model.py
 #this file contains the main model class for the Documentation Summarization AI project. It includes the core functionality for generating abstractive summaries of documentation text.
+# Import necessary libraries
 import torch
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 import yaml
