@@ -1,0 +1,74 @@
+# config/logging.yaml
+# Comprehensive Logging Configuration for Documentation Summarization AI
+
+# Logging Configuration Version
+version: 1
+
+# Formatters define the structure of log messages
+formatters:
+  # Standard format for general logging
+  standard:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+  
+  # Detailed error format with additional context
+  error:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+
+# Handlers define where and how log messages are output
+handlers:
+  # Console handler for real-time logging
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: standard
+    stream: ext://sys.stdout
+
+  # File handler for persistent error logging
+  file:
+    class: logging.FileHandler
+    level: ERROR
+    formatter: error
+    filename: logs/summarization_errors.log
+    mode: a  # Append mode
+
+  # Separate file for general application logs
+  application_log:
+    class: logging.FileHandler
+    level: INFO
+    formatter: standard
+    filename: logs/summarization_app.log
+    mode: a  # Append mode
+
+# Logger configuration for different components
+loggers:
+  # Root logger configuration
+  root:
+    level: INFO
+    handlers: [console, file]
+    propagate: yes
+
+  # Specific loggers for different project modules
+  src.model:
+    level: DEBUG
+    handlers: [console, file, application_log]
+    propagate: no
+
+  src.data_processor:
+    level: INFO
+    handlers: [console, file, application_log]
+    propagate: no
+
+  src.trainer:
+    level: INFO
+    handlers: [console, file, application_log]
+    propagate: no
+
+  src.inference:
+    level: INFO
+    handlers: [console, file, application_log]
+    propagate: no
+
+# Additional configuration for log rotation (optional)
+# Note: Requires additional setup with logging.handlers.RotatingFileHandler
